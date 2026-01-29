@@ -26,6 +26,7 @@ export const generateHTML = (data: InvitationData) => {
 
   // 3. Daftar kata kunci yang akan diganti (Mapping)
   const replacements: Record<string, string> = {
+    '{{COVER_IMG}}': data.cover?.img || data.groom.img,
     '{{GROOM_NICK}}': data.groom.nick,
     '{{GROOM_FULL}}': data.groom.full,
     '{{GROOM_PARENTS}}': data.groom.parents,
@@ -35,7 +36,6 @@ export const generateHTML = (data: InvitationData) => {
     '{{BRIDE_FULL}}': data.bride.full,
     '{{BRIDE_PARENTS}}': data.bride.parents,
     '{{BRIDE_IMG}}': data.bride.img,
-    '{{COVER_IMG}}': data.cover?.img || data.groom.img, // Gunakan optional chaining dan fallback ke foto pria
 
     '{{EVENT_DATE}}': data.event.date,
     '{{EVENT_TIME}}': data.event.time,
