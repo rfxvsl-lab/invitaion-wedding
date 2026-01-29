@@ -81,13 +81,13 @@
       <div class="flex flex-wrap justify-center gap-8 mb-16">
         <div class="profile-card cursor-pointer group" onclick="openInvitation()">
           <div class="w-32 h-32 md:w-40 md:h-40 bg-blue-500 rounded-md mb-4 overflow-hidden transition-all duration-300">
-            <img src="nicola.jpg" class="w-full h-full object-cover" alt="Nicola">
+            <img src="{{GROOM_IMG}}" class="w-full h-full object-cover" alt="Nicola">
           </div>
           <p class="text-secondary group-hover:text-white">Nicola</p>
         </div>
         <div class="profile-card cursor-pointer group" onclick="openInvitation()">
           <div class="w-32 h-32 md:w-40 md:h-40 bg-red-500 rounded-md mb-4 overflow-hidden transition-all duration-300">
-            <img src="salsa.jpg" class="w-full h-full object-cover" alt="Salsa">
+            <img src="{{BRIDE_IMG}}" class="w-full h-full object-cover" alt="Salsa">
           </div>
           <p class="text-secondary group-hover:text-white">Salsa</p>
         </div>
@@ -108,7 +108,7 @@
     <!-- SECTION 2: HOME (Netflix Featured Title) -->
     <section id="home" class="min-h-screen relative flex items-end pb-20 px-6 md:px-20 overflow-hidden">
       <div class="absolute inset-0 z-0">
-        <img src="mempelaicover.jpg" class="w-full h-full object-cover" alt="Featured">
+        <img src="{{COVER_IMG}}" class="w-full h-full object-cover" alt="Featured">
         <div class="absolute inset-0 bg-gradient-to-r from-dark via-dark/40 to-transparent"></div>
         <div class="absolute inset-0 netflix-gradient"></div>
       </div>
@@ -144,13 +144,13 @@
       </div>
       <div class="flex flex-wrap gap-8 px-6 md:px-20">
         <div class="w-full md:w-1/3 bg-cream p-6 rounded-md group" data-aos="fade-up">
-          <img src="nicola.jpg" class="w-full h-64 object-cover rounded-md mb-6" alt="Groom">
+          <img src="{{GROOM_IMG}}" class="w-full h-64 object-cover rounded-md mb-6" alt="Groom">
           <h3 class="text-2xl font-bold mb-2">Nicola Valentino</h3>
           <p class="text-primary font-bold mb-4">As THE GROOM</p>
           <p class="text-secondary text-sm">Putra dari Bpk. Misno & Ibu Atik Fifiani</p>
         </div>
         <div class="w-full md:w-1/3 bg-cream p-6 rounded-md group" data-aos="fade-up" data-aos-delay="200">
-          <img src="salsa.jpg" class="w-full h-64 object-cover rounded-md mb-6" alt="Bride">
+          <img src="{{BRIDE_IMG}}" class="w-full h-64 object-cover rounded-md mb-6" alt="Bride">
           <h3 class="text-2xl font-bold mb-2">Salsabillah Ekanaiya</h3>
           <p class="text-primary font-bold mb-4">As THE BRIDE</p>
           <p class="text-secondary text-sm">Putri dari Bpk. M. Rofiek & Ibu Sri Kurniawati</p>
@@ -166,7 +166,7 @@
       <div class="px-6 md:px-20">
         <div class="bg-cream p-8 rounded-md flex flex-col md:flex-row gap-10 items-center" data-aos="zoom-in">
           <div class="w-full md:w-1/3 relative">
-            <img src="prewedding2.jpg" class="rounded-md w-full h-48 object-cover">
+            <img src="https://placehold.co/600x800?text=Gallery+Photo" class="rounded-md w-full h-48 object-cover">
             <div class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-md">
               <i class="fa-solid fa-play text-4xl"></i>
             </div>
@@ -201,17 +201,17 @@
         <h2 class="text-3xl font-header tracking-wider">Trailers & Stills</h2>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-6 md:px-20">
-        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('prewedding1.jpg')">
-          <img src="prewedding1.jpg" class="rounded-md w-full h-40 object-cover">
+        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+          <img src="https://placehold.co/600x800?text=Gallery+Photo" class="rounded-md w-full h-40 object-cover">
         </div>
-        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('prewedding2.jpg')">
-          <img src="prewedding2.jpg" class="rounded-md w-full h-40 object-cover">
+        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+          <img src="https://placehold.co/600x800?text=Gallery+Photo" class="rounded-md w-full h-40 object-cover">
         </div>
-        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('prewedding3.jpg')">
-          <img src="prewedding3.jpg" class="rounded-md w-full h-40 object-cover">
+        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+          <img src="https://placehold.co/600x800?text=Gallery+Photo" class="rounded-md w-full h-40 object-cover">
         </div>
-        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('prewedding4.jpg')">
-          <img src="prewedding4.jpg" class="rounded-md w-full h-40 object-cover">
+        <div class="cursor-pointer hover:scale-105 transition duration-300" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+          <img src="https://placehold.co/600x800?text=Gallery+Photo" class="rounded-md w-full h-40 object-cover">
         </div>
       </div>
     </section>

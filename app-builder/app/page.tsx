@@ -24,6 +24,7 @@ export default function BuilderPage() {
     theme: 'theme-luxury-dark', // Default theme
     groom: { nick: 'Nicola', full: 'Nicola Valentino', parents: 'Bpk. Misno & Ibu Atik', img: 'https://placehold.co/400x600?text=Groom' },
     bride: { nick: 'Salsa', full: 'Salsabillah Putri', parents: 'Bpk. Rofiek & Ibu Sri', img: 'https://placehold.co/400x600?text=Bride' },
+    cover: { img: 'https://placehold.co/600x800?text=Cover' },
     event: { date: '2025-10-09', time: '10:00 WIB', loc: 'Malang, Jawa Timur', map: 'https://maps.google.com' },
     gift: { bank: 'BCA', num: '1234567890', name: 'Nicola Valentino' }
   });

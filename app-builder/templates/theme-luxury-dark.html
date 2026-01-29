@@ -96,7 +96,7 @@
   <div id="cover" class="fixed inset-0 z-[100] bg-dark flex flex-col justify-center items-center text-center overflow-hidden">
     <!-- Cover Background Image -->
     <div class="absolute inset-0 grayscale-[40%] brightness-[0.4]">
-        <img src="mempelaicover.jpg" class="w-full h-full object-cover" alt="Background">
+        <img src="{{COVER_IMG}}" class="w-full h-full object-cover" alt="Background">
     </div>
     
     <!-- Cover Content -->
@@ -140,7 +140,7 @@
         </div>
         <div class="order-1 md:order-2 flex justify-center" data-aos="zoom-in">
           <div class="w-72 h-96 img-arch overflow-hidden">
-            <img src="mempelaicover.jpg" class="w-full h-full object-cover rounded-t-full" alt="Main Photo">
+            <img src="{{COVER_IMG}}" class="w-full h-full object-cover rounded-t-full" alt="Main Photo">
           </div>
         </div>
       </div>
@@ -174,7 +174,7 @@
           <!-- Groom -->
           <div class="text-center group" data-aos="fade-right">
             <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-arch shadow-2xl">
-              <img src="nicola.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Groom" onerror="this.src='https://placehold.co/400x500?text=Groom'">
+              <img src="{{GROOM_IMG}}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Groom" onerror="this.src='https://placehold.co/400x500?text=Groom'">
             </div>
             <h3 class="font-header text-2xl font-bold gold-gradient mb-2">Nicola Valentino Misno</h3>
             <p class="text-[10px] tracking-[0.4em] text-primary font-bold mb-4 uppercase">Putra Kedua Dari</p>
@@ -185,7 +185,7 @@
           <!-- Bride -->
           <div class="text-center group" data-aos="fade-left">
             <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-arch shadow-2xl">
-              <img src="salsa.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Bride" onerror="this.src='https://placehold.co/400x500?text=Bride'">
+              <img src="{{BRIDE_IMG}}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Bride" onerror="this.src='https://placehold.co/400x500?text=Bride'">
             </div>
             <h3 class="font-header text-2xl font-bold gold-gradient mb-2">Salsabillah Ekanaiya Putri</h3>
             <p class="text-[10px] tracking-[0.4em] text-primary font-bold mb-4 uppercase">Putri Pertama Dari</p>
@@ -199,7 +199,7 @@
     <!-- SECTION 5: EVENT -->
     <section id="event" class="py-32 relative bg-accent">
       <div class="absolute inset-0 grayscale brightness-[0.2] opacity-20">
-        <img src="prewedding2.jpg" class="w-full h-full object-cover bg-fixed" alt="BG">
+        <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-full object-cover bg-fixed" alt="BG">
       </div>
       
       <div class="container mx-auto px-6 relative z-10 text-center">
@@ -248,29 +248,29 @@
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             <div class="space-y-4 md:space-y-8">
-                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('prewedding1.jpg')" data-aos="fade-up">
-                    <img src="prewedding1.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G1">
+                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G1">
                 </div>
-                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('prewedding2.jpg')" data-aos="fade-up">
-                    <img src="prewedding2.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G2">
+                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G2">
                 </div>
             </div>
             <div class="space-y-4 md:space-y-8 md:pt-16">
-                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('prewedding3.jpg')" data-aos="fade-up">
-                    <img src="prewedding3.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G3">
+                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G3">
                 </div>
             </div>
             <div class="space-y-4 md:space-y-8">
-                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('prewedding4.jpg')" data-aos="fade-up">
-                    <img src="prewedding4.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G4">
+                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G4">
                 </div>
-                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('mempelaicover.jpg')" data-aos="fade-up">
-                    <img src="mempelaicover.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G5">
+                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('{{COVER_IMG}}')" data-aos="fade-up">
+                    <img src="{{COVER_IMG}}" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G5">
                 </div>
             </div>
             <div class="space-y-4 md:space-y-8 md:pt-16">
-                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('salsa.jpg')" data-aos="fade-up">
-                    <img src="salsa.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G6">
+                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('{{BRIDE_IMG}}')" data-aos="fade-up">
+                    <img src="{{BRIDE_IMG}}" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G6">
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ import path from 'path';
 export interface InvitationData {
   groom: { nick: string; full: string; parents: string; img: string };
   bride: { nick: string; full: string; parents: string; img: string };
+  cover?: { img: string };
   event: { date: string; time: string; loc: string; map: string };
   gift: { bank: string; num: string; name: string };
   theme: string; // Nama file template, misal: 'theme-luxury-dark'
@@ -34,6 +35,7 @@ export const generateHTML = (data: InvitationData) => {
     '{{BRIDE_FULL}}': data.bride.full,
     '{{BRIDE_PARENTS}}': data.bride.parents,
     '{{BRIDE_IMG}}': data.bride.img,
+    '{{COVER_IMG}}': data.cover?.img || data.groom.img, // Gunakan optional chaining dan fallback ke foto pria
 
     '{{EVENT_DATE}}': data.event.date,
     '{{EVENT_TIME}}': data.event.time,

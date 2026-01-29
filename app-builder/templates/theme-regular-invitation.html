@@ -97,7 +97,7 @@
   </div>
 
   <!-- COVER SCREEN (Overlay) -->
-  <div id="cover" class="fixed inset-0 z-[100] bg-[url('mempelaicover.jpg')] bg-cover bg-center h-screen w-full flex flex-col justify-end items-center pb-20 text-center before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/80 before:via-black/40 before:to-transparent">
+  <div id="cover" class="fixed inset-0 z-[100] bg-[url('{{COVER_IMG}}')] bg-cover bg-center h-screen w-full flex flex-col justify-end items-center pb-20 text-center before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/80 before:via-black/40 before:to-transparent">
     
     <div class="relative z-10 text-white px-6 animate-pulse">
       <p class="font-sans text-sm tracking-[0.3em] uppercase mb-4 text-secondary">The Wedding Of</p>
@@ -130,7 +130,7 @@
       <div class="relative w-full max-w-4xl mx-auto grid md:grid-cols-2 gap-8 items-center">
          <!-- Image Left -->
          <div data-aos="fade-right" class="hidden md:block">
-            <img src="mempelaicover.jpg" class="rounded-t-[100px] rounded-b-[20px] shadow-xl w-full h-[500px] object-cover" alt="Couple">
+            <img src="{{COVER_IMG}}" class="rounded-t-[100px] rounded-b-[20px] shadow-xl w-full h-[500px] object-cover" alt="Couple">
          </div>
          
          <!-- Text Center/Right -->
@@ -184,7 +184,7 @@
           <div class="text-center w-full md:w-5/12 group" data-aos="fade-right">
             <div class="relative w-64 h-80 mx-auto mb-6">
               <div class="absolute inset-0 border-[1px] border-gold rounded-t-full rounded-b-xl translate-x-3 translate-y-3 transition-transform group-hover:translate-x-1 group-hover:translate-y-1"></div>
-              <img src="nicola.jpg" alt="Nicola" class="absolute inset-0 w-full h-full object-cover rounded-t-full rounded-b-xl shadow-lg" onerror="this.src='https://placehold.co/300x400?text=Groom'">
+              <img src="{{GROOM_IMG}}" alt="Nicola" class="absolute inset-0 w-full h-full object-cover rounded-t-full rounded-b-xl shadow-lg" onerror="this.src='https://placehold.co/300x400?text=Groom'">
             </div>
             <h3 class="font-serif text-3xl font-bold text-dark mb-1">Nicola Valentino Misno</h3>
             <p class="text-xs text-primary mb-4 font-bold tracking-wider">Putra Kedua</p>
@@ -203,7 +203,7 @@
           <div class="text-center w-full md:w-5/12 group" data-aos="fade-left">
             <div class="relative w-64 h-80 mx-auto mb-6">
               <div class="absolute inset-0 border-[1px] border-gold rounded-t-full rounded-b-xl -translate-x-3 translate-y-3 transition-transform group-hover:-translate-x-1 group-hover:translate-y-1"></div>
-              <img src="salsa.jpg" alt="Salsa" class="absolute inset-0 w-full h-full object-cover rounded-t-full rounded-b-xl shadow-lg" onerror="this.src='https://placehold.co/300x400?text=Bride'">
+              <img src="{{BRIDE_IMG}}" alt="Salsa" class="absolute inset-0 w-full h-full object-cover rounded-t-full rounded-b-xl shadow-lg" onerror="this.src='https://placehold.co/300x400?text=Bride'">
             </div>
             <h3 class="font-serif text-3xl font-bold text-dark mb-1">Salsabillah Ekanaiya Putri</h3>
             <p class="text-xs text-primary mb-4 font-bold tracking-wider">Putri Pertama</p>
@@ -220,7 +220,7 @@
     <!-- Event Section -->
     <section id="event" class="py-20 relative bg-[#6d4c41] text-white bg-opacity-95">
       <!-- Background overlay image if needed -->
-      <div class="absolute inset-0 bg-[url('prewedding2.jpg')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
+      <div class="absolute inset-0 bg-[url('https://placehold.co/600x800?text=Gallery+Photo')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
       
       <div class="container mx-auto px-6 relative z-10 text-center">
         <h2 class="font-script text-5xl mb-12 text-gold" data-aos="fade-down">Acara Pernikahan</h2>
@@ -273,32 +273,32 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
            <!-- Masonry-like Grid -->
            <div class="space-y-4">
-             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" onclick="openModal('prewedding1.jpg')">
-               <img src="prewedding1.jpg" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x600/png?text=Prewed+1'">
+             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+               <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x600/png?text=Prewed+1'">
              </div>
-             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="100" onclick="openModal('mempelaicover.jpg')">
-               <img src="mempelaicover.jpg" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery">
+             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="100" onclick="openModal('{{COVER_IMG}}')">
+               <img src="{{COVER_IMG}}" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery">
              </div>
            </div>
            
            <div class="space-y-4 md:mt-8">
-             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="200" onclick="openModal('prewedding2.jpg')">
-               <img src="prewedding2.jpg" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x500/png?text=Prewed+2'">
+             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="200" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+               <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x500/png?text=Prewed+2'">
              </div>
            </div>
 
            <div class="space-y-4">
-             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="300" onclick="openModal('prewedding3.jpg')">
-               <img src="prewedding3.jpg" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x500/png?text=Prewed+3'">
+             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="300" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+               <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x500/png?text=Prewed+3'">
              </div>
-             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="400" onclick="openModal('salsa.jpg')">
-                <img src="salsa.jpg" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery">
+             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="400" onclick="openModal('{{BRIDE_IMG}}')">
+                <img src="{{BRIDE_IMG}}" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery">
               </div>
            </div>
 
            <div class="space-y-4 md:mt-8">
-             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="500" onclick="openModal('prewedding4.jpg')">
-               <img src="prewedding4.jpg" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x600/png?text=Prewed+4'">
+             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="500" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
+               <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x600/png?text=Prewed+4'">
              </div>
            </div>
         </div>

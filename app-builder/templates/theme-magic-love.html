@@ -142,7 +142,7 @@
         
         <div class="relative mb-16 px-4">
           <div class="absolute inset-0 bg-primary/20 blur-[100px] rounded-full"></div>
-          <img src="mempelaicover.jpg" class="img-magic-arch w-72 h-96 md:w-80 md:h-[500px] object-cover mx-auto relative z-10" alt="Hero Image">
+          <img src="{{COVER_IMG}}" class="img-magic-arch w-72 h-96 md:w-80 md:h-[500px] object-cover mx-auto relative z-10" alt="Hero Image">
           <div class="absolute -top-6 -left-2 text-secondary text-3xl float-magic"><i class="fa-solid fa-sparkles"></i></div>
           <div class="absolute bottom-10 -right-2 text-accent text-2xl float-magic" style="animation-delay: 2s;"><i class="fa-solid fa-star"></i></div>
         </div>
@@ -179,7 +179,7 @@
           <!-- Groom -->
           <div class="text-center group" data-aos="fade-right">
             <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-magic-arch">
-              <img src="nicola.jpg" class="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000" alt="Groom" onerror="this.src='https://placehold.co/400x500?text=Groom'">
+              <img src="{{GROOM_IMG}}" class="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000" alt="Groom" onerror="this.src='https://placehold.co/400x500?text=Groom'">
             </div>
             <h3 class="font-header text-3xl text-white mb-2">Nicola Valentino</h3>
             <p class="text-[10px] text-secondary/60 mb-6 font-bold tracking-widest uppercase italic">The Guardian</p>
@@ -197,7 +197,7 @@
           <!-- Bride -->
           <div class="text-center group" data-aos="fade-left">
             <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-magic-arch">
-              <img src="salsa.jpg" class="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000" alt="Bride" onerror="this.src='https://placehold.co/400x500?text=Bride'">
+              <img src="{{BRIDE_IMG}}" class="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000" alt="Bride" onerror="this.src='https://placehold.co/400x500?text=Bride'">
             </div>
             <h3 class="font-header text-3xl text-white mb-2">Salsabillah Ekanaiya</h3>
             <p class="text-[10px] text-accent/60 mb-6 font-bold tracking-widest uppercase italic">The Muse</p>
@@ -263,29 +263,29 @@
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
             <div class="space-y-4 md:space-y-6">
-                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding1.jpg')" data-aos="fade-up">
-                    <img src="prewedding1.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G1">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G1">
                 </div>
-                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding2.jpg')" data-aos="fade-up" data-aos-delay="100">
-                    <img src="prewedding2.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G2">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up" data-aos-delay="100">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G2">
                 </div>
             </div>
             <div class="space-y-4 md:space-y-6 md:pt-16">
-                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding3.jpg')" data-aos="fade-up" data-aos-delay="200">
-                    <img src="prewedding3.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G3">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up" data-aos-delay="200">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G3">
                 </div>
             </div>
             <div class="space-y-4 md:space-y-6">
-                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding4.jpg')" data-aos="fade-up" data-aos-delay="300">
-                    <img src="prewedding4.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G4">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')" data-aos="fade-up" data-aos-delay="300">
+                    <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G4">
                 </div>
-                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('mempelaicover.jpg')" data-aos="fade-up" data-aos-delay="400">
-                    <img src="mempelaicover.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G5">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('{{COVER_IMG}}')" data-aos="fade-up" data-aos-delay="400">
+                    <img src="{{COVER_IMG}}" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G5">
                 </div>
             </div>
             <div class="space-y-4 md:space-y-6 md:pt-16">
-                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('salsa.jpg')" data-aos="fade-up" data-aos-delay="500">
-                    <img src="salsa.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G6">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('{{BRIDE_IMG}}')" data-aos="fade-up" data-aos-delay="500">
+                    <img src="{{BRIDE_IMG}}" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G6">
                 </div>
             </div>
         </div>
