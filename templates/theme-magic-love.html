@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Magic of Nicola & Salsa</title>
+  
+  <!-- Fonts: Mystical & Elegant -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Pinyon+Script&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- AOS Animation -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#7B66FF',    /* Magic Purple */
+            secondary: '#FFD700',  /* Celestial Gold */
+            dark: '#0B0B1E',       /* Midnight Void */
+            accent: '#C084FC',     /* Pink Nebula */
+            cream: '#FDFCF0',      /* Star Dust White */
+          },
+          fontFamily: {
+            header: ['"Marcellus"', 'serif'],
+            script: ['"Pinyon Script"', 'cursive'],
+            body: ['"Lora"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0B0B1E; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(#7B66FF, #C084FC); border-radius: 10px; }
+    
+    /* Cover Transition */
+    .cover-slide-up {
+      transform: translateY(-100%);
+      transition: transform 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+    }
+    
+    /* Magic Star Background */
+    .magic-bg {
+      background: radial-gradient(circle at center, #1B1B3A 0%, #0B0B1E 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .magic-bg::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 200%;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 150px 150px, #fff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 300px 300px;
+      opacity: 0.3;
+      animation: starsMove 150s linear infinite;
+    }
+    @keyframes starsMove { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+
+    /* Arched Image Mask */
+    .img-magic-arch {
+      border-radius: 999px 999px 0 0;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      padding: 8px;
+      box-shadow: 0 0 30px rgba(123, 102, 255, 0.2);
+    }
+
+    /* Glassmorphism */
+    .glass-card {
+      background: rgba(11, 11, 30, 0.6);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(192, 132, 252, 0.2);
+    }
+
+    /* Floating Animation */
+    @keyframes floating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    .float-magic { animation: floating 6s ease-in-out infinite; }
+
+    /* Modal Overlay */
+    #imgModal { opacity: 0; pointer-events: none; transition: opacity 0.4s ease; z-index: 1000; }
+    #imgModal.active { opacity: 1; pointer-events: all; }
+  </style>
+</head>
+<body class="bg-dark text-cream font-body overflow-hidden antialiased">
+
+  <!-- AUDIO ASSET -->
+  <audio id="bgMusic" loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-magic.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- FLOATING MUSIC CONTROL -->
+  <div id="musicControl" class="fixed top-6 right-6 z-50 hidden opacity-0 transition-opacity duration-1000">
+    <button onclick="toggleMusic()" class="w-12 h-12 glass-card rounded-full flex items-center justify-center text-secondary shadow-[0_0_20px_rgba(123,102,255,0.4)] transition-all active:scale-90">
+      <i class="fa-solid fa-wand-magic-sparkles" id="musicIcon"></i>
+    </button>
+  </div>
+
+  <!-- SECTION 1: COVER -->
+  <div id="cover" class="fixed inset-0 z-[100] magic-bg flex flex-col justify-center items-center text-center p-6 before:content-[''] before:absolute before:inset-0 before:bg-dark/30">
+    <div class="relative z-10 max-w-2xl" data-aos="zoom-in" data-aos-duration="2000">
+      <div class="float-magic mb-8">
+        <p class="font-header text-secondary tracking-[0.5em] text-sm uppercase mb-4">The Magic Union Of</p>
+        <h1 class="font-script text-7xl md:text-9xl text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">Nicola & Salsa</h1>
+      </div>
+      
+      <div class="mb-12">
+        <p class="text-[10px] tracking-[0.4em] mb-4 uppercase opacity-60">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+        <div class="glass-card py-4 px-10 inline-block rounded-full border-secondary/20">
+          <p class="font-header text-xl text-secondary">TAMU UNDANGAN</p>
+        </div>
+      </div>
+
+      <button onclick="openInvitation()" class="group relative px-12 py-4 bg-gradient-to-r from-primary to-accent text-white font-header tracking-[0.3em] text-[10px] rounded-full shadow-[0_0_30px_rgba(123,102,255,0.5)] transition-all hover:scale-105 active:scale-95">
+        <i class="fa-solid fa-moon mr-2"></i> BUKA UNDANGAN
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN SCROLLABLE WRAPPER -->
+  <main id="mainContent" class="hidden opacity-0 transition-opacity duration-1000">
+    
+    <!-- SECTION 2: HOME -->
+    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-32 pb-20 magic-bg">
+      <div data-aos="fade-up" class="max-w-4xl">
+        <p class="font-header text-secondary text-xs tracking-[0.5em] mb-12 uppercase">Written in the Stars</p>
+        
+        <div class="relative mb-16 px-4">
+          <div class="absolute inset-0 bg-primary/20 blur-[100px] rounded-full"></div>
+          <img src="mempelaicover.jpg" class="img-magic-arch w-72 h-96 md:w-80 md:h-[500px] object-cover mx-auto relative z-10" alt="Hero Image">
+          <div class="absolute -top-6 -left-2 text-secondary text-3xl float-magic"><i class="fa-solid fa-sparkles"></i></div>
+          <div class="absolute bottom-10 -right-2 text-accent text-2xl float-magic" style="animation-delay: 2s;"><i class="fa-solid fa-star"></i></div>
+        </div>
+
+        <div class="space-y-6">
+          <h2 class="font-script text-6xl md:text-8xl text-white">Nicola & Salsa</h2>
+          <div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-secondary to-transparent mx-auto"></div>
+          <p class="font-header text-2xl text-secondary tracking-widest italic">09 . 10 . 2025</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: AYAT -->
+    <section class="py-24 px-6 text-center border-y border-white/5 bg-dark/40">
+      <div class="max-w-3xl mx-auto" data-aos="fade-up">
+        <i class="fa-solid fa-wand-magic-sparkles text-3xl text-primary/40 mb-10"></i>
+        <p class="font-body text-lg md:text-xl text-cream/80 leading-relaxed italic mb-8 font-light tracking-wide">
+          "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."
+        </p>
+        <p class="font-header text-secondary tracking-[0.3em] text-xs">— Q.S. AR-RUM : 21 —</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4: COUPLE -->
+    <section id="couple" class="py-32 magic-bg">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-24" data-aos="fade-down">
+          <h2 class="font-header text-4xl text-secondary tracking-widest">THE BELOVED</h2>
+          <p class="text-[10px] text-accent font-bold uppercase tracking-[0.6em] mt-4">Witness of Magic</p>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-center items-center gap-20 max-w-6xl mx-auto">
+          
+          <!-- Groom -->
+          <div class="text-center group" data-aos="fade-right">
+            <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-magic-arch">
+              <img src="nicola.jpg" class="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000" alt="Groom" onerror="this.src='https://placehold.co/400x500?text=Groom'">
+            </div>
+            <h3 class="font-header text-3xl text-white mb-2">Nicola Valentino</h3>
+            <p class="text-[10px] text-secondary/60 mb-6 font-bold tracking-widest uppercase italic">The Guardian</p>
+            <p class="font-body text-sm text-cream/60 leading-relaxed">
+              Putra Bpk. Misno (Mendol) <br>& Ibu Atik Fifiani
+            </p>
+            <div class="mt-8 flex justify-center gap-4">
+              <a href="#" class="w-10 h-10 glass-card rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-dark transition-all"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="hidden md:block text-secondary opacity-30 text-4xl" data-aos="zoom-in"><i class="fa-solid fa-heart"></i></div>
+
+          <!-- Bride -->
+          <div class="text-center group" data-aos="fade-left">
+            <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-magic-arch">
+              <img src="salsa.jpg" class="w-full h-full object-cover grayscale-[40%] group-hover:grayscale-0 transition-all duration-1000" alt="Bride" onerror="this.src='https://placehold.co/400x500?text=Bride'">
+            </div>
+            <h3 class="font-header text-3xl text-white mb-2">Salsabillah Ekanaiya</h3>
+            <p class="text-[10px] text-accent/60 mb-6 font-bold tracking-widest uppercase italic">The Muse</p>
+            <p class="font-body text-sm text-cream/60 leading-relaxed">
+              Putri Bpk. M. Rofiek Aribowo <br>& Ibu Sri Kurniawati
+            </p>
+            <div class="mt-8 flex justify-center gap-4">
+              <a href="#" class="w-10 h-10 glass-card rounded-full flex items-center justify-center text-accent hover:bg-accent hover:text-dark transition-all"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: EVENT -->
+    <section id="event" class="py-32 relative">
+      <div class="container mx-auto px-6 relative z-10 text-center">
+        <h2 class="font-header text-4xl text-secondary mb-20 tracking-widest" data-aos="fade-down">SACRED CEREMONY</h2>
+        
+        <div class="max-w-xl mx-auto glass-card p-12 rounded-[40px] shadow-2xl relative overflow-hidden" data-aos="flip-up">
+          <div class="absolute inset-0 bg-primary/5 -z-10"></div>
+          
+          <div class="mb-12">
+            <i class="fa-solid fa-star-and-crescent text-4xl text-secondary/40 mb-6"></i>
+            <h3 class="font-header text-3xl font-bold text-white tracking-[0.2em]">RESEPSI</h3>
+            <p class="text-[10px] tracking-[0.5em] text-accent uppercase font-bold mt-2">The Magic Celebration</p>
+          </div>
+          
+          <div class="space-y-8 border-y border-white/10 py-10 mb-10">
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-[10px] tracking-[0.3em] text-secondary uppercase">Day & Date</p>
+              <p class="font-header text-xl">Kamis, 09 Oktober 2025</p>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-[10px] tracking-[0.3em] text-secondary uppercase">Time</p>
+              <p class="font-header text-xl">10.00 WIB - SELESAI</p>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <p class="text-[10px] tracking-[0.3em] text-secondary uppercase">Location</p>
+              <p class="font-sans text-sm tracking-widest leading-loose uppercase opacity-80">
+                Bocek Karangploso<br>(Toko Pak Mendol)
+              </p>
+            </div>
+          </div>
+          
+          <a href="https://maps.google.com" target="_blank" class="inline-block px-10 py-4 bg-primary/20 border border-primary text-cream rounded-full text-[10px] font-header tracking-widest hover:bg-primary transition-all duration-500">
+            NAVIGATE THE STARS <i class="fa-solid fa-location-arrow ml-2"></i>
+          </a>
+        </div>
+
+        <!-- Countdown -->
+        <div id="countdown" class="mt-24 flex flex-wrap justify-center gap-6" data-aos="fade-up">
+          <!-- JS fills this -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: GALLERY -->
+    <section id="gallery" class="py-32 magic-bg">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="font-header text-4xl text-secondary mb-16 tracking-widest" data-aos="fade-up">ENCHANTED MEMORIES</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
+            <div class="space-y-4 md:space-y-6">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding1.jpg')" data-aos="fade-up">
+                    <img src="prewedding1.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G1">
+                </div>
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding2.jpg')" data-aos="fade-up" data-aos-delay="100">
+                    <img src="prewedding2.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G2">
+                </div>
+            </div>
+            <div class="space-y-4 md:space-y-6 md:pt-16">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding3.jpg')" data-aos="fade-up" data-aos-delay="200">
+                    <img src="prewedding3.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G3">
+                </div>
+            </div>
+            <div class="space-y-4 md:space-y-6">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('prewedding4.jpg')" data-aos="fade-up" data-aos-delay="300">
+                    <img src="prewedding4.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G4">
+                </div>
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('mempelaicover.jpg')" data-aos="fade-up" data-aos-delay="400">
+                    <img src="mempelaicover.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G5">
+                </div>
+            </div>
+            <div class="space-y-4 md:space-y-6 md:pt-16">
+                <div class="group overflow-hidden rounded-3xl border border-white/10 p-2 glass-card cursor-pointer" onclick="openModal('salsa.jpg')" data-aos="fade-up" data-aos-delay="500">
+                    <img src="salsa.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-110" alt="G6">
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: GIFT -->
+    <section id="gift" class="py-32 bg-dark/40 border-y border-white/5">
+      <div class="container mx-auto px-6 text-center max-w-4xl">
+        <h2 class="font-header text-4xl text-secondary mb-10 tracking-widest" data-aos="fade-down">A TOKEN OF MAGIC</h2>
+        <p class="text-cream/70 font-body mb-16 italic font-light leading-relaxed max-w-2xl mx-auto" data-aos="fade-up">
+          Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Namun jika memberi adalah ungkapan tanda kasih Anda, kami ucapkan terima kasih.
+        </p>
+        
+        <div class="max-w-md mx-auto glass-card p-12 rounded-[50px] shadow-2xl relative overflow-hidden group" data-aos="zoom-in">
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-accent/10 blur-3xl rounded-full"></div>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-6 mx-auto mb-10 brightness-200 grayscale opacity-60" alt="BCA">
+          
+          <div class="mb-12">
+            <p class="font-header text-4xl font-black text-white tracking-[0.2em] mb-4" id="rekNum">8163069596</p>
+            <p class="text-[10px] tracking-[0.5em] text-secondary uppercase font-bold">a.n Nicola Valentino</p>
+          </div>
+          
+          <button onclick="copyToClipboard()" class="w-full py-4 bg-gradient-to-r from-primary to-accent text-white font-header text-[10px] tracking-[0.4em] rounded-full hover:shadow-[0_0_20px_rgba(123,102,255,0.4)] transition-all">
+            CAST COPY SPELL <i class="fa-regular fa-copy ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: RSVP -->
+    <section id="rsvp" class="py-32 magic-bg pb-48">
+      <div class="container mx-auto px-6 max-w-2xl">
+        <div class="text-center mb-16">
+          <h2 class="font-header text-4xl text-secondary tracking-widest" data-aos="fade-down">WHISPER WISHES</h2>
+          <p class="text-[10px] tracking-[0.5em] text-cream/30 uppercase mt-4" data-aos="fade-down" data-aos-delay="200">Send your prayers</p>
+        </div>
+        
+        <div class="glass-card p-10 rounded-[40px]" data-aos="fade-up">
+          <textarea id="guestMsg" rows="6" class="w-full bg-dark/40 border-b border-secondary/30 p-4 focus:outline-none focus:border-secondary transition-all font-body text-cream/80 text-sm font-light italic resize-none placeholder:opacity-20" placeholder="Whisper your magic prayers here..."></textarea>
+          
+          <button onclick="sendToWA()" class="w-full mt-10 py-5 bg-gradient-to-r from-primary to-accent text-white font-header text-xs tracking-[0.5em] rounded-full transition-all transform active:scale-95">
+            SEND MAGIC <i class="fa-solid fa-paper-plane ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 9: FOOTER -->
+    <footer class="py-24 bg-black text-center border-t border-white/10">
+      <h2 class="font-script text-6xl text-white mb-6">Nicola & Salsa</h2>
+      <p class="font-header text-[10px] tracking-[0.7em] text-secondary opacity-50 uppercase mb-12">October 9, 2025 • Karangploso</p>
+      
+      <div class="flex justify-center items-center gap-6 opacity-20 mb-12">
+        <div class="h-[1px] w-12 bg-secondary"></div>
+        <i class="fa-solid fa-sparkles text-xs text-secondary"></i>
+        <div class="h-[1px] w-12 bg-secondary"></div>
+      </div>
+
+      <div class="text-[8px] tracking-[0.3em] text-cream/20 font-sans uppercase">
+        Designed for Excellence & Ethereal Eternity
+      </div>
+    </footer>
+
+    <!-- NAVIGATION TAB BAR -->
+    <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[55] glass-card px-8 py-4 rounded-full shadow-2xl flex gap-10 transition-all duration-1000 translate-y-32 opacity-0">
+      <a href="#home" class="text-cream/30 hover:text-secondary text-lg active:scale-90"><i class="fa-solid fa-moon"></i></a>
+      <a href="#couple" class="text-cream/30 hover:text-secondary text-lg active:scale-90"><i class="fa-solid fa-wand-magic-sparkles"></i></a>
+      <a href="#event" class="text-cream/30 hover:text-secondary text-lg active:scale-90"><i class="fa-solid fa-star-and-crescent"></i></a>
+      <a href="#gallery" class="text-cream/30 hover:text-secondary text-lg active:scale-90"><i class="fa-solid fa-gem"></i></a>
+      <a href="#gift" class="text-cream/30 hover:text-secondary text-lg active:scale-90"><i class="fa-solid fa-gift"></i></a>
+    </nav>
+
+  </main>
+
+  <!-- UTILITIES: TOAST & MODAL -->
+  <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-[1000] glass-card border-primary/50 text-secondary px-8 py-3 rounded-full opacity-0 transition-all pointer-events-none translate-y-[-20px] shadow-2xl">
+    <span class="font-header text-[10px] tracking-[0.2em] uppercase">Spell Copied Successfully</span>
+  </div>
+
+  <div id="imgModal" class="fixed inset-0 bg-black/95 flex items-center justify-center p-6" onclick="closeModal()">
+    <button class="absolute top-10 right-10 text-secondary text-4xl">&times;</button>
+    <img id="modalImage" src="" class="max-h-[85vh] max-w-full rounded-3xl border border-white/20 p-1" alt="Preview">
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 1200 });
+
+    const dom = {
+      cover: document.getElementById('cover'),
+      main: document.getElementById('mainContent'),
+      music: document.getElementById('bgMusic'),
+      musicCtrl: document.getElementById('musicControl'),
+      musicIcon: document.getElementById('musicIcon'),
+      nav: document.getElementById('navbar'),
+      countdown: document.getElementById('countdown'),
+      toast: document.getElementById('toast'),
+      modal: document.getElementById('imgModal'),
+      modalImg: document.getElementById('modalImage')
+    };
+
+    let isPlaying = false;
+    let musicPromise = null;
+
+    // FIX: Async Open Invitation to prevent UI hang
+    function openInvitation() {
+      // 1. Transition UI immediately
+      dom.cover.classList.add('cover-slide-up');
+      dom.main.classList.remove('hidden');
+      
+      setTimeout(() => {
+        dom.main.classList.add('opacity-100');
+        dom.musicCtrl.classList.remove('hidden', 'opacity-0');
+        dom.nav.classList.remove('translate-y-32', 'opacity-0');
+        document.body.style.overflow = 'auto';
+        AOS.refresh();
+      }, 500);
+
+      // 2. Try playing music in background
+      toggleMusic(true);
+    }
+
+    // FIX: AbortError on play()
+    async function toggleMusic(forcePlay = false) {
+      if (forcePlay || !isPlaying) {
+        try {
+          musicPromise = dom.music.play();
+          if (musicPromise !== undefined) {
+            await musicPromise;
+            isPlaying = true;
+            dom.musicIcon.classList.add('fa-spin');
+            dom.musicIcon.classList.replace('fa-play', 'fa-wand-magic-sparkles');
+          }
+        } catch (err) {
+          console.warn("Autoplay block / playback error");
+          isPlaying = false;
+        }
+      } else {
+        if (musicPromise !== null) {
+          await musicPromise;
+        }
+        dom.music.pause();
+        isPlaying = false;
+        dom.musicIcon.classList.remove('fa-spin');
+        dom.musicIcon.classList.replace('fa-wand-magic-sparkles', 'fa-play');
+      }
+    }
+
+    // Countdown Logic
+    const weddingDate = new Date("2025-10-09T10:00:00").getTime();
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const diff = weddingDate - now;
+
+      if (diff < 0) {
+        dom.countdown.innerHTML = `<div class='font-header text-secondary tracking-widest uppercase'>The Magic Moment is Here</div>`;
+        return;
+      }
+
+      const t = {
+        days: Math.floor(diff / 86400000),
+        hrs: Math.floor((diff % 86400000) / 3600000),
+        min: Math.floor((diff % 3600000) / 60000),
+        sec: Math.floor((diff % 60000) / 1000)
+      };
+
+      dom.countdown.innerHTML = Object.entries(t).map(([key, val]) => `
+        <div class="glass-card rounded-[20px] p-5 w-24 border-primary/20 shadow-xl">
+          <div class="text-3xl font-black font-header text-white mb-1">${val}</div>
+          <div class="text-[8px] uppercase tracking-[0.2em] text-secondary font-bold">${key}</div>
+        </div>
+      `).join('');
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Copy Account
+    function copyToClipboard() {
+      const el = document.createElement('textarea');
+      el.value = '8163069596';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      dom.toast.classList.replace('opacity-0', 'opacity-100');
+      dom.toast.classList.replace('translate-y-[-20px]', 'translate-y-0');
+      setTimeout(() => {
+        dom.toast.classList.replace('opacity-100', 'opacity-0');
+        dom.toast.classList.replace('translate-y-0', 'translate-y-[-20px]');
+      }, 3000);
+    }
+
+    // Gallery Modal
+    function openModal(src) {
+      dom.modalImg.src = src;
+      dom.modal.classList.add('active');
+    }
+    function closeModal() {
+      dom.modal.classList.remove('active');
+    }
+
+    // RSVP / Wishes Logic
+    function sendToWA() {
+      const msg = document.getElementById("guestMsg").value;
+      if (!msg.trim()) return;
+      window.location.href = `mailto:nikolavalentino8@gmail.com?subject=Magic Wishes&body=${encodeURIComponent(msg)}`;
+    }
+
+    document.body.style.overflow = 'hidden';
+  </script>
+</body>
+</html>
