@@ -1,245 +1,245 @@
 // @ts-nocheck
 /* eslint-disable */
-export const TEMPLATES_COLLECTION: Record<string, string> = {
+export const TEMPLATES_COLLECTION = {
   'luxury-dark': '<!DOCTYPE html>
     < html lang="id" class= "scroll-smooth" >
       <head>
-      <meta charset="UTF-8">
-        <meta name="viewport" content = "width=device-width, initial-scale=1.0" >
-          <title>The Wedding of Nicola & Salsa </title>
+        <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+            <title>The Wedding of Nicola & Salsa </title>
 
-  < !--Fonts: Premium Luxury Tier -->
-    <link rel="preconnect" href = "https://fonts.googleapis.com" >
-      <link rel="preconnect" href = "https://fonts.gstatic.com" crossorigin >
-        <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Pinyon+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel = "stylesheet" >
+            < !--Fonts: Premium Luxury Tier -->
+            <link rel="preconnect" href="https://fonts.googleapis.com" >
+              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+                <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Pinyon+Script&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" >
 
-          <!--Core Libraries-- >
-            <script src="https://cdn.tailwindcss.com" > </script>
-              < link href = "https://unpkg.com/aos@2.3.1/dist/aos.css" rel = "stylesheet" >
-                <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
+                  <!--Core Libraries-- >
+                  <script src="https://cdn.tailwindcss.com" > </script>
+                  < link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" >
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
 
-                  <script>
-                  tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#B89E67',    /* Gold Satin */
-          secondary: '#D4AF37',  /* Metallic Gold */
-            dark: '#0A0A0A',       /* Deep Charcoal */
-              accent: '#141414',     /* Card Surface */
-                cream: '#EADBC8',      /* Soft Text */
+                      <script>
+                        tailwind.config = {
+                          theme: {
+                          extend: {
+                          colors: {
+                          primary: '#B89E67',    /* Gold Satin */
+                        secondary: '#D4AF37',  /* Metallic Gold */
+                        dark: '#0A0A0A',       /* Deep Charcoal */
+                        accent: '#141414',     /* Card Surface */
+                        cream: '#EADBC8',      /* Soft Text */
             },
-      fontFamily: {
-        header: ['"Cinzel Decorative"', 'serif'],
-          script: ['"Pinyon Script"', 'cursive'],
-            sans: ['"Montserrat"', 'sans-serif'],
+                        fontFamily: {
+                          header: ['"Cinzel Decorative"', 'serif'],
+                        script: ['"Pinyon Script"', 'cursive'],
+                        sans: ['"Montserrat"', 'sans-serif'],
             }
     }
   }
 }
-</script>
+                      </script>
 
-  <style>
+                      <style>
       /* Premium Scrollbar */
-      :: -webkit - scrollbar { width: 4px; }
-      :: -webkit - scrollbar - track { background: #0A0A0A; }
-      :: -webkit - scrollbar - thumb { background: linear - gradient(#0A0A0A, #B89E67, #0A0A0A); }
+                        :: -webkit - scrollbar {width: 4px; }
+                        :: -webkit - scrollbar - track {background: #0A0A0A; }
+                        :: -webkit - scrollbar - thumb {background: linear - gradient(#0A0A0A, #B89E67, #0A0A0A); }
 
-      /* Reveal Animation Logic */
-      .cover - hidden { transform: translateY(-100 %); transition: transform 1.2s cubic - bezier(0.85, 0, 0.15, 1); }
+                        /* Reveal Animation Logic */
+                        .cover - hidden {transform: translateY(-100 %); transition: transform 1.2s cubic - bezier(0.85, 0, 0.15, 1); }
 
-      /* Luxury Mask & Borders */
-      .img - arch {
-  border - radius: 999px 999px 0 0;
-  border: 1px solid rgba(184, 158, 103, 0.4);
-  padding: 10px;
-}
-  
-      .glass - effect {
-  background: rgba(20, 20, 20, 0.7);
-  backdrop - filter: blur(12px);
-  border: 1px solid rgba(184, 158, 103, 0.15);
-}
-  
-      .gold - gradient {
-  background: linear - gradient(135deg, #B89E67 0 %, #F3E5AB 50 %, #D4AF37 100 %);
-  -webkit - background - clip: text;
-  -webkit - text - fill - color: transparent;
-}
-  
-      .bg - luxury {
-  background - image: radial - gradient(circle at 2px 2px, rgba(184, 158, 103, 0.03) 1px, transparent 0);
-  background - size: 40px 40px;
+                        /* Luxury Mask & Borders */
+                        .img - arch {
+                          border - radius: 999px 999px 0 0;
+                        border: 1px solid rgba(184, 158, 103, 0.4);
+                        padding: 10px;
 }
 
-/* Rotation for Music Disk */
-@keyframes spin - slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-      .animate - spin - slow { animation: spin - slow 6s linear infinite; }
+                        .glass - effect {
+                          background: rgba(20, 20, 20, 0.7);
+                        backdrop - filter: blur(12px);
+                        border: 1px solid rgba(184, 158, 103, 0.15);
+}
 
-/* Modal Animation */
-#imgModal { opacity: 0; pointer - events: none; transition: opacity 0.4s ease; }
-#imgModal.active { opacity: 1; pointer - events: all; }
-</style>
-  </head>
-  < body class="bg-dark text-cream font-sans overflow-hidden select-none antialiased" >
+                        .gold - gradient {
+                          background: linear - gradient(135deg, #B89E67 0 %, #F3E5AB 50 %, #D4AF37 100 %);
+                        -webkit - background - clip: text;
+                        -webkit - text - fill - color: transparent;
+}
 
-    <!--Background Music Asset-- >
-      <audio id="bgMusic" loop >
-        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type = "audio/mpeg" >
-          </audio>
+                        .bg - luxury {
+                          background - image: radial - gradient(circle at 2px 2px, rgba(184, 158, 103, 0.03) 1px, transparent 0);
+                        background - size: 40px 40px;
+}
 
-          < !--Floating Music Control-- >
-            <aside id="musicControl" class="fixed top-6 right-6 z-[60] hidden opacity-0 transition-opacity duration-1000" >
-              <button onclick="toggleMusic()" class="group w-12 h-12 glass-effect rounded-full flex items-center justify-center text-primary shadow-xl hover:scale-110 transition-all active:scale-95 border-primary/40" >
-                <i class="fa-solid fa-music animate-spin-slow" id = "musicIcon" > </i>
-                  </button>
-                  </aside>
+                        /* Rotation for Music Disk */
+                        @keyframes spin - slow {from {transform: rotate(0deg); } to {transform: rotate(360deg); } }
+                        .animate - spin - slow {animation: spin - slow 6s linear infinite; }
 
-                  < !--SECTION 1: COVER-- >
-                    <div id="cover" class="fixed inset-0 z-[100] bg-dark flex flex-col justify-center items-center text-center overflow-hidden" >
-                      <!--Cover Background Image-- >
+                        /* Modal Animation */
+                        #imgModal {opacity: 0; pointer - events: none; transition: opacity 0.4s ease; }
+                        #imgModal.active {opacity: 1; pointer - events: all; }
+                      </style>
+                    </head>
+                    < body class="bg-dark text-cream font-sans overflow-hidden select-none antialiased" >
+
+                      <!--Background Music Asset-- >
+                      <audio id="bgMusic" loop >
+                        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg" >
+                      </audio>
+
+                      < !--Floating Music Control-- >
+                      <aside id="musicControl" class="fixed top-6 right-6 z-[60] hidden opacity-0 transition-opacity duration-1000" >
+                        <button onclick="toggleMusic()" class="group w-12 h-12 glass-effect rounded-full flex items-center justify-center text-primary shadow-xl hover:scale-110 transition-all active:scale-95 border-primary/40" >
+                          <i class="fa-solid fa-music animate-spin-slow" id="musicIcon" > </i>
+                        </button>
+                      </aside>
+
+                      < !--SECTION 1: COVER-- >
+                      <div id="cover" class="fixed inset-0 z-[100] bg-dark flex flex-col justify-center items-center text-center overflow-hidden" >
+                        <!--Cover Background Image-- >
                         <div class="absolute inset-0 grayscale-[40%] brightness-[0.4]" >
-                          <img src="mempelaicover.jpg" class="w-full h-full object-cover" alt = "Background" >
-                            </div>
+                          <img src="mempelaicover.jpg" class="w-full h-full object-cover" alt="Background" >
+                        </div>
 
-                            < !--Cover Content-- >
-                              <div class="relative z-10 px-6 max-w-2xl" data - aos="zoom-out" data - aos - duration="2000" >
-                                <p class="font-header tracking-[0.6em] text-xs mb-8 text-primary/80 uppercase" > The Wedding Celebration Of </p>
-                                  < h1 class="font-script text-7xl md:text-9xl gold-gradient mb-6 drop-shadow-lg" > Nicola & Salsa </h1>
-                                    < div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-10" > </div>
+                        < !--Cover Content-- >
+                        <div class="relative z-10 px-6 max-w-2xl" data - aos="zoom-out" data - aos - duration="2000" >
+                        <p class="font-header tracking-[0.6em] text-xs mb-8 text-primary/80 uppercase" > The Wedding Celebration Of </p>
+                        < h1 class="font-script text-7xl md:text-9xl gold-gradient mb-6 drop-shadow-lg" > Nicola & Salsa </h1>
+                        < div class="h-[1px] w-24 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto mb-10" > </div>
 
-                                      < div class="mb-12" >
-                                        <p class="text-[10px] tracking-[0.4em] mb-4 uppercase opacity-60" > Kepada Bapak / Ibu / Saudara / i </p>
-                                          < div class="glass-effect py-4 px-8 inline-block rounded-sm border-primary/20" >
-                                            <span class="font-header text-lg tracking-widest text-primary" > TAMU UNDANGAN </span>
-                                              </div>
-                                              </div>
+                        < div class="mb-12" >
+                          <p class="text-[10px] tracking-[0.4em] mb-4 uppercase opacity-60" > Kepada Bapak / Ibu / Saudara / i </p>
+                          < div class="glass-effect py-4 px-8 inline-block rounded-sm border-primary/20" >
+                            <span class="font-header text-lg tracking-widest text-primary" > TAMU UNDANGAN </span>
+                          </div>
+                        </div>
 
-                                              < button onclick = "openInvitation()" class="group relative px-12 py-4 overflow-hidden border border-primary/50 text-primary font-header tracking-[0.4em] text-[10px] hover:text-dark transition-colors duration-500" >
-                                                <span class="relative z-10" > <i class="fa-solid fa-envelope-open mr-2" > </i> BUKA UNDANGAN</span >
-                                                  <div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-500" > </div>
-                                                    </button>
-                                                    </div>
-                                                    </div>
+                        < button onclick="openInvitation()" class="group relative px-12 py-4 overflow-hidden border border-primary/50 text-primary font-header tracking-[0.4em] text-[10px] hover:text-dark transition-colors duration-500" >
+                          <span class="relative z-10" > <i class="fa-solid fa-envelope-open mr-2" > </i> BUKA UNDANGAN</span >
+                          <div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-500" > </div>
+                        </button>
+                      </div>
+                    </div>
 
-                                                    < !--MAIN SCROLLABLE WRAPPER-- >
-                                                      <main id="mainContent" class="hidden opacity-0 transition-opacity duration-1000" >
+                    < !--MAIN SCROLLABLE WRAPPER-- >
+                    <main id="mainContent" class="hidden opacity-0 transition-opacity duration-1000" >
 
-                                                        <!--SECTION 2: HOME(HERO)-- >
-                                                          <section id="home" class="relative min-h-screen flex flex-col justify-center items-center bg-luxury pt-24 pb-20 px-4" >
-                                                            <div class="text-center mb-16" data - aos="fade-up" >
-                                                              <p class="font-header tracking-[0.5em] text-primary text-[10px] mb-4" > WE ARE GETTING MARRIED </p>
-                                                                < h2 class="font-script text-7xl md:text-8xl gold-gradient leading-tight" > Nicola & Salsa </h2>
-                                                                  </div>
+                      <!--SECTION 2: HOME(HERO)-- >
+                      <section id="home" class="relative min-h-screen flex flex-col justify-center items-center bg-luxury pt-24 pb-20 px-4" >
+                        <div class="text-center mb-16" data - aos="fade-up" >
+                        <p class="font-header tracking-[0.5em] text-primary text-[10px] mb-4" > WE ARE GETTING MARRIED </p>
+                        < h2 class="font-script text-7xl md:text-8xl gold-gradient leading-tight" > Nicola & Salsa </h2>
+                      </div>
 
-                                                                  < div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center" >
-                                                                    <div class="order-2 md:order-1 text-center md:text-right" data - aos="fade-right" >
-                                                                      <p class="font-header text-2xl mb-2" >09 OKTOBER 2025 </p>
-                                                                        < p class="text-xs tracking-[0.3em] text-primary mb-8 uppercase opacity-80" > Kamis Wage </p>
-                                                                          < div class="w-16 h-[2px] bg-primary ml-auto hidden md:block mb-8" > </div>
-                                                                            < p class="font-sans italic font-light leading-relaxed text-sm text-cream/70" >
-                                                                              "Sebab di mana ada cinta, di situ ada kehidupan. Di mana ada janji, di situ ada harapan."
-                                                                              </p>
-                                                                              </div>
-                                                                              < div class="order-1 md:order-2 flex justify-center" data - aos="zoom-in" >
-                                                                                <div class="w-72 h-96 img-arch overflow-hidden" >
-                                                                                  <img src="mempelaicover.jpg" class="w-full h-full object-cover rounded-t-full" alt = "Main Photo" >
-                                                                                    </div>
-                                                                                    </div>
-                                                                                    </div>
-                                                                                    </section>
+                      < div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center" >
+                        <div class="order-2 md:order-1 text-center md:text-right" data - aos="fade-right" >
+                        <p class="font-header text-2xl mb-2" >09 OKTOBER 2025 </p>
+                        < p class="text-xs tracking-[0.3em] text-primary mb-8 uppercase opacity-80" > Kamis Wage </p>
+                        < div class="w-16 h-[2px] bg-primary ml-auto hidden md:block mb-8" > </div>
+                        < p class="font-sans italic font-light leading-relaxed text-sm text-cream/70" >
+                          "Sebab di mana ada cinta, di situ ada kehidupan. Di mana ada janji, di situ ada harapan."
+                        </p>
+                      </div>
+                      < div class="order-1 md:order-2 flex justify-center" data - aos="zoom-in" >
+                      <div class="w-72 h-96 img-arch overflow-hidden" >
+                        <img src="mempelaicover.jpg" class="w-full h-full object-cover rounded-t-full" alt="Main Photo" >
+                      </div>
+                    </div>
+                  </div>
+                </section>
 
-                                                                                    < !--SECTION 3: AYAT-- >
-                                                                                      <section class="py-24 glass-effect border-y border-primary/10" >
-                                                                                        <div class="max-w-3xl mx-auto px-6 text-center" data - aos="fade-up" >
-                                                                                          <i class="fa-solid fa-feather-pointed text-primary/30 text-3xl mb-8" > </i>
-                                                                                            < p class="font-sans text-lg md:text-xl font-light italic leading-loose mb-8 text-cream/90" >
-                                                                                              "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."
-                                                                                              </p>
-                                                                                              < div class="inline-block px-6 py-2 border-x border-primary/40" >
-                                                                                                <span class="font-header text-primary tracking-widest text-xs" > QS.AR - RUM: 21 </span>
-                                                                                                  </div>
-                                                                                                  </div>
-                                                                                                  </section>
+                < !--SECTION 3: AYAT-- >
+                <section class="py-24 glass-effect border-y border-primary/10" >
+                  <div class="max-w-3xl mx-auto px-6 text-center" data - aos="fade-up" >
+                  <i class="fa-solid fa-feather-pointed text-primary/30 text-3xl mb-8" > </i>
+                  < p class="font-sans text-lg md:text-xl font-light italic leading-loose mb-8 text-cream/90" >
+                    "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang."
+                  </p>
+                  < div class="inline-block px-6 py-2 border-x border-primary/40" >
+                    <span class="font-header text-primary tracking-widest text-xs" > QS.AR - RUM: 21 </span>
+                  </div>
+                </div>
+              </section>
 
-                                                                                                  < !--SECTION 4: COUPLE-- >
-                                                                                                    <section id="couple" class="py-32 bg-luxury relative overflow-hidden" >
-                                                                                                      <div class="container mx-auto px-6 max-w-6xl" >
-                                                                                                        <div class="text-center mb-24" data - aos="fade-down" >
-                                                                                                          <h2 class="font-header text-4xl text-primary tracking-[0.3em] mb-4" > THE COUPLE </h2>
-                                                                                                            < div class="h-[1px] w-12 bg-primary mx-auto" > </div>
-                                                                                                              </div>
+              < !--SECTION 4: COUPLE-- >
+              <section id="couple" class="py-32 bg-luxury relative overflow-hidden" >
+                <div class="container mx-auto px-6 max-w-6xl" >
+                  <div class="text-center mb-24" data - aos="fade-down" >
+                  <h2 class="font-header text-4xl text-primary tracking-[0.3em] mb-4" > THE COUPLE </h2>
+                  < div class="h-[1px] w-12 bg-primary mx-auto" > </div>
+                </div>
 
-                                                                                                              < div class="grid md:grid-cols-2 gap-24 items-start relative" >
-                                                                                                                <!--Separator Line-- >
-                                                                                                                  <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" > </div>
+                < div class="grid md:grid-cols-2 gap-24 items-start relative" >
+                  <!--Separator Line-- >
+                  <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-primary/20 to-transparent" > </div>
 
-                                                                                                                    < !--Groom -->
-                                                                                                                      <div class="text-center group" data - aos="fade-right" >
-                                                                                                                        <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-arch shadow-2xl" >
-                                                                                                                          <img src="nicola.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt = "Groom" onerror = "this.src='https://placehold.co/400x500?text=Groom'" >
-                                                                                                                            </div>
-                                                                                                                            < h3 class="font-header text-2xl font-bold gold-gradient mb-2" > Nicola Valentino Misno </h3>
-                                                                                                                              < p class="text-[10px] tracking-[0.4em] text-primary font-bold mb-4 uppercase" > Putra Kedua Dari </p>
-                                                                                                                                < p class="font-sans text-sm font-light text-cream/70 italic" > Bpk.Misno(Mendol) & Ibu Atik Fifiani </p>
-                                                                                                                                  < a href = "#" class="mt-8 inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/30 text-primary hover:bg-primary hover:text-dark transition-all" > <i class="fa-brands fa-instagram" > </i></a >
-                                                                                                                                    </div>
+                  < !--Groom -->
+                  <div class="text-center group" data - aos="fade-right" >
+                  <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-arch shadow-2xl" >
+                    <img src="nicola.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Groom" onerror="this.src='https://placehold.co/400x500?text=Groom'" >
+                  </div>
+                  < h3 class="font-header text-2xl font-bold gold-gradient mb-2" > Nicola Valentino Misno </h3>
+                  < p class="text-[10px] tracking-[0.4em] text-primary font-bold mb-4 uppercase" > Putra Kedua Dari </p>
+                  < p class="font-sans text-sm font-light text-cream/70 italic" > Bpk.Misno(Mendol) & Ibu Atik Fifiani </p>
+                  < a href="#" class="mt-8 inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/30 text-primary hover:bg-primary hover:text-dark transition-all" > <i class="fa-brands fa-instagram" > </i></a >
+                </div>
 
-                                                                                                                                    < !--Bride -->
-                                                                                                                                      <div class="text-center group" data - aos="fade-left" >
-                                                                                                                                        <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-arch shadow-2xl" >
-                                                                                                                                          <img src="salsa.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt = "Bride" onerror = "this.src='https://placehold.co/400x500?text=Bride'" >
-                                                                                                                                            </div>
-                                                                                                                                            < h3 class="font-header text-2xl font-bold gold-gradient mb-2" > Salsabillah Ekanaiya Putri </h3>
-                                                                                                                                              < p class="text-[10px] tracking-[0.4em] text-primary font-bold mb-4 uppercase" > Putri Pertama Dari </p>
-                                                                                                                                                < p class="font-sans text-sm font-light text-cream/70 italic" > Bpk.M.Rofiek Aribowo & Ibu Sri Kurniawati </p>
-                                                                                                                                                  < a href = "#" class="mt-8 inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/30 text-primary hover:bg-primary hover:text-dark transition-all" > <i class="fa-brands fa-instagram" > </i></a >
-                                                                                                                                                    </div>
-                                                                                                                                                    </div>
-                                                                                                                                                    </div>
-                                                                                                                                                    </section>
+                < !--Bride -->
+                <div class="text-center group" data - aos="fade-left" >
+                <div class="relative w-64 h-80 mx-auto mb-10 overflow-hidden img-arch shadow-2xl" >
+                  <img src="salsa.jpg" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" alt="Bride" onerror="this.src='https://placehold.co/400x500?text=Bride'" >
+                </div>
+                < h3 class="font-header text-2xl font-bold gold-gradient mb-2" > Salsabillah Ekanaiya Putri </h3>
+                < p class="text-[10px] tracking-[0.4em] text-primary font-bold mb-4 uppercase" > Putri Pertama Dari </p>
+                < p class="font-sans text-sm font-light text-cream/70 italic" > Bpk.M.Rofiek Aribowo & Ibu Sri Kurniawati </p>
+                < a href="#" class="mt-8 inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/30 text-primary hover:bg-primary hover:text-dark transition-all" > <i class="fa-brands fa-instagram" > </i></a >
+              </div>
+            </div>
+          </div>
+        </section>
 
-                                                                                                                                                    < !--SECTION 5: EVENT-- >
-                                                                                                                                                      <section id="event" class="py-32 relative bg-accent" >
-                                                                                                                                                        <div class="absolute inset-0 grayscale brightness-[0.2] opacity-20" >
-                                                                                                                                                          <img src="prewedding2.jpg" class="w-full h-full object-cover bg-fixed" alt = "BG" >
-                                                                                                                                                            </div>
+        < !--SECTION 5: EVENT-- >
+        <section id="event" class="py-32 relative bg-accent" >
+          <div class="absolute inset-0 grayscale brightness-[0.2] opacity-20" >
+            <img src="prewedding2.jpg" class="w-full h-full object-cover bg-fixed" alt="BG" >
+          </div>
 
-                                                                                                                                                            < div class="container mx-auto px-6 relative z-10 text-center" >
-                                                                                                                                                              <h2 class="font-header text-4xl text-primary tracking-[0.3em] mb-20" data - aos="fade-down" > SAVE THE DATE </h2>
+          < div class="container mx-auto px-6 relative z-10 text-center" >
+            <h2 class="font-header text-4xl text-primary tracking-[0.3em] mb-20" data - aos="fade-down" > SAVE THE DATE </h2>
 
-                                                                                                                                                                < div class="max-w-xl mx-auto glass-effect p-12 relative" data - aos="flip-up" >
-                                                                                                                                                                  <div class="mb-10" >
-                                                                                                                                                                    <i class="fa-solid fa-wine-glass text-4xl text-primary/50 mb-6" > </i>
-                                                                                                                                                                      < h3 class="font-header text-3xl font-bold text-white mb-2" > RESEPSI </h3>
-                                                                                                                                                                        < p class="text-[10px] tracking-[0.5em] text-primary uppercase font-bold" > The Celebration </p>
-                                                                                                                                                                          </div>
+          < div class="max-w-xl mx-auto glass-effect p-12 relative" data - aos="flip-up" >
+          <div class="mb-10" >
+            <i class="fa-solid fa-wine-glass text-4xl text-primary/50 mb-6" > </i>
+            < h3 class="font-header text-3xl font-bold text-white mb-2" > RESEPSI </h3>
+            < p class="text-[10px] tracking-[0.5em] text-primary uppercase font-bold" > The Celebration </p>
+          </div>
 
-                                                                                                                                                                          < div class="grid grid-cols-1 gap-8 border-y border-primary/20 py-10 my-10" >
-                                                                                                                                                                            <div class="space-y-2" >
-                                                                                                                                                                              <p class="font-header text-xl text-cream" > Kamis, 09 Oktober 2025 </p>
-                                                                                                                                                                                < p class="text-[10px] tracking-[0.4em] text-primary/80 uppercase" > 10:00 WIB - SELESAI </p>
-                                                                                                                                                                                  </div>
-                                                                                                                                                                                  < div class="w-12 h-[1px] bg-primary/30 mx-auto" > </div>
-                                                                                                                                                                                    < div class="space-y-4" >
-                                                                                                                                                                                      <p class="text-xs tracking-widest text-cream uppercase" > LOKASI: </p>
-                                                                                                                                                                                        < p class="font-sans text-sm font-light leading-relaxed tracking-widest text-cream/70" >
-                                                                                                                                                                                          Jalan Arumdalu RT.04 RW.03 < br > Bocek Karangploso(Toko Pak Mendol)
-                                                                                                                                                                                            </p>
-                                                                                                                                                                                            </div>
-                                                                                                                                                                                            </div>
+          < div class="grid grid-cols-1 gap-8 border-y border-primary/20 py-10 my-10" >
+            <div class="space-y-2" >
+              <p class="font-header text-xl text-cream" > Kamis, 09 Oktober 2025 </p>
+              < p class="text-[10px] tracking-[0.4em] text-primary/80 uppercase" > 10:00 WIB - SELESAI </p>
+            </div>
+            < div class="w-12 h-[1px] bg-primary/30 mx-auto" > </div>
+            < div class="space-y-4" >
+              <p class="text-xs tracking-widest text-cream uppercase" > LOKASI: </p>
+              < p class="font-sans text-sm font-light leading-relaxed tracking-widest text-cream/70" >
+                Jalan Arumdalu RT.04 RW.03 < br > Bocek Karangploso(Toko Pak Mendol)
+              </p>
+            </div>
+          </div>
 
-                                                                                                                                                                                            < a href = "https://maps.google.com" target = "_blank" class="inline-block px-10 py-4 border border-primary text-primary font-header text-[10px] tracking-[0.4em] hover:bg-primary hover:text-dark transition-all duration-500" >
-                                                                                                                                                                                              PETUNJUK LOKASI < i class="fa-solid fa-location-dot ml-2" > </i>
-                                                                                                                                                                                                </a>
-                                                                                                                                                                                                </div>
+          < a href="https://maps.google.com" target="_blank" class="inline-block px-10 py-4 border border-primary text-primary font-header text-[10px] tracking-[0.4em] hover:bg-primary hover:text-dark transition-all duration-500" >
+            PETUNJUK LOKASI < i class="fa-solid fa-location-dot ml-2" > </i>
+          </a>
+        </div>
 
-                                                                                                                                                                                                < !--Countdown -->
-                                                                                                                                                                                                  <div id="countdown" class="flex flex-wrap justify-center gap-6 mt-24" data - aos="fade-up" >
-                                                                                                                                                                                                    <!--Populated by JS-- >
-                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                      </section>
+        < !--Countdown -->
+        <div id="countdown" class="flex flex-wrap justify-center gap-6 mt-24" data - aos="fade-up" >
+        <!--Populated by JS-- >
+      </div>
+                                                                                                                                                                                                      </div >
+                                                                                                                                                                                                      </section >
 
                                                                                                                                                                                                       < !--SECTION 6: GALLERY-- >
                                                                                                                                                                                                         <section id="gallery" class="py-32 bg-luxury" >
@@ -257,28 +257,28 @@ export const TEMPLATES_COLLECTION: Record<string, string> = {
                                                                                                                                                                                                                           < div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick = "openModal('prewedding2.jpg')" data - aos="fade-up" >
                                                                                                                                                                                                                             <img src="prewedding2.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt = "G2" >
                                                                                                                                                                                                                               </div>
-                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                              < div class="space-y-4 md:space-y-8 md:pt-16" >
-                                                                                                                                                                                                                                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick = "openModal('prewedding3.jpg')" data - aos="fade-up" >
-                                                                                                                                                                                                                                  <img src="prewedding3.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt = "G3" >
-                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                              </div >
+  < div class="space-y-4 md:space-y-8 md:pt-16" >
+    <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('prewedding3.jpg')" data - aos="fade-up" >
+    <img src="prewedding3.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G3" >
+  </div>
+                                                                                                                                                                                                                                    </div >
                                                                                                                                                                                                                                     < div class="space-y-4 md:space-y-8" >
                                                                                                                                                                                                                                       <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick = "openModal('prewedding4.jpg')" data - aos="fade-up" >
                                                                                                                                                                                                                                         <img src="prewedding4.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt = "G4" >
                                                                                                                                                                                                                                           </div>
                                                                                                                                                                                                                                           < div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick = "openModal('mempelaicover.jpg')" data - aos="fade-up" >
-                                                                                                                                                                                                                                            <img src="mempelaicover.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt = "G5" >
-                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                              < div class="space-y-4 md:space-y-8 md:pt-16" >
-                                                                                                                                                                                                                                                <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick = "openModal('salsa.jpg')" data - aos="fade-up" >
-                                                                                                                                                                                                                                                  <img src="salsa.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt = "G6" >
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                    </section>
+  <img src="mempelaicover.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G5" >
+  </div>
+                                                                                                                                                                                                                                              </div >
+  < div class="space-y-4 md:space-y-8 md:pt-16" >
+    <div class="group overflow-hidden border border-primary/20 p-2 glass-effect cursor-pointer" onclick="openModal('salsa.jpg')" data - aos="fade-up" >
+    <img src="salsa.jpg" class="w-full h-auto grayscale transition-all duration-1000 group-hover:grayscale-0 group-hover:scale-105" alt="G6" >
+  </div>
+                                                                                                                                                                                                                                                    </div >
+                                                                                                                                                                                                                                                    </div >
+                                                                                                                                                                                                                                                    </div >
+                                                                                                                                                                                                                                                    </section >
 
                                                                                                                                                                                                                                                     < !--SECTION 7: GIFT-- >
                                                                                                                                                                                                                                                       <section id="gift" class="py-32 bg-accent/80 border-y border-primary/10" >
@@ -289,19 +289,19 @@ export const TEMPLATES_COLLECTION: Record<string, string> = {
           </p>
 
                                                                                                                                                                                                                                                                 < div class="max-w-md mx-auto glass-effect p-12 rounded-sm border-primary/20 shadow-2xl overflow-hidden relative group" data - aos="zoom-in" >
-                                                                                                                                                                                                                                                                  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-6 mx-auto mb-10 opacity-70 brightness-200 grayscale" alt = "BCA" >
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-6 mx-auto mb-10 opacity-70 brightness-200 grayscale" alt="BCA" >
 
-                                                                                                                                                                                                                                                                    <div class="mb-12" >
-                                                                                                                                                                                                                                                                      <p class="font-header text-3xl font-black text-white tracking-widest mb-3" > 8163069596 </p>
-                                                                                                                                                                                                                                                                        < p class="text-[10px] tracking-[0.5em] text-primary uppercase font-bold" > a.n Nicola Valentino </p>
-                                                                                                                                                                                                                                                                          </div>
+    <div class="mb-12" >
+      <p class="font-header text-3xl font-black text-white tracking-widest mb-3" > 8163069596 </p>
+      < p class="text-[10px] tracking-[0.5em] text-primary uppercase font-bold" > a.n Nicola Valentino </p>
+    </div>
 
-                                                                                                                                                                                                                                                                          < button onclick = "copyToClipboard()" class="w-full py-4 border border-primary/40 text-primary font-header text-[10px] tracking-[0.3em] hover:bg-primary hover:text-dark transition-all duration-500 uppercase" >
-                                                                                                                                                                                                                                                                            <i class="fa-regular fa-copy mr-2" > </i> SALIN NO. REKENING
-                                                                                                                                                                                                                                                                              </button>
-                                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                                              </div>
-                                                                                                                                                                                                                                                                              </section>
+    < button onclick="copyToClipboard()" class="w-full py-4 border border-primary/40 text-primary font-header text-[10px] tracking-[0.3em] hover:bg-primary hover:text-dark transition-all duration-500 uppercase" >
+      <i class="fa-regular fa-copy mr-2" > </i> SALIN NO. REKENING
+    </button>
+  </div>
+                                                                                                                                                                                                                                                                              </div >
+                                                                                                                                                                                                                                                                              </section >
 
                                                                                                                                                                                                                                                                               < !--SECTION 8: RSVP-- >
                                                                                                                                                                                                                                                                                 <section id="rsvp" class="py-32 bg-luxury pb-48" >
@@ -312,19 +312,19 @@ export const TEMPLATES_COLLECTION: Record<string, string> = {
                                                                                                                                                                                                                                                                                           </div>
 
                                                                                                                                                                                                                                                                                           < div class="glass-effect p-8 md:p-12 border-primary/10 shadow-inner" data - aos="fade-up" >
-                                                                                                                                                                                                                                                                                            <div class="space-y-8" >
-                                                                                                                                                                                                                                                                                              <div>
-                                                                                                                                                                                                                                                                                              <label class="text-[10px] tracking-widest text-primary font-bold uppercase block mb-4" > Pesan & Doa Restu </label>
-                                                                                                                                                                                                                                                                                                < textarea id = "guestMsg" rows = "6" class="w-full bg-dark/40 border-b border-primary/30 p-4 focus:outline-none focus:border-primary transition-all font-sans text-cream/80 text-sm font-light resize-none placeholder:text-cream/20" placeholder = "Tuliskan ucapan Anda disini..." > </textarea>
-                                                                                                                                                                                                                                                                                                  </div>
+  <div class="space-y-8" >
+    <div>
+      <label class="text-[10px] tracking-widest text-primary font-bold uppercase block mb-4" > Pesan & Doa Restu </label>
+      < textarea id="guestMsg" rows="6" class="w-full bg-dark/40 border-b border-primary/30 p-4 focus:outline-none focus:border-primary transition-all font-sans text-cream/80 text-sm font-light resize-none placeholder:text-cream/20" placeholder="Tuliskan ucapan Anda disini..." > </textarea>
+    </div>
 
-                                                                                                                                                                                                                                                                                                  < button onclick = "sendToWA()" class="w-full py-5 bg-primary text-dark font-header text-xs tracking-[0.4em] shadow-[0_0_40px_rgba(184,158,103,0.1)] hover:bg-white transition-all transform active:scale-95 uppercase" >
-                                                                                                                                                                                                                                                                                                    KIRIM UCAPAN < i class="fa-solid fa-paper-plane ml-2" > </i>
-                                                                                                                                                                                                                                                                                                      </button>
-                                                                                                                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                                                                                                                      </div>
-                                                                                                                                                                                                                                                                                                      </section>
+    < button onclick="sendToWA()" class="w-full py-5 bg-primary text-dark font-header text-xs tracking-[0.4em] shadow-[0_0_40px_rgba(184,158,103,0.1)] hover:bg-white transition-all transform active:scale-95 uppercase" >
+      KIRIM UCAPAN < i class="fa-solid fa-paper-plane ml-2" > </i>
+    </button>
+  </div>
+                                                                                                                                                                                                                                                                                                      </div >
+                                                                                                                                                                                                                                                                                                      </div >
+                                                                                                                                                                                                                                                                                                      </section >
 
                                                                                                                                                                                                                                                                                                       < !--SECTION 9: FOOTER-- >
                                                                                                                                                                                                                                                                                                         <footer class="bg-black text-center py-24 border-t border-primary/10 relative" >
@@ -343,15 +343,15 @@ export const TEMPLATES_COLLECTION: Record<string, string> = {
                                                                                                                                                                                                                                                                                                                           </footer>
 
                                                                                                                                                                                                                                                                                                                           < !--NAVIGATION TAB BAR-- >
-                                                                                                                                                                                                                                                                                                                            <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[55] glass-effect px-8 py-4 rounded-full shadow-2xl flex gap-8 transition-all duration-1000 translate-y-32 opacity-0" >
-                                                                                                                                                                                                                                                                                                                              <a href="#home" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-house" > </i></a >
-                                                                                                                                                                                                                                                                                                                                <a href="#couple" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-user-group" > </i></a >
-                                                                                                                                                                                                                                                                                                                                  <a href="#event" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-calendar-check" > </i></a >
-                                                                                                                                                                                                                                                                                                                                    <a href="#gallery" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-images" > </i></a >
-                                                                                                                                                                                                                                                                                                                                      <a href="#gift" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-gift" > </i></a >
-                                                                                                                                                                                                                                                                                                                                        </nav>
+  <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[55] glass-effect px-8 py-4 rounded-full shadow-2xl flex gap-8 transition-all duration-1000 translate-y-32 opacity-0" >
+    <a href="#home" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-house" > </i></a >
+    <a href="#couple" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-user-group" > </i></a >
+    <a href="#event" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-calendar-check" > </i></a >
+    <a href="#gallery" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-images" > </i></a >
+    <a href="#gift" class="text-cream/40 hover:text-primary transition-colors text-lg active:scale-90" > <i class="fa-solid fa-gift" > </i></a >
+  </nav>
 
-                                                                                                                                                                                                                                                                                                                                        </main>
+                                                                                                                                                                                                                                                                                                                                        </main >
 
                                                                                                                                                                                                                                                                                                                                         < !--UTILITIES: TOAST & MODAL-- >
                                                                                                                                                                                                                                                                                                                                           <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-[1000] glass-effect border border-primary/50 text-primary px-8 py-3 rounded-sm opacity-0 transition-all pointer-events-none translate-y-[-20px] shadow-2xl" >
@@ -485,278 +485,278 @@ function sendToWA() {
 // Lock Scroll on Load
 document.body.style.overflow = 'hidden';
 </script>
-  </body>
-  </html>
-    `, //
+  </body >
+  </html >
+  `, //
   'rustic-wood': `< !DOCTYPE html >
   <html lang="id" class="scroll-smooth" >
     <head>
-    <meta charset="UTF-8" >
-      <meta name="viewport" content = "width=device-width, initial-scale=1.0" >
-        <title>The Wedding of Nicola & Salsa - Rustic Edition </title>
+      <meta charset="UTF-8" >
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+          <title>The Wedding of Nicola & Salsa - Rustic Edition </title>
 
           < !--Fonts: Rustic & Organic(Playfair for Titles, Dancing Script for Names, Quicksand for Body) -->
-            <link rel="preconnect" href = "https://fonts.googleapis.com" >
-              <link rel="preconnect" href = "https://fonts.gstatic.com" crossorigin >
-                <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;600&display=swap" rel = "stylesheet" >
+          <link rel="preconnect" href="https://fonts.googleapis.com" >
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin >
+              <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet" >
 
-                  <!--Tailwind CSS-- >
-                    <script src="https://cdn.tailwindcss.com" > </script>
+                <!--Tailwind CSS-- >
+                <script src="https://cdn.tailwindcss.com" > </script>
 
-                      < !--AOS Animation-- >
-                        <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel = "stylesheet" >
+                < !--AOS Animation-- >
+                <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" >
 
-                          <!--Icons -->
-                            <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
+                  <!--Icons -->
+                  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
 
-                              <script>
-                              tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#8B5E3C',    /* Wood Brown */
-          secondary: '#A67B5B',  /* Tan / Light Wood */
-            dark: '#3E2723',       /* Dark Bark */
-              accent: '#626F47',     /* Sage Green / Leaves */
-                cream: '#F5F5DC',      /* Warm Beige */
-                  paper: '#FAF3E0',      /* Vintage Paper */
+                    <script>
+                      tailwind.config = {
+                        theme: {
+                        extend: {
+                        colors: {
+                        primary: '#8B5E3C',    /* Wood Brown */
+                      secondary: '#A67B5B',  /* Tan / Light Wood */
+                      dark: '#3E2723',       /* Dark Bark */
+                      accent: '#626F47',     /* Sage Green / Leaves */
+                      cream: '#F5F5DC',      /* Warm Beige */
+                      paper: '#FAF3E0',      /* Vintage Paper */
             },
-      fontFamily: {
-        header: ['"Playfair Display"', 'serif'],
-          script: ['"Dancing Script"', 'cursive'],
-            sans: ['"Quicksand"', 'sans-serif'],
+                      fontFamily: {
+                        header: ['"Playfair Display"', 'serif'],
+                      script: ['"Dancing Script"', 'cursive'],
+                      sans: ['"Quicksand"', 'sans-serif'],
             }
     }
   }
 }
-</script>
+                    </script>
 
-  <style>
+                    <style>
       /* Custom Scrollbar Rustic */
-      :: -webkit - scrollbar { width: 6px; }
-      :: -webkit - scrollbar - track { background: #F5F5DC; }
-      :: -webkit - scrollbar - thumb { background: #8B5E3C; border - radius: 10px; }
-      
-      .cover - slide - up {
-  transform: translateY(-100 %);
-  transition: transform 1.2s cubic - bezier(0.77, 0, 0.175, 1);
+                      :: -webkit - scrollbar {width: 6px; }
+                      :: -webkit - scrollbar - track {background: #F5F5DC; }
+                      :: -webkit - scrollbar - thumb {background: #8B5E3C; border - radius: 10px; }
+
+                      .cover - slide - up {
+                        transform: translateY(-100 %);
+                      transition: transform 1.2s cubic - bezier(0.77, 0, 0.175, 1);
 }
 
-      /* Paper Texture Overlay */
-      .bg - rustic - pattern {
-  background - color: #FAF3E0;
-  background - image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
+                      /* Paper Texture Overlay */
+                      .bg - rustic - pattern {
+                        background - color: #FAF3E0;
+                      background - image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
 }
 
-      /* Organic Image Frame */
-      .img - organic {
-  border - radius: 60 % 40 % 30 % 70 % / 60% 30% 70% 40%;
-  border: 8px solid white;
-  box - shadow: 0 10px 30px rgba(62, 39, 35, 0.1);
+                      /* Organic Image Frame */
+                      .img - organic {
+                        border - radius: 60 % 40 % 30 % 70 % / 60% 30% 70% 40%;
+                      border: 8px solid white;
+                      box - shadow: 0 10px 30px rgba(62, 39, 35, 0.1);
 }
 
-      /* Wood Button Shadow */
-      .btn - rustic {
-  box - shadow: 4px 4px 0px #3E2723;
-  transition: all 0.2s ease;
+                      /* Wood Button Shadow */
+                      .btn - rustic {
+                        box - shadow: 4px 4px 0px #3E2723;
+                      transition: all 0.2s ease;
 }
-      .btn - rustic:active {
-  box - shadow: 0px 0px 0px #3E2723;
-  transform: translate(2px, 2px);
+                      .btn - rustic:active {
+                        box - shadow: 0px 0px 0px #3E2723;
+                      transform: translate(2px, 2px);
 }
 
-/* Floating Leaves Animation */
-@keyframes float {
-  0 % { transform: translateY(0px) rotate(0deg); }
-  50 % { transform: translateY(-10px) rotate(5deg); }
-  100 % { transform: translateY(0px) rotate(0deg); }
+                      /* Floating Leaves Animation */
+                      @keyframes float {
+                        0 % { transform: translateY(0px) rotate(0deg); }
+  50 % {transform: translateY(-10px) rotate(5deg); }
+                      100 % {transform: translateY(0px) rotate(0deg); }
 }
-      .leaf - deco { animation: float 4s ease -in -out infinite; }
+                      .leaf - deco {animation: float 4s ease -in -out infinite; }
 
-      /* Modal Styling */
-      .modal {
-  transition: opacity 0.3s ease;
-  opacity: 0;
-  pointer - events: none;
-  z - index: 5000;
+                      /* Modal Styling */
+                      .modal {
+                        transition: opacity 0.3s ease;
+                      opacity: 0;
+                      pointer - events: none;
+                      z - index: 5000;
 }
-      .modal.active {
-  opacity: 1;
-  pointer - events: all;
+                      .modal.active {
+                        opacity: 1;
+                      pointer - events: all;
 }
-</style>
-  </head>
-  < body class="bg-paper text-dark font-sans overflow-hidden antialiased" >
+                    </style>
+                  </head>
+                  < body class="bg-paper text-dark font-sans overflow-hidden antialiased" >
 
-    <!--Audio -->
-      <audio id="bgMusic" loop >
-        <source src="https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3" type = "audio/mpeg" >
-          </audio>
+                    <!--Audio -->
+                    <audio id="bgMusic" loop >
+                      <source src="https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3" type="audio/mpeg" >
+                    </audio>
 
-          < !--Music Control(Rustic Style)-- >
-            <div id="musicControl" class="fixed top-6 right-6 z-50 hidden opacity-0 transition-opacity duration-1000" >
-              <button onclick="toggleMusic()" class="w-14 h-14 bg-primary text-cream rounded-full shadow-lg flex items-center justify-center border-4 border-white" >
-                <i class="fa-solid fa-compact-disc animate-spin-slow" id = "musicIcon" style = "animation-duration: 5s;" > </i>
-                  </button>
-                  </div>
+                    < !--Music Control(Rustic Style)-- >
+                    <div id="musicControl" class="fixed top-6 right-6 z-50 hidden opacity-0 transition-opacity duration-1000" >
+                      <button onclick="toggleMusic()" class="w-14 h-14 bg-primary text-cream rounded-full shadow-lg flex items-center justify-center border-4 border-white" >
+                        <i class="fa-solid fa-compact-disc animate-spin-slow" id="musicIcon" style="animation-duration: 5s;" > </i>
+                      </button>
+                    </div>
 
-                  < !--COVER SCREEN-- >
+                    < !--COVER SCREEN-- >
                     <div id="cover" class="fixed inset-0 z-[100] bg-[url('mempelaicover.jpg')] bg-cover bg-center h-screen w-full flex flex-col justify-center items-center text-center p-6 before:content-[''] before:absolute before:inset-0 before:bg-dark/40 before:backdrop-blur-[2px]" >
 
                       <div class="relative z-10 bg-paper/90 p-8 md:p-16 rounded-[40px] shadow-2xl border-2 border-primary/20 max-w-lg w-full" data - aos="zoom-in" >
-                        <!--Decorative Leaf SVG-- >
-                          <div class="absolute -top-10 -left-10 text-accent opacity-30 leaf-deco" >
-                            <svg width="100" height = "100" viewBox = "0 0 24 24" fill = "currentColor" > <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,11 17,8 17,8Z" /> </svg>
-                              </div>
+                      <!--Decorative Leaf SVG-- >
+                      <div class="absolute -top-10 -left-10 text-accent opacity-30 leaf-deco" >
+                        <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor" > <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,11 17,8 17,8Z" /> </svg>
+                      </div>
 
-                              < p class="font-header italic text-primary tracking-widest mb-4" > The Wedding Of </p>
-                                < h1 class="font-script text-6xl md:text-7xl mb-6 text-dark" > Nicola & Salsa </h1>
+                      < p class="font-header italic text-primary tracking-widest mb-4" > The Wedding Of </p>
+                      < h1 class="font-script text-6xl md:text-7xl mb-6 text-dark" > Nicola & Salsa </h1>
 
-                                  < div class="w-16 h-1 bg-accent mx-auto mb-8" > </div>
+                      < div class="w-16 h-1 bg-accent mx-auto mb-8" > </div>
 
-                                    < div class="mb-10" >
-                                      <p class="text-[10px] mb-2 tracking-[0.2em] uppercase font-bold text-accent" > Dear Beloved Guest </p>
-                                        < h2 class="font-header text-xl text-dark" > TAMU UNDANGAN </h2>
-                                          </div>
+                      < div class="mb-10" >
+                        <p class="text-[10px] mb-2 tracking-[0.2em] uppercase font-bold text-accent" > Dear Beloved Guest </p>
+                        < h2 class="font-header text-xl text-dark" > TAMU UNDANGAN </h2>
+                      </div>
 
-                                          < button onclick = "openInvitation()" class="btn-rustic px-8 py-4 bg-primary text-cream font-header tracking-widest text-sm hover:bg-dark transition-all rounded-xl" >
-                                            <i class="fa-solid fa-heart mr-2" > </i> BUKA UNDANGAN
-                                              </button>
-                                              </div>
-                                              </div>
+                      < button onclick="openInvitation()" class="btn-rustic px-8 py-4 bg-primary text-cream font-header tracking-widest text-sm hover:bg-dark transition-all rounded-xl" >
+                        <i class="fa-solid fa-heart mr-2" > </i> BUKA UNDANGAN
+                      </button>
+                    </div>
+                  </div>
 
-                                              < !--MAIN CONTENT-- >
-                                                <main id="mainContent" class="hidden relative" >
+                  < !--MAIN CONTENT-- >
+                  <main id="mainContent" class="hidden relative" >
 
-                                                  <!--Home Section-- >
-                                                    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-rustic-pattern pt-20" >
-                                                      <div data - aos="fade-up" class="relative" >
-                                                        <p class="font-script text-4xl text-primary mb-2" > Save the Date </p>
-                                                          < h2 class="font-header text-5xl md:text-7xl text-dark mb-10" >09.10.2025 </h2>
+                    <!--Home Section-- >
+                    <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 bg-rustic-pattern pt-20" >
+                      <div data - aos="fade-up" class="relative" >
+                      <p class="font-script text-4xl text-primary mb-2" > Save the Date </p>
+                      < h2 class="font-header text-5xl md:text-7xl text-dark mb-10" >09.10.2025 </h2>
 
-                                                            < div class="flex justify-center gap-4 mb-12" >
-                                                              <div class="w-2 h-2 rounded-full bg-accent" > </div>
-                                                                < div class="w-2 h-2 rounded-full bg-secondary" > </div>
-                                                                  < div class="w-2 h-2 rounded-full bg-accent" > </div>
-                                                                    </div>
-                                                                    </div>
+                      < div class="flex justify-center gap-4 mb-12" >
+                        <div class="w-2 h-2 rounded-full bg-accent" > </div>
+                        < div class="w-2 h-2 rounded-full bg-secondary" > </div>
+                        < div class="w-2 h-2 rounded-full bg-accent" > </div>
+                      </div>
+                    </div>
 
-                                                                    < div class="max-w-4xl mx-auto px-6" >
-                                                                      <img src="mempelaicover.jpg" class="img-organic w-72 h-72 md:w-96 md:h-96 object-cover mx-auto mb-12 border-[12px] border-white shadow-xl" alt = "Couple" data - aos="zoom-in" >
-                                                                        <p class="font-header text-2xl text-dark mb-4 italic" data - aos="fade-up" > "And so the adventure begins..." </p>
-                                                                          </div>
+                    < div class="max-w-4xl mx-auto px-6" >
+                      <img src="mempelaicover.jpg" class="img-organic w-72 h-72 md:w-96 md:h-96 object-cover mx-auto mb-12 border-[12px] border-white shadow-xl" alt="Couple" data - aos="zoom-in" >
+                      <p class="font-header text-2xl text-dark mb-4 italic" data - aos="fade-up" > "And so the adventure begins..." </p>
+                  </div>
 
-                                                                          < !--Rustic Leaf Divider-- >
-                                                                            <div class="mt-16 text-accent opacity-20" data - aos="fade-up" >
-                                                                              <i class="fa-solid fa-leaf text-4xl" > </i>
-                                                                                </div>
-                                                                                </section>
+                  < !--Rustic Leaf Divider-- >
+                  <div class="mt-16 text-accent opacity-20" data - aos="fade-up" >
+                  <i class="fa-solid fa-leaf text-4xl" > </i>
+                </div>
+              </section>
 
-                                                                                < !--Ayat Section-- >
-                                                                                  <section class="py-24 px-6 bg-accent/10 text-center" >
-                                                                                    <div class="max-w-2xl mx-auto" data - aos="fade-up" >
-                                                                                      <p class="font-sans text-lg text-dark/80 leading-relaxed italic mb-6" >
-                                                                                        "Maka nikmat Tuhanmu yang manakah yang kamu dustakan?"
-                                                                                        </p>
-                                                                                        < p class="font-header text-primary font-bold tracking-widest" >— AR - RAHMAN —</p>
-                                                                                          </div>
-                                                                                          </section>
+              < !--Ayat Section-- >
+              <section class="py-24 px-6 bg-accent/10 text-center" >
+                <div class="max-w-2xl mx-auto" data - aos="fade-up" >
+                <p class="font-sans text-lg text-dark/80 leading-relaxed italic mb-6" >
+                  "Maka nikmat Tuhanmu yang manakah yang kamu dustakan?"
+                </p>
+                < p class="font-header text-primary font-bold tracking-widest" >— AR - RAHMAN —</p>
+              </div>
+            </section>
 
-                                                                                          < !--Couple Section-- >
-                                                                                            <section id="couple" class="py-24 bg-rustic-pattern" >
-                                                                                              <div class="container mx-auto px-6" >
-                                                                                                <div class="text-center mb-20" data - aos="fade-down" >
-                                                                                                  <h2 class="font-script text-5xl text-primary" > Mempelai </h2>
-                                                                                                    < p class="font-header text-dark/40 tracking-[0.3em] uppercase text-[10px] mt-2" > The Happy Couple </p>
-                                                                                                      </div>
+            < !--Couple Section-- >
+            <section id="couple" class="py-24 bg-rustic-pattern" >
+              <div class="container mx-auto px-6" >
+                <div class="text-center mb-20" data - aos="fade-down" >
+                <h2 class="font-script text-5xl text-primary" > Mempelai </h2>
+                < p class="font-header text-dark/40 tracking-[0.3em] uppercase text-[10px] mt-2" > The Happy Couple </p>
+              </div>
 
-                                                                                                      < div class="flex flex-col md:flex-row justify-center items-center gap-16" >
+              < div class="flex flex-col md:flex-row justify-center items-center gap-16" >
 
-                                                                                                        <!--Groom -->
-                                                                                                          <div class="text-center group" data - aos="fade-right" >
-                                                                                                            <div class="relative w-64 h-64 mx-auto mb-8 img-organic overflow-hidden" >
-                                                                                                              <img src="nicola.jpg" alt = "Nicola" class="w-full h-full object-cover grayscale-[40%] hover:grayscale-0 transition duration-700" onerror = "this.src='https://placehold.co/400x400?text=Groom'" >
-                                                                                                                </div>
-                                                                                                                < h3 class="font-header text-3xl text-dark mb-3" > Nicola Valentino </h3>
-                                                                                                                  < p class="text-xs text-accent font-bold uppercase tracking-widest mb-4" > Putra Dari: </p>
-                                                                                                                    < p class="text-sm text-dark/70 font-sans italic" > Bpk.Misno(Mendol) & Ibu Atik Fifiani </p>
-                                                                                                                      < div class="mt-6 flex justify-center gap-3" >
-                                                                                                                        <a href="#" class="w-8 h-8 rounded-full bg-secondary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition" > <i class="fa-brands fa-instagram" > </i></a >
-                                                                                                                          </div>
-                                                                                                                          </div>
+                <!--Groom -->
+                <div class="text-center group" data - aos="fade-right" >
+                <div class="relative w-64 h-64 mx-auto mb-8 img-organic overflow-hidden" >
+                  <img src="nicola.jpg" alt="Nicola" class="w-full h-full object-cover grayscale-[40%] hover:grayscale-0 transition duration-700" onerror="this.src='https://placehold.co/400x400?text=Groom'" >
+                </div>
+                < h3 class="font-header text-3xl text-dark mb-3" > Nicola Valentino </h3>
+                < p class="text-xs text-accent font-bold uppercase tracking-widest mb-4" > Putra Dari: </p>
+                < p class="text-sm text-dark/70 font-sans italic" > Bpk.Misno(Mendol) & Ibu Atik Fifiani </p>
+                < div class="mt-6 flex justify-center gap-3" >
+                  <a href="#" class="w-8 h-8 rounded-full bg-secondary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition" > <i class="fa-brands fa-instagram" > </i></a >
+                </div>
+              </div>
 
-                                                                                                                          < !--Decorative & -->
-                                                                                                                          <div class="font-script text-6xl text-accent opacity-30" data - aos="zoom-in" >& </div>
+              < !--Decorative & -->
+              <div class="font-script text-6xl text-accent opacity-30" data - aos="zoom-in" >& </div>
 
-                                                                                                                            < !--Bride -->
-                                                                                                                              <div class="text-center group" data - aos="fade-left" >
-                                                                                                                                <div class="relative w-64 h-64 mx-auto mb-8 img-organic overflow-hidden" >
-                                                                                                                                  <img src="salsa.jpg" alt = "Salsa" class="w-full h-full object-cover grayscale-[40%] hover:grayscale-0 transition duration-700" onerror = "this.src='https://placehold.co/400x400?text=Bride'" >
-                                                                                                                                    </div>
-                                                                                                                                    < h3 class="font-header text-3xl text-dark mb-3" > Salsabillah Ekanaiya </h3>
-                                                                                                                                      < p class="text-xs text-accent font-bold uppercase tracking-widest mb-4" > Putri Dari: </p>
-                                                                                                                                        < p class="text-sm text-dark/70 font-sans italic" > Bpk.M.Rofiek Aribowo & Ibu Sri Kurniawati </p>
-                                                                                                                                          < div class="mt-6 flex justify-center gap-3" >
-                                                                                                                                            <a href="#" class="w-8 h-8 rounded-full bg-secondary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition" > <i class="fa-brands fa-instagram" > </i></a >
-                                                                                                                                              </div>
-                                                                                                                                              </div>
+            < !--Bride -->
+            <div class="text-center group" data - aos="fade-left" >
+            <div class="relative w-64 h-64 mx-auto mb-8 img-organic overflow-hidden" >
+              <img src="salsa.jpg" alt="Salsa" class="w-full h-full object-cover grayscale-[40%] hover:grayscale-0 transition duration-700" onerror="this.src='https://placehold.co/400x400?text=Bride'" >
+            </div>
+            < h3 class="font-header text-3xl text-dark mb-3" > Salsabillah Ekanaiya </h3>
+            < p class="text-xs text-accent font-bold uppercase tracking-widest mb-4" > Putri Dari: </p>
+            < p class="text-sm text-dark/70 font-sans italic" > Bpk.M.Rofiek Aribowo & Ibu Sri Kurniawati </p>
+            < div class="mt-6 flex justify-center gap-3" >
+              <a href="#" class="w-8 h-8 rounded-full bg-secondary/20 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition" > <i class="fa-brands fa-instagram" > </i></a >
+            </div>
+          </div>
 
-                                                                                                                                              </div>
-                                                                                                                                              </div>
-                                                                                                                                              </section>
+        </div>
+      </div>
+    </section>
 
-                                                                                                                                              < !--Event Section-- >
-                                                                                                                                                <section id="event" class="py-24 bg-dark text-cream relative overflow-hidden" >
-                                                                                                                                                  <!--Background texture-- >
-                                                                                                                                                    <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" > </div>
+    < !--Event Section-- >
+    <section id="event" class="py-24 bg-dark text-cream relative overflow-hidden" >
+      <!--Background texture-- >
+      <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]" > </div>
 
-                                                                                                                                                      < div class="container mx-auto px-6 relative z-10" >
-                                                                                                                                                        <div class="max-w-3xl mx-auto bg-paper text-dark p-10 md:p-16 rounded-[40px] shadow-2xl border-b-[10px] border-primary" data - aos="flip-left" >
-                                                                                                                                                          <div class="text-center mb-12" >
-                                                                                                                                                            <i class="fa-solid fa-calendar-heart text-5xl text-primary mb-6" > </i>
-                                                                                                                                                              < h2 class="font-header text-4xl mb-2" > RESEPSI PERNIKAHAN </h2>
-                                                                                                                                                                < div class="w-20 h-1 bg-accent mx-auto" > </div>
-                                                                                                                                                                  </div>
+      < div class="container mx-auto px-6 relative z-10" >
+        <div class="max-w-3xl mx-auto bg-paper text-dark p-10 md:p-16 rounded-[40px] shadow-2xl border-b-[10px] border-primary" data - aos="flip-left" >
+        <div class="text-center mb-12" >
+          <i class="fa-solid fa-calendar-heart text-5xl text-primary mb-6" > </i>
+          < h2 class="font-header text-4xl mb-2" > RESEPSI PERNIKAHAN </h2>
+          < div class="w-20 h-1 bg-accent mx-auto" > </div>
+        </div>
 
-                                                                                                                                                                  < div class="grid md:grid-cols-2 gap-10 text-center md:text-left items-center" >
-                                                                                                                                                                    <div class="space-y-6" >
-                                                                                                                                                                      <div class="flex items-center gap-4 justify-center md:justify-start" >
-                                                                                                                                                                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent" > <i class="fa-solid fa-calendar" > </i></div >
-                                                                                                                                                                          <div>
-                                                                                                                                                                          <p class="text-[10px] uppercase tracking-widest font-bold text-accent" > Hari / Tanggal </p>
-                                                                                                                                                                            < p class="font-header text-lg" > Kamis, 09 Oktober 2025 </p>
-                                                                                                                                                                              </div>
-                                                                                                                                                                              </div>
-                                                                                                                                                                              < div class="flex items-center gap-4 justify-center md:justify-start" >
-                                                                                                                                                                                <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent" > <i class="fa-solid fa-clock" > </i></div >
-                                                                                                                                                                                  <div>
-                                                                                                                                                                                  <p class="text-[10px] uppercase tracking-widest font-bold text-accent" > Waktu </p>
-                                                                                                                                                                                    < p class="font-header text-lg" > 10.00 WIB - Selesai </p>
-                                                                                                                                                                                      </div>
-                                                                                                                                                                                      </div>
-                                                                                                                                                                                      < div class="flex items-center gap-4 justify-center md:justify-start" >
-                                                                                                                                                                                        <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent" > <i class="fa-solid fa-location-dot" > </i></div >
-                                                                                                                                                                                          <div>
-                                                                                                                                                                                          <p class="text-[10px] uppercase tracking-widest font-bold text-accent" > Alamat </p>
-                                                                                                                                                                                            < p class="font-header text-sm" > Bocek Karangploso(Toko Pak Mendol) </p>
-                                                                                                                                                                                              </div>
-                                                                                                                                                                                              </div>
-                                                                                                                                                                                              </div>
+        < div class="grid md:grid-cols-2 gap-10 text-center md:text-left items-center" >
+          <div class="space-y-6" >
+            <div class="flex items-center gap-4 justify-center md:justify-start" >
+              <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent" > <i class="fa-solid fa-calendar" > </i></div >
+              <div>
+                <p class="text-[10px] uppercase tracking-widest font-bold text-accent" > Hari / Tanggal </p>
+                < p class="font-header text-lg" > Kamis, 09 Oktober 2025 </p>
+              </div>
+            </div>
+            < div class="flex items-center gap-4 justify-center md:justify-start" >
+              <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent" > <i class="fa-solid fa-clock" > </i></div >
+              <div>
+                <p class="text-[10px] uppercase tracking-widest font-bold text-accent" > Waktu </p>
+                < p class="font-header text-lg" > 10.00 WIB - Selesai </p>
+              </div>
+            </div>
+            < div class="flex items-center gap-4 justify-center md:justify-start" >
+              <div class="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent" > <i class="fa-solid fa-location-dot" > </i></div >
+              <div>
+                <p class="text-[10px] uppercase tracking-widest font-bold text-accent" > Alamat </p>
+                < p class="font-header text-sm" > Bocek Karangploso(Toko Pak Mendol) </p>
+              </div>
+            </div>
+          </div>
 
-                                                                                                                                                                                              < div class="text-center" >
-                                                                                                                                                                                                <a href="https://maps.google.com" target = "_blank" class="btn-rustic inline-block px-10 py-5 bg-accent text-white rounded-2xl font-header tracking-widest text-xs hover:bg-dark transition" >
-                                                                                                                                                                                                  <i class="fa-solid fa-map-location-dot mr-2" > </i> BUKA GOOGLE MAPS
-                                                                                                                                                                                                    </a>
-                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                    </div>
+          < div class="text-center" >
+            <a href="https://maps.google.com" target="_blank" class="btn-rustic inline-block px-10 py-5 bg-accent text-white rounded-2xl font-header tracking-widest text-xs hover:bg-dark transition" >
+              <i class="fa-solid fa-map-location-dot mr-2" > </i> BUKA GOOGLE MAPS
+            </a>
+          </div>
+        </div>
+      </div>
 
-                                                                                                                                                                                                    < !--Countdown -->
-                                                                                                                                                                                                      <div id="countdown" class="flex flex-wrap justify-center gap-4 mt-20" data - aos="fade-up" >
-                                                                                                                                                                                                        <!--JS dynamic content-- >
-                                                                                                                                                                                                          </div>
-                                                                                                                                                                                                          </div>
-                                                                                                                                                                                                          </section>
+      < !--Countdown -->
+      <div id="countdown" class="flex flex-wrap justify-center gap-4 mt-20" data - aos="fade-up" >
+      <!--JS dynamic content-- >
+    </div>
+  </div>
+                                                                                                                                                                                                          </section >
 
                                                                                                                                                                                                           < !--Gallery Section-- >
                                                                                                                                                                                                             <section id="gallery" class="py-24 bg-rustic-pattern" >
@@ -784,41 +784,41 @@ document.body.style.overflow = 'hidden';
                                                                                                                                                                                                                                           </section>
 
                                                                                                                                                                                                                                           < !--Gift Section-- >
-                                                                                                                                                                                                                                            <section id="gift" class="py-24 bg-paper text-center" >
-                                                                                                                                                                                                                                              <div class="container mx-auto px-6 max-w-2xl" >
-                                                                                                                                                                                                                                                <h2 class="font-script text-5xl text-primary mb-6" > Wedding Gift </h2>
-                                                                                                                                                                                                                                                  < p class="text-sm text-dark/70 italic mb-12 font-sans" > "Your presence is enough, but if you wish to give, we are truly grateful." </p>
+  <section id="gift" class="py-24 bg-paper text-center" >
+    <div class="container mx-auto px-6 max-w-2xl" >
+      <h2 class="font-script text-5xl text-primary mb-6" > Wedding Gift </h2>
+      < p class="text-sm text-dark/70 italic mb-12 font-sans" > "Your presence is enough, but if you wish to give, we are truly grateful." </p>
 
-                                                                                                                                                                                                                                                    < div class="bg-white p-10 rounded-[40px] shadow-xl border-2 border-dashed border-secondary/40 relative overflow-hidden" data - aos="zoom-in" >
-                                                                                                                                                                                                                                                      <div class="absolute top-4 right-4 text-accent/10" > <i class="fa-solid fa-gift text-8xl" > </i></div >
-                                                                                                                                                                                                                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-6 mx-auto mb-8 grayscale opacity-70" alt = "BCA" >
-                                                                                                                                                                                                                                                          <p class="font-header text-3xl font-bold tracking-widest text-dark mb-2" > 8163069596 </p>
-                                                                                                                                                                                                                                                            < p class="text-xs uppercase tracking-widest text-accent font-bold mb-10" > A.n Nicola Valentino </p>
+      < div class="bg-white p-10 rounded-[40px] shadow-xl border-2 border-dashed border-secondary/40 relative overflow-hidden" data - aos="zoom-in" >
+      <div class="absolute top-4 right-4 text-accent/10" > <i class="fa-solid fa-gift text-8xl" > </i></div >
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-6 mx-auto mb-8 grayscale opacity-70" alt="BCA" >
+        <p class="font-header text-3xl font-bold tracking-widest text-dark mb-2" > 8163069596 </p>
+        < p class="text-xs uppercase tracking-widest text-accent font-bold mb-10" > A.n Nicola Valentino </p>
 
-                                                                                                                                                                                                                                                              < button onclick = "copyToClipboard()" class="btn-rustic px-10 py-4 bg-primary text-white rounded-xl text-xs font-header tracking-widest" >
-                                                                                                                                                                                                                                                                SALIN NO.REKENING
-                                                                                                                                                                                                                                                                  </button>
-                                                                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                                                                  </section>
+        < button onclick="copyToClipboard()" class="btn-rustic px-10 py-4 bg-primary text-white rounded-xl text-xs font-header tracking-widest" >
+          SALIN NO.REKENING
+        </button>
+    </div>
+  </div>
+                                                                                                                                                                                                                                                                  </section >
 
                                                                                                                                                                                                                                                                   < !--RSVP / Guestbook-- >
-                                                                                                                                                                                                                                                                  <section id="rsvp" class="py-24 bg-rustic-pattern pb-48" >
-                                                                                                                                                                                                                                                                    <div class="container mx-auto px-6 max-w-xl" >
-                                                                                                                                                                                                                                                                      <div class="text-center mb-12" >
-                                                                                                                                                                                                                                                                        <h2 class="font-script text-5xl text-primary mb-2" > Wish Us Well </h2>
-                                                                                                                                                                                                                                                                          < p class="text-xs text-dark/50 uppercase tracking-widest" > Send your prayers </p>
-                                                                                                                                                                                                                                                                            </div>
+  <section id="rsvp" class="py-24 bg-rustic-pattern pb-48" >
+    <div class="container mx-auto px-6 max-w-xl" >
+      <div class="text-center mb-12" >
+        <h2 class="font-script text-5xl text-primary mb-2" > Wish Us Well </h2>
+        < p class="text-xs text-dark/50 uppercase tracking-widest" > Send your prayers </p>
+      </div>
 
-                                                                                                                                                                                                                                                                            < div class="bg-white/80 backdrop-blur p-8 rounded-[40px] shadow-lg border border-secondary/20" data - aos="fade-up" >
-                                                                                                                                                                                                                                                                              <textarea id="guestMsg" rows = "4" class="w-full bg-paper/50 border-2 border-secondary/20 rounded-2xl p-6 focus:outline-none focus:border-accent transition-all font-sans text-dark placeholder:italic" placeholder = "Tuliskan ucapan & doa restu Anda..." > </textarea>
+      < div class="bg-white/80 backdrop-blur p-8 rounded-[40px] shadow-lg border border-secondary/20" data - aos="fade-up" >
+      <textarea id="guestMsg" rows="4" class="w-full bg-paper/50 border-2 border-secondary/20 rounded-2xl p-6 focus:outline-none focus:border-accent transition-all font-sans text-dark placeholder:italic" placeholder="Tuliskan ucapan & doa restu Anda..." > </textarea>
 
-                                                                                                                                                                                                                                                                                < button onclick = "sendToWA()" class="btn-rustic w-full mt-6 bg-accent text-white py-5 rounded-2xl font-header tracking-widest text-sm uppercase" >
-                                                                                                                                                                                                                                                                                  Kirim Ucapan < i class="fa-solid fa-paper-plane ml-2" > </i>
-                                                                                                                                                                                                                                                                                    </button>
-                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                    </div>
-                                                                                                                                                                                                                                                                                    </section>
+      < button onclick="sendToWA()" class="btn-rustic w-full mt-6 bg-accent text-white py-5 rounded-2xl font-header tracking-widest text-sm uppercase" >
+        Kirim Ucapan < i class="fa-solid fa-paper-plane ml-2" > </i>
+      </button>
+    </div>
+  </div>
+                                                                                                                                                                                                                                                                                    </section >
 
                                                                                                                                                                                                                                                                                     < !--Footer -->
                                                                                                                                                                                                                                                                                       <footer class="py-20 bg-dark text-cream text-center border-t-8 border-primary" >
@@ -832,15 +832,15 @@ document.body.style.overflow = 'hidden';
                                                                                                                                                                                                                                                                                                     </footer>
 
                                                                                                                                                                                                                                                                                                     < !--Mobile Nav-- >
-                                                                                                                                                                                                                                                                                                      <nav id="navbar" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur shadow-2xl rounded-full px-8 py-4 flex gap-8 z-40 border border-secondary/20 transition-all duration-700 translate-y-32 opacity-0" >
-                                                                                                                                                                                                                                                                                                        <a href="#home" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-house" > </i></a >
-                                                                                                                                                                                                                                                                                                          <a href="#couple" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-user-group" > </i></a >
-                                                                                                                                                                                                                                                                                                            <a href="#event" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-calendar-check" > </i></a >
-                                                                                                                                                                                                                                                                                                              <a href="#gallery" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-images" > </i></a >
-                                                                                                                                                                                                                                                                                                                <a href="#gift" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-gift" > </i></a >
-                                                                                                                                                                                                                                                                                                                  </nav>
+  <nav id="navbar" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur shadow-2xl rounded-full px-8 py-4 flex gap-8 z-40 border border-secondary/20 transition-all duration-700 translate-y-32 opacity-0" >
+    <a href="#home" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-house" > </i></a >
+    <a href="#couple" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-user-group" > </i></a >
+    <a href="#event" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-calendar-check" > </i></a >
+    <a href="#gallery" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-images" > </i></a >
+    <a href="#gift" class="text-secondary hover:text-primary transition" > <i class="fa-solid fa-gift" > </i></a >
+  </nav>
 
-                                                                                                                                                                                                                                                                                                                  </main>
+                                                                                                                                                                                                                                                                                                                  </main >
 
                                                                                                                                                                                                                                                                                                                   < !--Notification Toast-- >
                                                                                                                                                                                                                                                                                                                     <div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-primary text-cream px-6 py-3 rounded-full shadow-2xl z-[60] opacity-0 transition-all pointer-events-none text-xs font-bold tracking-widest uppercase" >
@@ -946,9 +946,9 @@ function closeModal() {
 
 document.body.style.overflow = 'hidden';
 </script>
-  </body>
-  </html>
-    `, //
+  </body >
+  </html >
+  `, //
 
   'pixel-art': `< !DOCTYPE html >
   <html lang="id" class="scroll-smooth" >
@@ -1273,20 +1273,20 @@ document.body.style.overflow = 'hidden';
                                                                                                                                                                                                                                                 </section>
 
                                                                                                                                                                                                                                                 < !--SECTION 8: RSVP(Dialogue Input)-- >
-                                                                                                                                                                                                                                                  <section id="rsvp" class="py-24 bg-[#1a1a1a] pb-48" >
-                                                                                                                                                                                                                                                    <div class="container mx-auto px-6 max-w-2xl" >
-                                                                                                                                                                                                                                                      <div class="pixel-box-dark p-8 md:p-12" data - aos="fade-up" >
-                                                                                                                                                                                                                                                        <h2 class="font-header text-lg text-secondary mb-10 uppercase" > LEAVE A MESSAGE </h2>
-                                                                                                                                                                                                                                                          < div class="space-y-6" >
-                                                                                                                                                                                                                                                            <textarea id="guestMsg" rows = "4" class="w-full bg-dark/50 border-4 border-white p-6 font-mono text-2xl text-white focus:border-secondary outline-none placeholder:text-white/20" placeholder = "Type your message here player..." > </textarea>
+  <section id="rsvp" class="py-24 bg-[#1a1a1a] pb-48" >
+    <div class="container mx-auto px-6 max-w-2xl" >
+      <div class="pixel-box-dark p-8 md:p-12" data - aos="fade-up" >
+      <h2 class="font-header text-lg text-secondary mb-10 uppercase" > LEAVE A MESSAGE </h2>
+      < div class="space-y-6" >
+        <textarea id="guestMsg" rows="4" class="w-full bg-dark/50 border-4 border-white p-6 font-mono text-2xl text-white focus:border-secondary outline-none placeholder:text-white/20" placeholder="Type your message here player..." > </textarea>
 
-                                                                                                                                                                                                                                                              < button onclick = "sendToWA()" class="pixel-btn w-full py-5 bg-secondary text-dark font-header text-xs uppercase" >
-                                                                                                                                                                                                                                                                SEND COMMAND < i class="fa-solid fa-terminal ml-2" > </i>
-                                                                                                                                                                                                                                                                  </button>
-                                                                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                                                                  </div>
-                                                                                                                                                                                                                                                                  </section>
+        < button onclick="sendToWA()" class="pixel-btn w-full py-5 bg-secondary text-dark font-header text-xs uppercase" >
+          SEND COMMAND < i class="fa-solid fa-terminal ml-2" > </i>
+        </button>
+      </div>
+    </div>
+  </div>
+                                                                                                                                                                                                                                                                  </section >
 
                                                                                                                                                                                                                                                                   < !--SECTION 9: FOOTER-- >
                                                                                                                                                                                                                                                                     <footer class="py-20 bg-dark text-center border-t-8 border-ui" >
@@ -1297,15 +1297,15 @@ document.body.style.overflow = 'hidden';
                                                                                                                                                                                                                                                                               </footer>
 
                                                                                                                                                                                                                                                                               < !--Inventory / Nav-- >
-                                                                                                                                                                                                                                                                              <nav id="navbar" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white border-4 border-dark flex gap-6 p-4 z-40 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-700 translate-y-32 opacity-0" >
-                                                                                                                                                                                                                                                                                <a href="#home" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-house-user" > </i></a >
-                                                                                                                                                                                                                                                                                  <a href="#couple" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-users" > </i></a >
-                                                                                                                                                                                                                                                                                    <a href="#event" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-scroll" > </i></a >
-                                                                                                                                                                                                                                                                                      <a href="#gallery" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-images" > </i></a >
-                                                                                                                                                                                                                                                                                        <a href="#gift" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-coins" > </i></a >
-                                                                                                                                                                                                                                                                                          </nav>
+  <nav id="navbar" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-white border-4 border-dark flex gap-6 p-4 z-40 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-700 translate-y-32 opacity-0" >
+    <a href="#home" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-house-user" > </i></a >
+    <a href="#couple" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-users" > </i></a >
+    <a href="#event" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-scroll" > </i></a >
+    <a href="#gallery" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-images" > </i></a >
+    <a href="#gift" class="text-dark hover:text-primary transition-all active:scale-90" > <i class="fa-solid fa-coins" > </i></a >
+  </nav>
 
-                                                                                                                                                                                                                                                                                          </main>
+                                                                                                                                                                                                                                                                                          </main >
 
                                                                                                                                                                                                                                                                                           < !--Notification Toast-- >
                                                                                                                                                                                                                                                                                             <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[1000] bg-accent text-dark border-4 border-dark px-8 py-4 opacity-0 transition-all pointer-events-none font-header text-[8px] shadow-[4px_4px_0px_0px_#000] uppercase" >
@@ -1455,7 +1455,7 @@ function closeModal() {
 // Initial State
 document.body.style.overflow = 'hidden';
 </script>
-  </body>
+  </body >
   < /html>`, / /
 
   'magic-love': `<!DOCTYPE html>
@@ -1903,7 +1903,7 @@ document.body.style.overflow = 'hidden';
         const diff = weddingDate - now;
   
         if (diff < 0) {
-          dom.countdown.innerHTML = `< div class='font-header text-secondary tracking-widest uppercase' > The Magic Moment is Here </div>`;
+          dom.countdown.innerHTML = `< div class='font-header text-secondary tracking-widest uppercase' > The Magic Moment is Here </div > `;
 return;
         }
 
@@ -1915,11 +1915,11 @@ const t = {
 };
 
 dom.countdown.innerHTML = Object.entries(t).map(([key, val]) => `
-          <div class="glass-card rounded-[20px] p-5 w-24 border-primary/20 shadow-xl">
+  < div class="glass-card rounded-[20px] p-5 w-24 border-primary/20 shadow-xl" >
             <div class="text-3xl font-black font-header text-white mb-1">${val}</div>
             <div class="text-[8px] uppercase tracking-[0.2em] text-secondary font-bold">${key}</div>
-          </div>
-        `).join('');
+          </div >
+  `).join('');
       }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -1954,7 +1954,7 @@ function closeModal() {
 function sendToWA() {
   const msg = document.getElementById("guestMsg").value;
   if (!msg.trim()) return;
-  window.location.href = `mailto:nikolavalentino8@gmail.com?subject=Magic Wishes&body=${encodeURIComponent(msg)}`;
+  window.location.href = `mailto:nikolavalentino8 @gmail.com?subject = Magic Wishes & body=${ encodeURIComponent(msg) } `;
 }
 
 document.body.style.overflow = 'hidden';
@@ -2259,11 +2259,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "<h3 class='font-header text-white'>RACE IS ON!</h3>"; return; }
   const t = { days: Math.floor(diff / 86400000), hrs: Math.floor((diff % 86400000) / 3600000), min: Math.floor((diff % 3600000) / 60000), sec: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-        <div class="bg-white border-4 border-dark p-4 w-24 rounded-lg transform hover:scale-110 transition">
+    < div class="bg-white border-4 border-dark p-4 w-24 rounded-lg transform hover:scale-110 transition" >
           <div class="text-3xl font-header text-primary">${v}</div>
           <div class="text-[8px] font-racing text-dark uppercase">${k}</div>
-        </div>
-      `).join('');
+        </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -2274,7 +2274,7 @@ function copyToClipboard() {
 }
 
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -2539,11 +2539,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "<h3 class='font-header text-white'>PARTY TIME!</h3>"; return; }
   const t = { days: Math.floor(diff / 86400000), hrs: Math.floor((diff % 86400000) / 3600000), min: Math.floor((diff % 3600000) / 60000), sec: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-          <div class="bg-white border-4 border-dark p-4 w-24 rounded-[30px] transform hover:scale-110 transition shadow-lg">
+    < div class="bg-white border-4 border-dark p-4 w-24 rounded-[30px] transform hover:scale-110 transition shadow-lg" >
             <div class="text-3xl font-header text-secondary">${v}</div>
             <div class="text-[8px] font-bubble text-dark uppercase">${k}</div>
-          </div>
-        `).join('');
+          </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -2554,7 +2554,7 @@ function copyToClipboard() {
 }
 
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -2836,11 +2836,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "<h3 class='font-header text-accent'>THE BALANCE IS RESTORED!</h3>"; return; }
   const t = { days: Math.floor(diff / 86400000), hrs: Math.floor((diff % 86400000) / 3600000), min: Math.floor((diff % 3600000) / 60000), sec: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-        <div class="bg-white/10 border-2 border-accent p-5 w-24 rounded-sm transform hover:scale-110 transition shadow-2xl">
+    < div class="bg-white/10 border-2 border-accent p-5 w-24 rounded-sm transform hover:scale-110 transition shadow-2xl" >
           <div class="text-3xl font-header text-accent">${v}</div>
           <div class="text-[8px] font-header text-white uppercase">${k}</div>
-        </div>
-      `).join('');
+        </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -2851,7 +2851,7 @@ function copyToClipboard() {
 }
 
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -3178,11 +3178,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "NOW STREAMING"; return; }
   const t = { D: Math.floor(diff / 86400000), H: Math.floor((diff % 86400000) / 3600000), M: Math.floor((diff % 3600000) / 60000), S: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-          <div class="bg-cream border-b-2 border-primary p-4 w-20 rounded shadow-lg">
+    < div class="bg-cream border-b-2 border-primary p-4 w-20 rounded shadow-lg" >
             <div class="text-3xl font-header text-white">${v}</div>
             <div class="text-[10px] font-bold text-secondary">${k}</div>
-          </div>
-        `).join('');
+          </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -3192,7 +3192,7 @@ function copyToClipboard() {
   const toast = document.getElementById('toast'); toast.classList.add('opacity-100'); setTimeout(() => toast.classList.remove('opacity-100'), 2000);
 }
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -3493,11 +3493,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "PREMIERE STARTED"; return; }
   const t = { D: Math.floor(diff / 86400000), H: Math.floor((diff % 86400000) / 3600000), M: Math.floor((diff % 3600000) / 60000), S: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-          <div class="bg-primary border border-secondary p-4 w-20 shadow-xl">
+    < div class="bg-primary border border-secondary p-4 w-20 shadow-xl" >
             <div class="text-3xl font-header text-secondary">${v}</div>
             <div class="text-[10px] font-bold text-white opacity-60">${k}</div>
-          </div>
-        `).join('');
+          </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -3507,7 +3507,7 @@ function copyToClipboard() {
   const toast = document.getElementById('toast'); toast.classList.add('opacity-100'); setTimeout(() => toast.classList.remove('opacity-100'), 2000);
 }
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -3793,11 +3793,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "<h3 class='font-header text-secondary tracking-widest uppercase'>Dinten Bahagia Sampun Tiba</h3>"; return; }
   const t = { dinten: Math.floor(diff / 86400000), jam: Math.floor((diff % 86400000) / 3600000), menit: Math.floor((diff % 3600000) / 60000), detik: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-          <div class="bg-primary border-2 border-secondary p-4 w-24 rounded-lg transform hover:scale-110 transition shadow-lg">
+    < div class="bg-primary border-2 border-secondary p-4 w-24 rounded-lg transform hover:scale-110 transition shadow-lg" >
             <div class="text-3xl font-header text-secondary">${v}</div>
             <div class="text-[8px] font-header text-white uppercase opacity-60">${k}</div>
-          </div>
-        `).join('');
+          </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -3807,7 +3807,7 @@ function copyToClipboard() {
   const toast = document.getElementById('toast'); toast.classList.add('opacity-100'); setTimeout(() => toast.classList.remove('opacity-100'), 2000);
 }
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -4075,11 +4075,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "<h3 class='font-header text-secondary tracking-widest uppercase'>Aleks Gadang Dimuloi</h3>"; return; }
   const t = { hari: Math.floor(diff / 86400000), jam: Math.floor((diff % 86400000) / 3600000), min: Math.floor((diff % 3600000) / 60000), dtk: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-          <div class="bg-primary border-2 border-secondary p-4 w-24 gadang-corner transform hover:scale-110 transition shadow-lg">
+    < div class="bg-primary border-2 border-secondary p-4 w-24 gadang-corner transform hover:scale-110 transition shadow-lg" >
             <div class="text-3xl font-header text-accent">${v}</div>
             <div class="text-[8px] font-header text-white uppercase opacity-60">${k}</div>
-          </div>
-        `).join('');
+          </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -4089,7 +4089,7 @@ function copyToClipboard() {
   const toast = document.getElementById('toast'); toast.classList.add('opacity-100'); setTimeout(() => toast.classList.remove('opacity-100'), 2000);
 }
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -4374,11 +4374,11 @@ function updateCountdown() {
   if (diff < 0) { dom.countdown.innerHTML = "<h3 class='font-header text-secondary tracking-widest uppercase'>Galah Bahagia Sampun Datang</h3>"; return; }
   const t = { rahina: Math.floor(diff / 86400000), jam: Math.floor((diff % 86400000) / 3600000), menit: Math.floor((diff % 3600000) / 60000), detik: Math.floor((diff % 60000) / 1000) };
   dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => `
-          <div class="bg-primary border-2 border-secondary p-4 w-24 rounded-lg transform hover:scale-110 transition shadow-lg">
+    < div class="bg-primary border-2 border-secondary p-4 w-24 rounded-lg transform hover:scale-110 transition shadow-lg" >
             <div class="text-3xl font-header text-secondary">${v}</div>
             <div class="text-[8px] font-header text-white uppercase opacity-60">${k}</div>
-          </div>
-        `).join('');
+          </div >
+  `).join('');
 }
 setInterval(updateCountdown, 1000);
 updateCountdown();
@@ -4388,7 +4388,7 @@ function copyToClipboard() {
   const toast = document.getElementById('toast'); toast.classList.add('opacity-100'); setTimeout(() => toast.classList.remove('opacity-100'), 2000);
 }
 function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
-function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola@example.com?body=${encodeURIComponent(msg)}`; }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = `mailto:nikola @example.com?body = ${ encodeURIComponent(msg) } `; }
 document.body.style.overflow = 'hidden';
 </script>
   </body>
@@ -4852,11 +4852,11 @@ function updateCountdown() {
   const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   const timeBox = (val, label) => `
-          <div class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-3 w-20 shadow-lg">
+    < div class="bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg p-3 w-20 shadow-lg" >
             <div class="text-2xl font-bold font-serif text-white">${val}</div>
             <div class="text-[10px] uppercase tracking-wider text-gold font-bold">${label}</div>
-          </div>
-        `;
+          </div >
+  `;
 
   document.getElementById("countdown").innerHTML =
     timeBox(days, 'Hari') +
@@ -4900,7 +4900,7 @@ function sendToWA() {
   }
   const subject = "Ucapan Pernikahan Nicola & Salsa";
   const body = encodeURIComponent(input);
-  window.location.href = `mailto:nikolavalentino8@gmail.com?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:nikolavalentino8 @gmail.com?subject = ${ subject }& body=${ body } `;
 }
 
 // Modal Image Logic
