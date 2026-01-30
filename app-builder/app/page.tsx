@@ -1,3 +1,4 @@
+
 "use client";
 import { useState, useEffect } from 'react';
 
@@ -29,8 +30,12 @@ export default function BuilderPage() {
     gift: { bank: 'BCA', num: '1234567890', name: 'Nicola Valentino' }
   });
 
+  const [slug, setSlug] = useState('budi-doremi');
   const [previewHtml, setPreviewHtml] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishedUrl, setPublishedUrl] = useState('');
+  const [publishError, setPublishError] = useState('');
 
   // Fungsi fetch preview dari API yang baru kita buat
   const fetchPreview = async () => {
@@ -41,10 +46,12 @@ export default function BuilderPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
+      if (!res.ok) throw new Error('Failed to fetch preview');
       const html = await res.text();
       setPreviewHtml(html);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      setPreviewHtml(`<div class="p-4 text-red-600">Error: ${err.message}</div>`);
     } finally {
       setLoading(false);
     }
@@ -66,19 +73,43 @@ export default function BuilderPage() {
     }));
   };
 
-  const handleExport = () => {
-    const iframe = document.querySelector('iframe');
-    if (!iframe || !iframe.srcdoc) return;
+  const handlePublish = async () => {
+    if (!slug) {
+      setPublishError('Nama URL (slug) tidak boleh kosong.');
+      return;
+    }
+    
+    setIsPublishing(true);
+    setPublishedUrl('');
+    setPublishError('');
 
-    const blob = new Blob([iframe.srcdoc], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `undangan-${formData.groom.nick}-${formData.bride.nick}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const sanitizedSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      const response = await fetch('/api/publish', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          slug: sanitizedSlug,
+          theme: formData.theme,
+          formData: formData,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Gagal mempublikasikan undangan.');
+      }
+
+      setPublishedUrl(result.url);
+
+    } catch (error: any) {
+      setPublishError(error.message);
+    } finally {
+      setIsPublishing(false);
+    }
   };
 
   return (
@@ -101,6 +132,24 @@ export default function BuilderPage() {
             ))}
           </select>
         </div>
+        
+        {/* Nama URL (Slug) */}
+        <div className="mb-6">
+          <label htmlFor="slug" className="block text-sm font-bold mb-2">Nama URL (Slug)</label>
+          <div className="flex items-center">
+            <span className="text-gray-500 text-sm p-2 bg-gray-100 border rounded-l">/v/</span>
+            <input 
+              id="slug"
+              type="text"
+              className="w-full p-2 border-t border-b border-r rounded-r"
+              placeholder="contoh: budi-doremi"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+            />
+          </div>
+           <p className="text-xs text-gray-500 mt-1">Gunakan huruf kecil, angka, dan tanda hubung (-).</p>
+        </div>
+
 
         {/* Form Group: Mempelai Pria */}
         <div className="mb-6 border-b pb-4">
@@ -126,14 +175,45 @@ export default function BuilderPage() {
           <input type="date" className="w-full mb-2 p-2 border rounded text-sm" value={formData.event.date} onChange={e => handleChange('event', 'date', e.target.value)} />
           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Waktu (e.g. 10:00 WIB)" value={formData.event.time} onChange={e => handleChange('event', 'time', e.target.value)} />
           <textarea className="w-full mb-2 p-2 border rounded text-sm" placeholder="Alamat Lokasi" rows={2} value={formData.event.loc} onChange={e => handleChange('event', 'loc', e.target.value)} />
+           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Google Maps Link" value={formData.event.map} onChange={e => handleChange('event', 'map', e.target.value)} />
+        </div>
+
+        {/* Form Group: Gift */}
+        <div className="mb-6 border-b pb-4">
+          <h3 className="font-bold text-gray-500 mb-3 uppercase text-sm">Hadiah</h3>
+           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Bank (e.g. BCA)" value={formData.gift.bank} onChange={e => handleChange('gift', 'bank', e.target.value)} />
+           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nomor Rekening" value={formData.gift.num} onChange={e => handleChange('gift', 'num', e.target.value)} />
+           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Atas Nama" value={formData.gift.name} onChange={e => handleChange('gift', 'name', e.target.value)} />
         </div>
 
         <button 
-          onClick={handleExport}
-          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition"
+          onClick={handlePublish}
+          disabled={isPublishing || !slug}
+          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition"
         >
-          Download HTML Final
+          {isPublishing ? 'Mempublikasikan...' : 'Publikasikan Undangan'}
         </button>
+
+        {publishedUrl && (
+          <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-800 rounded">
+            <p className="font-bold">Publikasi Berhasil!</p>
+            <p className="text-sm mt-1">Bagikan link ini:</p>
+            <input 
+              type="text" 
+              readOnly 
+              value={publishedUrl} 
+              className="w-full bg-white p-2 mt-1 rounded border" 
+              onClick={(e) => (e.target as HTMLInputElement).select()}
+            />
+          </div>
+        )}
+
+        {publishError && (
+            <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-800 rounded">
+                <p className="font-bold">Error</p>
+                <p className="text-sm mt-1">{publishError}</p>
+            </div>
+        )}
       </div>
 
       {/* --- PANEL KANAN: LIVE PREVIEW --- */}
@@ -144,13 +224,15 @@ export default function BuilderPage() {
           </div>
         )}
         
-        {/* IFRAME: Menampilkan HTML hasil render */}
-        <div className="mockup-phone border-4 border-gray-800 rounded-[30px] overflow-hidden shadow-2xl h-[85vh] w-[400px] bg-white">
+        <div className="mockup-browser border-4 border-gray-800 rounded-2xl overflow-hidden shadow-2xl h-[90vh] w-[95%] bg-white">
+          <div className="mockup-browser-toolbar">
+            <div className="input border border-gray-400 rounded-full px-4">{publishedUrl || `http://localhost:3000/v/${slug}`}</div>
+          </div>
           <iframe 
             srcDoc={previewHtml} 
             className="w-full h-full"
             title="Preview Undangan"
-            sandbox="allow-scripts allow-same-origin" // Penting agar JS di template jalan
+            sandbox="allow-scripts allow-same-origin"
           />
         </div>
       </div>

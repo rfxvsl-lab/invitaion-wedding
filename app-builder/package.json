@@ -9,10 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "postcss": "latest",
+    "@supabase/supabase-js": "^2.93.3",
     "@tailwindcss/postcss": "latest",
     "autoprefixer": "latest",
     "next": "16.1.6",
+    "postcss": "latest",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
