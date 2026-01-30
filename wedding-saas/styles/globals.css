@@ -4,13 +4,14 @@
 /* Reset Layout agar Full Screen */
 html,
 body {
-  height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
-  /* Mencegah scroll ganda */
+  min-height: 100%;
+  /* overflow: hidden; -- REMOVED to allow scrolling on public page */
   background-color: #f3f4f6;
   /* bg-gray-100 fallback */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom Scrollbar yang Tipis & Elegan */
