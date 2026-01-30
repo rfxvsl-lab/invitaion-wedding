@@ -9,8 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
-    "autoprefixer": "^10.4.23",
+    "postcss": "latest",
+    "@tailwindcss/postcss": "latest",
+    "autoprefixer": "latest",
     "next": "16.1.6",
     "react": "18.3.1",
     "react-dom": "18.3.1"
@@ -21,7 +22,6 @@
     "@types/react-dom": "18.3.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.6",
-    "postcss": "^8.5.6",
     "tailwindcss": "^3",
     "typescript": "5.4.5"
   }
