@@ -1,45 +1,56 @@
-import { supabase } from '@/app-builder/lib/supabase';
-import { generateHTML } from '@/app-builder/lib/generator';
+import { supabase } from '@/lib/supabase';
+import { generateHTML, FormData } from '@/lib/generator';
 import { notFound } from 'next/navigation';
 
-type Props = {
-  params: { slug: string };
-};
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
 
-export default async function InvitationPage({ params }: Props) {
-  const { slug } = params;
-
+// 1. Ambil Data dari Supabase (Server-side)
+async function getInvitationData(slug: string) {
   const { data, error } = await supabase
     .from('invitations')
-    .select('data_json, theme_id')
+    .select('*')
     .eq('slug', slug)
     .single();
 
   if (error || !data) {
-    notFound();
+    return null;
   }
 
-  const { data_json: formData, theme_id: themeId } = data;
+  return data;
+}
 
-  if (!formData || !themeId) {
-    return <div className="w-full h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: Data undangan tidak lengkap.</p></div>;
+// 2. Render Halaman
+export default async function InvitationPage({ params }: PageProps) {
+  const record = await getInvitationData(params.slug);
+
+  if (!record) {
+    notFound(); // Tampilkan 404 jika slug tidak ditemukan
   }
 
-  const finalHtml = generateHTML(formData, themeId);
-
-  if (!finalHtml) {
-      return <div className="w-full h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: Template tidak ditemukan.</p></div>;
-  }
+  // Generate HTML final berdasarkan data dari DB
+  const htmlContent = generateHTML(record.data_json as FormData, record.theme);
 
   return (
-    <div dangerouslySetInnerHTML={{ __html: finalHtml }} />
+    <div 
+      className="w-full h-screen overflow-hidden bg-black"
+      dangerouslySetInnerHTML={{ __html: htmlContent }} 
+    />
   );
 }
 
-// Optional: Prerender pages at build time if you have a list of popular slugs
-export async function generateStaticParams() {
-  // Example: Fetch top 10 most visited slugs
-  const { data: invitations } = await supabase.from('invitations').select('slug').limit(10);
- 
-  return invitations?.map(({ slug }) => ({ slug })) || [];
+// Optional: Metadata dinamis untuk SEO sharing (WA/Facebook)
+export async function generateMetadata({ params }: PageProps) {
+  const record = await getInvitationData(params.slug);
+  
+  if (!record) return { title: 'Undangan Tidak Ditemukan' };
+
+  const data = record.data_json as FormData;
+  return {
+    title: `The Wedding of ${data.groomName} & ${data.brideName}`,
+    description: `Kami mengundang Anda ke acara pernikahan kami pada ${data.eventDate}`,
+  };
 }
