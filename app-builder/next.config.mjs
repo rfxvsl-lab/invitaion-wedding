@@ -7,15 +7,20 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Menggunakan `output: 'standalone'` memaksa Next.js untuk menyalin semua file yang diperlukan
-  // ke folder build. Ini adalah pendekatan yang lebih andal.
   output: 'standalone',
-  // Karena kita berada di dalam monorepo (`app-builder`), kita perlu memberi tahu Next.js
-  // di mana root dari monorepo berada agar ia bisa melacak semua dependensi dengan benar.
   experimental: {
-    // `path.join(__dirname, '../')` akan menunjuk ke direktori root proyek,
-    // satu level di atas direktori `app-builder`.
+    // Menentukan root dari monorepo agar pelacakan file berfungsi dengan benar.
     outputFileTracingRoot: path.join(__dirname, '../'),
+    
+    // Menambahkan instruksi eksplisit untuk menyalin folder `templates`.
+    // Ini adalah langkah kunci yang hilang. Next.js tidak tahu tentang folder ini
+    // karena hanya dibaca via `fs`, jadi kita harus memberitahunya.
+    outputFileTracingIncludes: {
+      // Saat membuat build untuk route ini, sertakan juga file-file berikut.
+      // Pola glob `'./templates/**/*'` akan menyalin seluruh folder `templates`.
+      '/api/preview': ['./templates/**/*'],
+      '/v/[slug]': ['./templates/**/*'],
+    },
   },
 };
 
