@@ -11,59 +11,78 @@ export interface InvitationData {
   theme: string;
 }
 
-// Fungsi baru untuk mencari path template yang andal
+// VERSI DIAGNOSTIK: Fungsi ini akan melaporkan struktur filesystem saat error
 const getTemplatePath = (theme: string): string => {
-  const baseDir = process.cwd();
-  
-  // Daftar path yang mungkin, untuk menangani lingkungan lokal dan Vercel
-  const possiblePaths = [
-    // Path utama di Vercel, di mana direktori proyek berada di root
-    path.join(baseDir, 'public', 'templates', `${theme}.html`),
-    // Path fallback untuk pengembangan lokal, di mana CWD mungkin adalah root monorepo
-    path.join(baseDir, 'app-builder', 'public', 'templates', `${theme}.html`)
-  ];
+  const baseDir = process.cwd(); // Harusnya /var/task di Vercel
+  const templatesDir = path.join(baseDir, 'public', 'templates');
+  const expectedPath = path.join(templatesDir, `${theme}.html`);
 
-  // Cari path pertama yang ada
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) {
-      console.log(`Template found at: ${p}`);
-      return p;
-    }
+  let debugInfo = `\n--- Laporan Diagnostik Filesystem Vercel ---\n`;
+  debugInfo += `Waktu: ${new Date().toISOString()}\n`;
+  debugInfo += `Direktori Kerja (process.cwd()): ${baseDir}\n`;
+  debugInfo += `Path Template yang Diharapkan: ${expectedPath}\n\n`;
+
+  // 1. Coba baca isi direktori root (/var/task)
+  try {
+    const rootDirContents = fs.readdirSync(baseDir);
+    debugInfo += `Isi dari '${baseDir}': [${rootDirContents.join(', ')}]\n`;
+  } catch (e: any) {
+    debugInfo += `Gagal membaca isi dari '${baseDir}': ${e.message}\n`;
+  }
+
+  // 2. Coba baca isi direktori public (/var/task/public)
+  const publicDir = path.join(baseDir, 'public');
+  try {
+    const publicDirContents = fs.readdirSync(publicDir);
+    debugInfo += `Isi dari '${publicDir}': [${publicDirContents.join(', ')}]\n`;
+  } catch (e: any) {
+    debugInfo += `Gagal membaca isi dari '${publicDir}': ${e.message}\n`;
   }
   
-  // Jika tidak ada yang ditemukan, kembalikan path default dan biarkan readFileSync yang menangani error
-  const defaultPath = path.join(baseDir, 'public', 'templates', `${theme}.html`);
-  console.log(`Template not found in checked paths, defaulting to: ${defaultPath}`);
-  return defaultPath;
+  // 3. Coba baca isi direktori templates (/var/task/public/templates)
+  try {
+    const templatesDirContents = fs.readdirSync(templatesDir);
+    debugInfo += `Isi dari '${templatesDir}': [${templatesDirContents.join(', ')}]\n`;
+  } catch (e: any) {
+    debugInfo += `Gagal membaca isi dari '${templatesDir}': ${e.message}\n`;
+  }
+  debugInfo += `--- Akhir Laporan Diagnostik ---\n`;
+
+  // Lakukan pengecekan akhir. Jika gagal, lemparkan error dengan semua info debug.
+  if (!fs.existsSync(expectedPath)) {
+    throw new Error(`CRITICAL: Template tidak ditemukan. ${debugInfo}`);
+  }
+
+  return expectedPath;
 };
 
 export const generateHTML = (data: InvitationData) => {
-  const templatePath = getTemplatePath(data.theme);
+  try {
+    const templatePath = getTemplatePath(data.theme);
+    let html = fs.readFileSync(templatePath, 'utf-8');
 
-  if (!fs.existsSync(templatePath)) {
-    throw new Error(`CRITICAL: Template file not found at the expected path: ${templatePath}. Ensure the file exists in the 'public/templates' directory.`);
+    // Ganti placeholder dengan data (logika tetap sama)
+    html = html
+      .replace(/{{groom.nick}}/g, data.groom.nick)
+      .replace(/{{groom.full}}/g, data.groom.full)
+      .replace(/{{groom.parents}}/g, data.groom.parents)
+      .replace(/{{groom.img}}/g, data.groom.img)
+      .replace(/{{bride.nick}}/g, data.bride.nick)
+      .replace(/{{bride.full}}/g, data.bride.full)
+      .replace(/{{bride.parents}}/g, data.bride.parents)
+      .replace(/{{bride.img}}/g, data.bride.img)
+      .replace(/{{event.date}}/g, data.event.date)
+      .replace(/{{event.time}}/g, data.event.time)
+      .replace(/{{event.loc}}/g, data.event.loc)
+      .replace(/{{event.map}}/g, data.event.map)
+      .replace(/{{gift.bank}}/g, data.gift.bank)
+      .replace(/{{gift.num}}/g, data.gift.num)
+      .replace(/{{gift.name}}/g, data.gift.name)
+      .replace(/{{cover.img}}/g, data.cover?.img || '');
+
+    return html;
+  } catch (error: any) {
+    // Lempar kembali error dari getTemplatePath agar pesan diagnostik lengkap muncul di preview
+    throw new Error(error.message);
   }
-
-  let html = fs.readFileSync(templatePath, 'utf-8');
-
-  // Ganti placeholder dengan data
-  html = html
-    .replace(/{{groom.nick}}/g, data.groom.nick)
-    .replace(/{{groom.full}}/g, data.groom.full)
-    .replace(/{{groom.parents}}/g, data.groom.parents)
-    .replace(/{{groom.img}}/g, data.groom.img)
-    .replace(/{{bride.nick}}/g, data.bride.nick)
-    .replace(/{{bride.full}}/g, data.bride.full)
-    .replace(/{{bride.parents}}/g, data.bride.parents)
-    .replace(/{{bride.img}}/g, data.bride.img)
-    .replace(/{{event.date}}/g, data.event.date)
-    .replace(/{{event.time}}/g, data.event.time)
-    .replace(/{{event.loc}}/g, data.event.loc)
-    .replace(/{{event.map}}/g, data.event.map)
-    .replace(/{{gift.bank}}/g, data.gift.bank)
-    .replace(/{{gift.num}}/g, data.gift.num)
-    .replace(/{{gift.name}}/g, data.gift.name)
-    .replace(/{{cover.img}}/g, data.cover?.img || '');
-
-  return html;
 };
