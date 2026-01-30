@@ -1,0 +1,284 @@
+// Auto-generated template export
+// Template: tradition-minang
+
+export const template = `< !DOCTYPE html >
+  <html lang="id" class="scroll-smooth" >
+    <head>
+    <meta charset="UTF-8" >
+      <meta name="viewport" content = "width=device-width, initial-scale=1.0" >
+        <title>Undangan Pernikahan Nicola & Salsa - Adat Minang </title>
+
+          < link rel = "preconnect" href = "https://fonts.googleapis.com" >
+            <link rel="preconnect" href = "https://fonts.gstatic.com" crossorigin >
+              <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Great+Vibes&family=Montserrat:wght@400;700&display=swap" rel = "stylesheet" >
+
+                <script src="https://cdn.tailwindcss.com" > </script>
+                  < link href = "https://unpkg.com/aos@2.3.1/dist/aos.css" rel = "stylesheet" >
+                    <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
+
+                      <script>
+                      tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#B71C1C',    /* Minang Red */
+          secondary: '#D4AF37',  /* Gold */
+            dark: '#121212',       /* Minang Black */
+              accent: '#FFC107',     /* Minang Yellow */
+                cream: '#FFFBEC',
+            },
+      fontFamily: {
+        header: ['"Cinzel"', 'serif'],
+          script: ['"Great Vibes"', 'cursive'],
+            body: ['"Montserrat"', 'sans-serif'],
+            }
+    }
+  }
+}
+</script>
+  
+    <style>
+  .bg - songket {
+  background - color: #B71C1C;
+  background - image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
+}
+      
+      .gadang - corner {
+  border - radius: 60px 0 60px 0;
+  border: 4px solid #D4AF37;
+}
+      
+      .cover - slide - up {
+  transform: translateY(-100 %);
+  transition: transform 1.2s cubic - bezier(0.7, 0, 0.3, 1);
+}
+      
+      .modal { transition: opacity 0.3s ease; opacity: 0; pointer - events: none; z - index: 5000; }
+      .modal.active { opacity: 1; pointer - events: all; }
+</style>
+  </head>
+  < body class="bg-cream text-dark font-body overflow-hidden antialiased" >
+
+    <audio id="bgMusic" loop >
+      <source src="https://www.bensound.com/bensound-music/bensound-relaxing.mp3" type = "audio/mpeg" >
+        </audio>
+
+        < div id = "musicControl" class="fixed top-6 right-6 z-50 hidden opacity-0 transition-opacity duration-1000" >
+          <button onclick="toggleMusic()" class="w-12 h-12 bg-primary text-secondary rounded-full flex items-center justify-center border-2 border-secondary shadow-xl" >
+            <i class="fa-solid fa-gem" id = "musicIcon" > </i>
+              </button>
+              </div>
+
+              < !--COVER -->
+                <div id="cover" class="fixed inset-0 z-[100] bg-dark flex flex-col justify-center items-center text-center p-6 border-x-[20px] border-primary" >
+                  <div class="relative z-10 bg-primary/95 p-12 gadang-corner shadow-2xl" data - aos="zoom-in" >
+                    <p class="font-header text-accent tracking-widest text-sm mb-4" > Aleks Nagari </p>
+                      < h1 class="font-script text-6xl md:text-8xl text-secondary mb-10" > Nicola & Salsa </h1>
+                        < div class="mb-12" >
+                          <p class="text-xs tracking-widest uppercase text-white opacity-60 mb-2" > Mananti Kadatangan: </p>
+                            < p class="font-header text-2xl text-accent underline decoration-secondary uppercase" > TAMU UNDANGAN </p>
+                              </div>
+                              < button onclick = "openInvitation()" class="px-10 py-4 bg-secondary text-dark font-header text-sm tracking-widest hover:bg-white transition-all" >
+                                BUKA UNDANGAN
+                                  </button>
+                                  </div>
+                                  </div>
+
+                                  < !--MAIN CONTENT-- >
+                                    <main id="mainContent" class="hidden opacity-0 transition-opacity duration-1000" >
+
+                                      <!--HOME -->
+                                        <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-32 pb-20 bg-songket" >
+                                          <div data - aos="fade-up" >
+                                            <div class="relative mb-12 inline-block bg-white p-4 gadang-corner" >
+                                              <img src="https://placehold.co/600x800" class="w-72 h-96 md:w-80 md:h-[500px] object-cover mx-auto shadow-2xl gadang-corner" >
+                                                </div>
+                                                < h2 class="font-script text-7xl text-secondary mb-4 drop-shadow-lg" > Nicola & Salsa </h2>
+                                                  < p class="font-header text-2xl text-accent tracking-widest" >09 OKTOBER 2025 </p>
+                                                    </div>
+                                                    </section>
+
+                                                    < !--AYAT -->
+                                                      <section class="py-24 px-6 bg-dark text-secondary text-center border-y-8 border-primary" >
+                                                        <div class="max-w-3xl mx-auto" data - aos="fade-up" >
+                                                          <i class="fa-solid fa-star text-4xl opacity-30 mb-8 text-accent" > </i>
+                                                            < p class="font-body text-xl md:text-2xl leading-relaxed mb-8 italic text-white/80" >
+                                                              "Adaik basandi Syara', Syara' basandi Kitabullah. Baralek gadang bapisau tajam, manjago nagari jo kasih sayang."
+                                                              </p>
+                                                              < p class="font-header tracking-widest text-accent" >— ADAT NAN TARADAT —</p>
+                                                                </div>
+                                                                </section>
+
+                                                                < !--COUPLE -->
+                                                                  <section id="couple" class="py-32 bg-cream" >
+                                                                    <div class="container mx-auto px-6 text-center" >
+                                                                      <h2 class="font-header text-4xl text-primary mb-20 underline decoration-secondary" > Anak Daro & Marapulai </h2>
+                                                                        < div class="flex flex-col md:flex-row justify-center gap-20 max-w-6xl mx-auto" >
+                                                                          <div class="text-center" data - aos="fade-right" >
+                                                                            <div class="w-64 h-64 mx-auto mb-8 border-4 border-secondary p-2 bg-primary gadang-corner overflow-hidden" >
+                                                                              <img src="nicola.jpg" class="w-full h-full object-cover gadang-corner" >
+                                                                                </div>
+                                                                                < h3 class="font-header text-3xl text-primary mb-2" > Nicola Valentino </h3>
+                                                                                  < p class="text-sm font-bold opacity-70" > Marapulai </p>
+                                                                                    < p class="text-xs mt-2 italic" > Putra dari Bpk.Misno & Ibu Atik Fifiani </p>
+                                                                                      </div>
+                                                                                      < div class="text-center" data - aos="fade-left" >
+                                                                                        <div class="w-64 h-64 mx-auto mb-8 border-4 border-secondary p-2 bg-primary gadang-corner overflow-hidden" >
+                                                                                          <img src="salsa.jpg" class="w-full h-full object-cover gadang-corner" >
+                                                                                            </div>
+                                                                                            < h3 class="font-header text-3xl text-primary mb-2" > Salsabillah Ekanaiya </h3>
+                                                                                              < p class="text-sm font-bold opacity-70" > Anak Daro </p>
+                                                                                                < p class="text-xs mt-2 italic" > Putri dari Bpk.M.Rofiek & Ibu Sri Kurniawati </p>
+                                                                                                  </div>
+                                                                                                  </div>
+                                                                                                  </div>
+                                                                                                  </section>
+
+                                                                                                  < !--EVENT -->
+                                                                                                    <section id="event" class="py-32 bg-songket text-white relative" >
+                                                                                                      <div class="container mx-auto px-6 text-center" >
+                                                                                                        <h2 class="font-header text-4xl text-accent mb-20" > Alek Resepsi </h2>
+                                                                                                          < div class="max-w-xl mx-auto bg-dark border-8 border-secondary p-12 gadang-corner shadow-2xl" data - aos="flip-up" >
+                                                                                                            <h3 class="font-header text-3xl mb-8 border-b border-accent pb-4 text-accent" > BARALEK GADANG </h3>
+                                                                                                              < p class="font-header text-xl mb-4" > Kamis, 09 Oktober 2025 </p>
+                                                                                                                < p class="font-header text-lg mb-10" > Pukul 10.00 WIB - Salasai </p>
+                                                                                                                  < div class="pt-8 border-t border-accent/20" >
+                                                                                                                    <p class="font-header text-xs tracking-widest mb-4 text-secondary uppercase" > TAMPEK BARALEK: </p>
+                                                                                                                      < p class="font-body text-lg italic uppercase" > Bocek Karangploso(Toko Pak Mendol) </p>
+                                                                                                                        </div>
+                                                                                                                        < button class="mt-12 px-10 py-4 bg-accent text-dark font-header text-xs tracking-widest hover:bg-white transition-all" > LOKASI BARALEK </button>
+                                                                                                                          </div>
+                                                                                                                          < div id = "countdown" class="flex flex-wrap justify-center gap-6 mt-20" > </div>
+                                                                                                                            </div>
+                                                                                                                            </section>
+
+                                                                                                                            < !--GALLERY -->
+                                                                                                                              <section id="gallery" class="py-32 bg-cream" >
+                                                                                                                                <div class="container mx-auto px-4 text-center" >
+                                                                                                                                  <h2 class="font-header text-4xl text-primary mb-16 underline decoration-accent" > Kaba Rancak </h2>
+                                                                                                                                    < div class="grid grid-cols-2 md:grid-cols-4 gap-6" >
+                                                                                                                                      <img src="prewedding1.jpg" class="gadang-corner border-4 border-secondary cursor-pointer hover:scale-105 transition" onclick = "openModal(this.src)" >
+                                                                                                                                        <img src="prewedding2.jpg" class="gadang-corner border-4 border-secondary cursor-pointer hover:scale-105 transition" onclick = "openModal(this.src)" >
+                                                                                                                                          <img src="prewedding3.jpg" class="gadang-corner border-4 border-secondary cursor-pointer hover:scale-105 transition" onclick = "openModal(this.src)" >
+                                                                                                                                            <img src="prewedding4.jpg" class="gadang-corner border-4 border-secondary cursor-pointer hover:scale-105 transition" onclick = "openModal(this.src)" >
+                                                                                                                                              </div>
+                                                                                                                                              </div>
+                                                                                                                                              </section>
+
+                                                                                                                                              < !--GIFT -->
+                                                                                                                                                <section id="gift" class="py-32 bg-dark text-accent text-center border-y-8 border-primary" >
+                                                                                                                                                  <div class="container mx-auto px-6 max-w-2xl" >
+                                                                                                                                                    <h2 class="font-header text-4xl mb-12" > Tando Kasih </h2>
+                                                                                                                                                      < div class="bg-primary p-12 gadang-corner border-4 border-secondary text-white shadow-2xl" data - aos="zoom-in" >
+                                                                                                                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-6 mx-auto mb-10 grayscale invert" >
+                                                                                                                                                          <p class="font-header text-4xl mb-4 tracking-widest text-secondary" > 8163069596 </p>
+                                                                                                                                                            < p class="font-header text-lg mb-12 uppercase" > Nicola Valentino </p>
+                                                                                                                                                              < button onclick = "copyToClipboard()" class="px-12 py-4 bg-secondary text-dark font-header text-xs tracking-widest hover:bg-white transition" > SALIN NO.REKENING </button>
+                                                                                                                                                                </div>
+                                                                                                                                                                </div>
+                                                                                                                                                                </section>
+
+                                                                                                                                                                < !--RSVP -->
+                                                                                                                                                                  <section id="rsvp" class="py-32 bg-cream pb-48" >
+                                                                                                                                                                    <div class="container mx-auto px-6 max-w-2xl text-center" >
+                                                                                                                                                                      <h2 class="font-header text-4xl text-primary mb-16" > Doa Jo Harapan </h2>
+                                                                                                                                                                        < div class="bg-white p-10 gadang-corner border-4 border-secondary shadow-2xl" >
+                                                                                                                                                                          <textarea id="guestMsg" rows = "5" class="w-full border-b-2 border-primary p-4 font-body text-xl focus:outline-none italic" placeholder = "Tuliskan doa jo harapan untuak mempelai..." > </textarea>
+                                                                                                                                                                            < button onclick = "sendToWA()" class="w-full mt-12 bg-primary text-secondary py-5 font-header text-lg tracking-widest shadow-xl uppercase" > Kirim Doa </button>
+                                                                                                                                                                              </div>
+                                                                                                                                                                              </div>
+                                                                                                                                                                              </section>
+
+                                                                                                                                                                              < footer class="py-24 bg-dark text-secondary text-center border-t-8 border-primary" >
+                                                                                                                                                                                <h2 class="font-script text-7xl mb-6" > Nicola & Salsa </h2>
+                                                                                                                                                                                  < p class="font-header tracking-[0.5em] text-xs opacity-40" > TARIMO KASIH • 2025 </p>
+                                                                                                                                                                                    </footer>
+
+                                                                                                                                                                                    < !--NAVBAR -->
+                                                                                                                                                                                      <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-primary border-2 border-secondary p-4 flex gap-10 rounded-full shadow-2xl transition-all duration-700 translate-y-32 opacity-0" >
+                                                                                                                                                                                        <a href="#home" class="text-secondary text-2xl" > <i class="fa-solid fa-house" > </i></a >
+                                                                                                                                                                                          <a href="#couple" class="text-secondary text-2xl" > <i class="fa-solid fa-user-group" > </i></a >
+                                                                                                                                                                                            <a href="#event" class="text-secondary text-2xl" > <i class="fa-solid fa-scroll" > </i></a >
+                                                                                                                                                                                              <a href="#gallery" class="text-secondary text-2xl" > <i class="fa-solid fa-camera-retro" > </i></a >
+                                                                                                                                                                                                <a href="#gift" class="text-secondary text-2xl" > <i class="fa-solid fa-gift" > </i></a >
+                                                                                                                                                                                                  </nav>
+                                                                                                                                                                                                  </main>
+
+                                                                                                                                                                                                  < !--UTILITIES -->
+                                                                                                                                                                                                    <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-[1000] bg-dark border-2 border-secondary text-accent px-10 py-4 font-header text-sm opacity-0 transition-all pointer-events-none shadow-2xl uppercase" > Tando Kasih Disalin! </div>
+                                                                                                                                                                                                      < div id = "imgModal" class="modal fixed inset-0 bg-black/95 flex items-center justify-center p-6" onclick = "this.classList.remove('active')" >
+                                                                                                                                                                                                        <img id="modalImage" class="max-h-[85vh] border-4 border-secondary gadang-corner shadow-2xl" >
+                                                                                                                                                                                                          </div>
+
+                                                                                                                                                                                                          < script src = "https://unpkg.com/aos@2.3.1/dist/aos.js" > </script>
+                                                                                                                                                                                                            <script>
+AOS.init({ once: true, duration: 800 });
+const dom = {
+  cover: document.getElementById('cover'),
+  main: document.getElementById('mainContent'),
+  music: document.getElementById('bgMusic'),
+  musicCtrl: document.getElementById('musicControl'),
+  musicIcon: document.getElementById('musicIcon'),
+  nav: document.getElementById('navbar'),
+  countdown: document.getElementById('countdown')
+};
+let isPlaying = false;
+let musicPromise = null;
+
+function openInvitation() {
+  dom.cover.classList.add('cover-slide-up');
+  dom.main.classList.remove('hidden');
+  setTimeout(() => {
+    dom.main.classList.add('opacity-100');
+    dom.musicCtrl.classList.remove('hidden', 'opacity-0');
+    dom.nav.classList.remove('translate-y-32', 'opacity-0');
+    document.body.style.overflow = 'auto';
+    AOS.refresh();
+  }, 500);
+  toggleMusic(true);
+}
+
+async function toggleMusic(force = false) {
+  if (force || !isPlaying) {
+    try {
+      musicPromise = dom.music.play();
+      if (musicPromise !== undefined) {
+        await musicPromise;
+        isPlaying = true;
+        dom.musicIcon.classList.add('fa-spin');
+      }
+    } catch (err) { isPlaying = false; }
+  } else {
+    dom.music.pause();
+    isPlaying = false;
+    dom.musicIcon.classList.remove('fa-spin');
+  }
+}
+
+const weddingDate = new Date("2025-10-09T10:00:00").getTime();
+function updateCountdown() {
+  const now = new Date().getTime();
+  const diff = weddingDate - now;
+  if (diff < 0) { dom.countdown.innerHTML = "<h3 class='font-header text-secondary tracking-widest uppercase'>Aleks Gadang Dimuloi</h3>"; return; }
+  const t = { hari: Math.floor(diff / 86400000), jam: Math.floor((diff % 86400000) / 3600000), min: Math.floor((diff % 3600000) / 60000), dtk: Math.floor((diff % 60000) / 1000) };
+  dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => \`
+    < div class="bg-primary border-2 border-secondary p-4 w-24 gadang-corner transform hover:scale-110 transition shadow-lg" >
+            <div class="text-3xl font-header text-accent">\${v}</div>
+            <div class="text-[8px] font-header text-white uppercase opacity-60">\${k}</div>
+          </div >
+  \`).join('');
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+function copyToClipboard() {
+  const el = document.createElement('textarea'); el.value = '8163069596'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+  const toast = document.getElementById('toast'); toast.classList.add('opacity-100'); setTimeout(() => toast.classList.remove('opacity-100'), 2000);
+}
+function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = \`mailto:nikola @example.com?body = \${ encodeURIComponent(msg) } \`; }
+document.body.style.overflow = 'hidden';
+</script>
+  </body>
+  </html>
+    `;

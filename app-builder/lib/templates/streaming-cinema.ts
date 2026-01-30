@@ -1,0 +1,317 @@
+// Auto-generated template export
+// Template: streaming-cinema
+
+export const template = `< !DOCTYPE html >
+  <html lang="id" class="scroll-smooth" >
+    <head>
+    <meta charset="UTF-8" >
+      <meta name="viewport" content = "width=device-width, initial-scale=1.0" >
+        <title>Cinema Love - Nicola & Salsa </title>
+
+          < !--Fonts: Vintage Cinema(Playfair & Montserrat)-- >
+            <link rel="preconnect" href = "https://fonts.googleapis.com" >
+              <link rel="preconnect" href = "https://fonts.gstatic.com" crossorigin >
+                <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;700&display=swap" rel = "stylesheet" >
+
+                  <script src="https://cdn.tailwindcss.com" > </script>
+                    < link href = "https://unpkg.com/aos@2.3.1/dist/aos.css" rel = "stylesheet" >
+                      <link rel="stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" >
+
+                        <script>
+                        tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#8B0000',    /* Velvet Red */
+          secondary: '#D4AF37',  /* Movie Gold */
+            dark: '#000000',
+              accent: '#FFFFFF',
+                cream: '#1A1A1A',
+            },
+      fontFamily: {
+        header: ['"Playfair Display"', 'serif'],
+          body: ['"Montserrat"', 'sans-serif'],
+            }
+    }
+  }
+}
+</script>
+
+  <style>
+      :: -webkit - scrollbar { width: 5px; }
+      :: -webkit - scrollbar - track { background: #000; }
+      :: -webkit - scrollbar - thumb { background: #D4AF37; }
+      
+      .cover - slide - up {
+  transform: translateY(-100 %);
+  transition: transform 1.5s cubic - bezier(0.7, 0, 0.3, 1);
+}
+      
+      .marquee - lights {
+  box - shadow: 0 0 10px #D4AF37, inset 0 0 5px #D4AF37;
+  animation: blink 1s infinite;
+}
+@keyframes blink { 0 %, 100 % { opacity: 1; } 50 % { opacity: 0.5; } }
+  
+      .ticket - dashed { border - style: dashed; border - width: 2px; border - color: #D4AF37; }
+
+      /* Curtains Effect */
+      .curtain { background: repeating - linear - gradient(to right, #8B0000, #8B0000 20px, #A52A2A 40px); }
+  
+      .modal { transition: opacity 0.3s ease; opacity: 0; pointer - events: none; z - index: 5000; }
+      .modal.active { opacity: 1; pointer - events: all; }
+</style>
+  </head>
+  < body class="bg-dark text-white font-body overflow-hidden antialiased" >
+
+    <audio id="bgMusic" loop >
+      <source src="https://www.bensound.com/bensound-music/bensound-slowmotion.mp3" type = "audio/mpeg" >
+        </audio>
+
+        < div id = "musicControl" class="fixed top-6 right-6 z-50 hidden opacity-0 transition-opacity duration-1000" >
+          <button onclick="toggleMusic()" class="w-12 h-12 bg-secondary text-dark rounded-full flex items-center justify-center shadow-lg" >
+            <i class="fa-solid fa-microphone-lines" id = "musicIcon" > </i>
+              </button>
+              </div>
+
+              < !--SECTION 1: COVER(Cinema Entrance)-- >
+                <div id="cover" class="fixed inset-0 z-[100] curtain flex flex-col justify-center items-center text-center p-6 border-x-[20px] border-secondary/20 shadow-inner" >
+                  <div class="max-w-xl w-full bg-cream border-[10px] border-secondary p-12 relative shadow-[0_0_50px_rgba(212,175,55,0.3)]" data - aos="zoom-in" >
+                    <!--Marquee Lights-- >
+                      <div class="absolute -top-4 -left-4 w-4 h-4 rounded-full bg-secondary marquee-lights" > </div>
+                        < div class="absolute -top-4 -right-4 w-4 h-4 rounded-full bg-secondary marquee-lights" > </div>
+                          < div class="absolute -bottom-4 -left-4 w-4 h-4 rounded-full bg-secondary marquee-lights" > </div>
+                            < div class="absolute -bottom-4 -right-4 w-4 h-4 rounded-full bg-secondary marquee-lights" > </div>
+
+                              < p class="font-header text-secondary tracking-[0.3em] uppercase mb-4 italic" > Grand Premiere </p>
+                                < h1 class="font-header text-5xl md:text-7xl mb-8 border-y-2 border-secondary/40 py-4" > Nicola & Salsa </h1>
+                                  < div class="mb-10" >
+                                    <p class="text-secondary text-xs tracking-widest uppercase mb-2" > Admit One: </p>
+                                      < p class="font-header text-3xl text-white underline decoration-secondary" > TAMU UNDANGAN </p>
+                                        </div>
+                                        < button onclick = "openInvitation()" class="bg-secondary text-dark px-10 py-4 font-bold rounded-sm shadow-xl hover:bg-white transition-all uppercase tracking-widest text-sm" > Enter Cinema </button>
+                                          </div>
+                                          </div>
+
+                                          < !--MAIN CONTENT-- >
+                                            <main id="mainContent" class="hidden opacity-0 transition-opacity duration-1000" >
+
+                                              <!--SECTION 2: HOME(Now Playing)-- >
+                                                <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center px-4 pt-32 pb-20 relative bg-black" >
+                                                  <div class="absolute inset-0 opacity-40" >
+                                                    <img src="https://placehold.co/600x800" class="w-full h-full object-cover grayscale" >
+                                                      </div>
+                                                      < div class="relative z-10" data - aos="fade-up" >
+                                                        <div class="inline-block bg-primary px-6 py-2 mb-6 border-2 border-secondary" >
+                                                          <p class="font-bold tracking-[0.5em] text-sm uppercase" > NOW PLAYING </p>
+                                                            </div>
+                                                            < h2 class="font-header text-6xl md:text-8xl text-secondary drop-shadow-lg mb-8 italic" > The Wedding Story </h2>
+                                                              < p class="text-3xl font-header tracking-widest" >09 . 10 . 2025 </p>
+                                                                </div>
+                                                                </section>
+
+                                                                < !--SECTION 3: AYAT(Movie Quote)-- >
+                                                                  <section class="py-24 px-6 bg-cream border-y border-secondary/20" >
+                                                                    <div class="max-w-4xl mx-auto text-center" data - aos="fade-up" >
+                                                                      <i class="fa-solid fa-quote-left text-4xl text-secondary mb-10" > </i>
+                                                                        < p class="text-2xl md:text-3xl font-header text-white leading-relaxed italic mb-8" >
+                                                                          "And in between the reels of fate, He created love to guide our hearts home."
+                                                                          </p>
+                                                                          < div class="w-20 h-1 bg-secondary mx-auto mb-4" > </div>
+                                                                            < p class="font-bold text-secondary tracking-widest" > QS.AR - RUM : 21 </p>
+                                                                              </div>
+                                                                              </section>
+
+                                                                              < !--SECTION 4: COUPLE(Lead Actors)-- >
+                                                                                <section id="couple" class="py-32 bg-dark" >
+                                                                                  <div class="text-center mb-20" >
+                                                                                    <h2 class="font-header text-5xl text-secondary" > The Lead Actors </h2>
+                                                                                      </div>
+                                                                                      < div class="flex flex-col md:flex-row justify-center gap-16 px-6 max-w-6xl mx-auto" >
+                                                                                        <div class="text-center" data - aos="fade-right" >
+                                                                                          <div class="relative inline-block mb-10 group" >
+                                                                                            <div class="absolute inset-0 bg-secondary blur-lg opacity-20 group-hover:opacity-40 transition" > </div>
+                                                                                              < img src = "nicola.jpg" class="w-72 h-96 object-cover border-4 border-secondary relative z-10" >
+                                                                                                </div>
+                                                                                                < h3 class="font-header text-4xl mb-4" > Nicola Valentino </h3>
+                                                                                                  < p class="text-secondary tracking-widest mb-6" > Starring as THE GROOM </p>
+                                                                                                    < p class="text-sm italic opacity-60" > Putra dari Bpk.Misno & Ibu Atik Fifiani </p>
+                                                                                                      </div>
+                                                                                                      < div class="text-center" data - aos="fade-left" >
+                                                                                                        <div class="relative inline-block mb-10 group" >
+                                                                                                          <div class="absolute inset-0 bg-secondary blur-lg opacity-20 group-hover:opacity-40 transition" > </div>
+                                                                                                            < img src = "salsa.jpg" class="w-72 h-96 object-cover border-4 border-secondary relative z-10" >
+                                                                                                              </div>
+                                                                                                              < h3 class="font-header text-4xl mb-4" > Salsabillah Ekanaiya </h3>
+                                                                                                                < p class="text-secondary tracking-widest mb-6" > Starring as THE BRIDE </p>
+                                                                                                                  < p class="text-sm italic opacity-60" > Putri dari Bpk.M.Rofiek & Ibu Sri Kurniawati </p>
+                                                                                                                    </div>
+                                                                                                                    </div>
+                                                                                                                    </section>
+
+                                                                                                                    < !--SECTION 5: EVENT(Showtimes)-- >
+                                                                                                                      <section id="event" class="py-32 bg-cream" >
+                                                                                                                        <div class="container mx-auto px-6 text-center" >
+                                                                                                                          <h2 class="font-header text-5xl text-secondary mb-20" > Ticket to Showtime </h2>
+                                                                                                                            < div class="max-w-2xl mx-auto bg-primary ticket-dashed p-12 rounded-lg relative overflow-hidden shadow-2xl" data - aos="flip-up" >
+                                                                                                                              <!--Ticket Side Circles-- >
+                                                                                                                                <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-cream rounded-full" > </div>
+                                                                                                                                  < div class="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-cream rounded-full" > </div>
+
+                                                                                                                                    < h3 class="font-header text-3xl mb-8 border-b border-secondary/30 pb-4" > MAIN PREMIERE </h3>
+                                                                                                                                      < div class="grid grid-cols-2 gap-8 text-center mb-10" >
+                                                                                                                                        <div>
+                                                                                                                                        <p class="text-xs text-secondary uppercase tracking-widest mb-1" > Date </p>
+                                                                                                                                          < p class="font-bold" >09 OCT 2025 </p>
+                                                                                                                                            </div>
+                                                                                                                                            < div >
+                                                                                                                                            <p class="text-xs text-secondary uppercase tracking-widest mb-1" > Time </p>
+                                                                                                                                              < p class="font-bold" > 10:00 AM </p>
+                                                                                                                                                </div>
+                                                                                                                                                < div class="col-span-2" >
+                                                                                                                                                  <p class="text-xs text-secondary uppercase tracking-widest mb-1" > Location </p>
+                                                                                                                                                    < p class="font-bold" > Bocek Karangploso(Toko Pak Mendol) </p>
+                                                                                                                                                      </div>
+                                                                                                                                                      </div>
+                                                                                                                                                      < button class="bg-secondary text-dark px-10 py-3 font-bold uppercase tracking-widest" > Get Your Ticket </button>
+                                                                                                                                                        </div>
+                                                                                                                                                        < div id = "countdown" class="flex flex-wrap justify-center gap-6 mt-24" > </div>
+                                                                                                                                                          </div>
+                                                                                                                                                          </section>
+
+                                                                                                                                                          < !--SECTION 6: GALLERY(Photo Reels)-- >
+                                                                                                                                                            <section id="gallery" class="py-32 bg-dark" >
+                                                                                                                                                              <div class="text-center mb-20" >
+                                                                                                                                                                <h2 class="font-header text-5xl text-secondary" > Cinema Reel Gallery </h2>
+                                                                                                                                                                  </div>
+                                                                                                                                                                  < div class="flex flex-wrap justify-center gap-6 px-4" >
+                                                                                                                                                                    <img src="prewedding1.jpg" class="w-40 h-60 object-cover border-2 border-secondary grayscale hover:grayscale-0 cursor-pointer transition duration-500" onclick = "openModal(this.src)" >
+                                                                                                                                                                      <img src="prewedding2.jpg" class="w-40 h-60 object-cover border-2 border-secondary grayscale hover:grayscale-0 cursor-pointer transition duration-500" onclick = "openModal(this.src)" >
+                                                                                                                                                                        <img src="prewedding3.jpg" class="w-40 h-60 object-cover border-2 border-secondary grayscale hover:grayscale-0 cursor-pointer transition duration-500" onclick = "openModal(this.src)" >
+                                                                                                                                                                          <img src="prewedding4.jpg" class="w-40 h-60 object-cover border-2 border-secondary grayscale hover:grayscale-0 cursor-pointer transition duration-500" onclick = "openModal(this.src)" >
+                                                                                                                                                                            </div>
+                                                                                                                                                                            </section>
+
+                                                                                                                                                                            < !--SECTION 7: GIFT(Box Office)-- >
+                                                                                                                                                                              <section id="gift" class="py-32 bg-cream" >
+                                                                                                                                                                                <div class="max-w-2xl mx-auto px-6 text-center" >
+                                                                                                                                                                                  <h2 class="font-header text-5xl text-secondary mb-12 italic" > Box Office Gift </h2>
+                                                                                                                                                                                    < div class="bg-dark p-12 border-4 border-secondary shadow-2xl" data - aos="zoom-in" >
+                                                                                                                                                                                      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" class="h-6 mx-auto mb-10 grayscale invert" >
+                                                                                                                                                                                        <p class="font-header text-5xl mb-4 text-secondary" > 8163069596 </p>
+                                                                                                                                                                                          < p class="text-xl italic mb-10" > A.n Nicola Valentino </p>
+                                                                                                                                                                                            < button onclick = "copyToClipboard()" class="bg-secondary text-dark px-10 py-4 font-bold rounded-sm w-full uppercase" > Copy Account Number </button>
+                                                                                                                                                                                              </div>
+                                                                                                                                                                                              </div>
+                                                                                                                                                                                              </section>
+
+                                                                                                                                                                                              < !--SECTION 8: RSVP(Guest Reviews)-- >
+                                                                                                                                                                                                <section id="rsvp" class="py-32 bg-dark pb-48" >
+                                                                                                                                                                                                  <div class="max-w-2xl mx-auto px-6 text-center" >
+                                                                                                                                                                                                    <h2 class="font-header text-5xl text-secondary mb-16" > The Critic's Reviews</h2>
+                                                                                                                                                                                                      < div class="bg-cream p-10 border-t-8 border-primary shadow-2xl" >
+                                                                                                                                                                                                        <textarea id="guestMsg" rows = "5" class="w-full bg-dark/50 border-2 border-secondary/30 rounded p-6 text-white focus:border-secondary mb-8 font-header italic text-xl" placeholder = "Write your warm blessing here..." > </textarea>
+                                                                                                                                                                                                          < button onclick = "sendToWA()" class="bg-secondary text-dark px-10 py-5 font-bold rounded-sm w-full uppercase text-lg" > Send Review </button>
+                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                            </section>
+
+                                                                                                                                                                                                            < !--SECTION 9: FOOTER(End Credits)-- >
+                                                                                                                                                                                                              <footer class="py-24 bg-black text-center border-t border-secondary/20" >
+                                                                                                                                                                                                                <h2 class="font-header text-6xl text-secondary mb-4 italic" > Nicola & Salsa </h2>
+                                                                                                                                                                                                                  < p class="tracking-[0.5em] text-xs opacity-40 uppercase mb-10" > THE END OF CHAPTER ONE • 2025 </p>
+                                                                                                                                                                                                                    < div class="text-secondary text-2xl flex justify-center gap-8" >
+                                                                                                                                                                                                                      <i class="fa-solid fa-film" > </i>
+                                                                                                                                                                                                                        < i class="fa-solid fa-star" > </i>
+                                                                                                                                                                                                                          < i class="fa-solid fa-ticket" > </i>
+                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                            </footer>
+
+                                                                                                                                                                                                                            < !--NAVBAR -->
+                                                                                                                                                                                                                              <nav id="navbar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-secondary/90 backdrop-blur-md px-10 py-4 rounded-full flex gap-12 transition-all duration-700 translate-y-32 opacity-0 shadow-2xl" >
+                                                                                                                                                                                                                                <a href="#home" class="text-dark hover:scale-125 transition" > <i class="fa-solid fa-house" > </i></a >
+                                                                                                                                                                                                                                  <a href="#couple" class="text-dark hover:scale-125 transition" > <i class="fa-solid fa-star" > </i></a >
+                                                                                                                                                                                                                                    <a href="#event" class="text-dark hover:scale-125 transition" > <i class="fa-solid fa-ticket" > </i></a >
+                                                                                                                                                                                                                                      <a href="#gallery" class="text-dark hover:scale-125 transition" > <i class="fa-solid fa-clapperboard" > </i></a >
+                                                                                                                                                                                                                                        <a href="#gift" class="text-dark hover:scale-125 transition" > <i class="fa-solid fa-gift" > </i></a >
+                                                                                                                                                                                                                                          </nav>
+
+                                                                                                                                                                                                                                          </main>
+
+                                                                                                                                                                                                                                          < !--UTILITIES -->
+                                                                                                                                                                                                                                            <div id="toast" class="fixed top-12 left-1/2 -translate-x-1/2 z-[1000] bg-secondary text-dark px-10 py-3 rounded-sm font-bold opacity-0 transition-all pointer-events-none shadow-xl" > COPIED! </div>
+                                                                                                                                                                                                                                              < div id = "imgModal" class="modal fixed inset-0 bg-black/95 flex items-center justify-center p-6" onclick = "this.classList.remove('active')" >
+                                                                                                                                                                                                                                                <img id="modalImage" class="max-h-[85vh] border-4 border-secondary shadow-2xl" >
+                                                                                                                                                                                                                                                  </div>
+
+                                                                                                                                                                                                                                                  < script src = "https://unpkg.com/aos@2.3.1/dist/aos.js" > </script>
+                                                                                                                                                                                                                                                    <script>
+AOS.init({ once: true, duration: 800 });
+const dom = {
+  cover: document.getElementById('cover'),
+  main: document.getElementById('mainContent'),
+  music: document.getElementById('bgMusic'),
+  musicCtrl: document.getElementById('musicControl'),
+  musicIcon: document.getElementById('musicIcon'),
+  nav: document.getElementById('navbar'),
+  countdown: document.getElementById('countdown')
+};
+let isPlaying = false;
+
+function openInvitation() {
+  dom.cover.classList.add('cover-slide-up');
+  dom.main.classList.remove('hidden');
+  setTimeout(() => {
+    dom.main.classList.add('opacity-100');
+    dom.musicCtrl.classList.remove('hidden', 'opacity-0');
+    dom.nav.classList.remove('translate-y-32', 'opacity-0');
+    document.body.style.overflow = 'auto';
+    AOS.refresh();
+  }, 500);
+  toggleMusic(true);
+}
+
+async function toggleMusic(force = false) {
+  if (force || !isPlaying) {
+    try {
+      const promise = dom.music.play();
+      if (promise !== undefined) {
+        await promise;
+        isPlaying = true;
+        dom.musicIcon.classList.add('fa-spin');
+      }
+    } catch (err) { isPlaying = false; }
+  } else {
+    dom.music.pause();
+    isPlaying = false;
+    dom.musicIcon.classList.remove('fa-spin');
+  }
+}
+
+const weddingDate = new Date("2025-10-09T10:00:00").getTime();
+function updateCountdown() {
+  const now = new Date().getTime();
+  const diff = weddingDate - now;
+  if (diff < 0) { dom.countdown.innerHTML = "PREMIERE STARTED"; return; }
+  const t = { D: Math.floor(diff / 86400000), H: Math.floor((diff % 86400000) / 3600000), M: Math.floor((diff % 3600000) / 60000), S: Math.floor((diff % 60000) / 1000) };
+  dom.countdown.innerHTML = Object.entries(t).map(([k, v]) => \`
+    < div class="bg-primary border border-secondary p-4 w-20 shadow-xl" >
+            <div class="text-3xl font-header text-secondary">\${v}</div>
+            <div class="text-[10px] font-bold text-white opacity-60">\${k}</div>
+          </div >
+  \`).join('');
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+function copyToClipboard() {
+  const el = document.createElement('textarea'); el.value = '8163069596'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+  const toast = document.getElementById('toast'); toast.classList.add('opacity-100'); setTimeout(() => toast.classList.remove('opacity-100'), 2000);
+}
+function openModal(src) { document.getElementById('modalImage').src = src; document.getElementById('imgModal').classList.add('active'); }
+function sendToWA() { const msg = document.getElementById("guestMsg").value; window.location.href = \`mailto:nikola @example.com?body = \${ encodeURIComponent(msg) } \`; }
+document.body.style.overflow = 'hidden';
+</script>
+  </body>
+  </html>
+    `;
