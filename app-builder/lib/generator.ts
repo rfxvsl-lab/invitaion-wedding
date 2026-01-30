@@ -21,8 +21,8 @@ async function loadTemplate(themeId: string): Promise<string> {
     try {
         console.log(`[Generator] Loading template: ${themeId}`);
 
-        // Dynamic import - works reliably in serverless
-        const templateModule = await import(`./templates/${themeId}.ts`);
+        // Dynamic import - works reliably in serverless (no .ts extension!)
+        const templateModule = await import(`./templates/${themeId}`);
         const template = templateModule.template;
 
         console.log(`[Generator] Successfully loaded template: ${themeId} (${template.length} bytes)`);
@@ -30,10 +30,10 @@ async function loadTemplate(themeId: string): Promise<string> {
     } catch (error) {
         console.error(`[Generator] Failed to load template ${themeId}:`, error);
 
-        // Fallback to default template
+        // Fallback to default template (no .ts extension!)
         try {
             console.log(`[Generator] Attempting fallback to regular-invitation`);
-            const fallbackModule = await import('./templates/regular-invitation.ts');
+            const fallbackModule = await import('./templates/regular-invitation');
             return fallbackModule.template;
         } catch (fallbackError) {
             console.error(`[Generator] Fallback also failed:`, fallbackError);
