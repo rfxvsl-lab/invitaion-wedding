@@ -66,6 +66,21 @@ export default function BuilderPage() {
     }));
   };
 
+  const handleExport = () => {
+    const iframe = document.querySelector('iframe');
+    if (!iframe || !iframe.srcdoc) return;
+
+    const blob = new Blob([iframe.srcdoc], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `undangan-${formData.groom.nick}-${formData.bride.nick}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="flex h-screen overflow-hidden font-sans bg-gray-100">
       
@@ -114,10 +129,10 @@ export default function BuilderPage() {
         </div>
 
         <button 
-          onClick={() => alert("Fitur Save/Render Final akan kita buat setelah ini!")}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition"
+          onClick={handleExport}
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition"
         >
-          Finalize & Render (1x)
+          Download HTML Final
         </button>
       </div>
 
