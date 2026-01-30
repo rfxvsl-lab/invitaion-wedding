@@ -14,7 +14,7 @@ export const revalidate = 0; // Force dynamic rendering
 async function getInvitationData(slug: string) {
   const { data, error } = await supabase
     .from('invitations')
-    .select('theme, form_data')
+    .select('theme, data_json')
     .eq('slug', slug)
     .single();
 
@@ -22,7 +22,7 @@ async function getInvitationData(slug: string) {
     console.error('Error fetching invitation:', error);
     return null;
   }
-  return data as { theme: string; form_data: InvitationData };
+  return data as { theme: string; data_json: InvitationData };
 }
 
 export default async function InvitationPage({ params }: PageProps) {
@@ -30,12 +30,12 @@ export default async function InvitationPage({ params }: PageProps) {
   const invitation = await getInvitationData(slug);
 
   if (!invitation) {
-    notFound();
+    return <div className="flex items-center justify-center h-screen text-2xl font-bold text-gray-700">Undangan tidak ditemukan.</div>;
   }
 
   // Combine theme from DB with the rest of the form_data for generator
   const fullData: InvitationData = {
-    ...invitation.form_data,
+    ...invitation.data_json,
     theme: invitation.theme,
   };
 
@@ -45,3 +45,4 @@ export default async function InvitationPage({ params }: PageProps) {
     <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
   );
 }
+
