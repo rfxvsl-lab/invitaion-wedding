@@ -1,3 +1,4 @@
+'''
 import fs from 'fs';
 import path from 'path';
 
@@ -11,47 +12,57 @@ export interface InvitationData {
   theme: string; // Nama file template, misal: 'theme-luxury-dark'
 }
 
-export const generateHTML = (data: InvitationData) => {
-  // Path yang lebih robust untuk menemukan folder templates
-  const templatePath = path.join(process.cwd(), 'app-builder', 'templates', `${data.theme}.html`);
+// Fungsi cerdas untuk menemukan path template yang benar di lingkungan lokal dan Vercel
+const getTemplatePath = (theme: string) => {
+  const root = process.cwd();
+  // Cek apakah folder templates ada di root langsung (Vercel) atau di dalam subfolder (Local)
+  const possiblePaths = [
+    path.join(root, 'templates', `${theme}.html`),
+    path.join(root, 'app-builder', 'templates', `${theme}.html`)
+  ];
 
-  // Cek apakah file ada
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) return p;
+  }
+  
+  // Fallback jika tidak ditemukan, akan memunculkan error di langkah berikutnya
+  const fallbackPath = path.join(root, 'templates', `${theme}.html`);
+  console.error(`Template not found. Tried paths: ${possiblePaths.join(', ')}. Falling back to: ${fallbackPath}`);
+  return fallbackPath;
+};
+
+export const generateHTML = (data: InvitationData) => {
+  // 1. Dapatkan path yang benar menggunakan fungsi cerdas
+  const templatePath = getTemplatePath(data.theme);
+
+  // 2. Cek apakah file ada
   if (!fs.existsSync(templatePath)) {
     // Lemparkan error yang akan ditangkap oleh API route
     throw new Error(`Template not found at path: ${templatePath}`);
   }
 
-  // 2. Baca isi file HTML
+  // 3. Baca isi file HTML
   let html = fs.readFileSync(templatePath, 'utf-8');
 
-  // 3. Daftar kata kunci yang akan diganti (Mapping)
-  const replacements: Record<string, string> = {
-    '{{COVER_IMG}}': data.cover?.img || data.groom.img,
-    '{{GROOM_NICK}}': data.groom.nick,
-    '{{GROOM_FULL}}': data.groom.full,
-    '{{GROOM_PARENTS}}': data.groom.parents,
-    '{{GROOM_IMG}}': data.groom.img,
-    
-    '{{BRIDE_NICK}}': data.bride.nick,
-    '{{BRIDE_FULL}}': data.bride.full,
-    '{{BRIDE_PARENTS}}': data.bride.parents,
-    '{{BRIDE_IMG}}': data.bride.img,
-
-    '{{EVENT_DATE}}': data.event.date,
-    '{{EVENT_TIME}}': data.event.time,
-    '{{EVENT_LOC}}': data.event.loc,
-    '{{EVENT_MAP}}': data.event.map,
-
-    '{{GIFT_BANK}}': data.gift.bank,
-    '{{GIFT_NUM}}': data.gift.num,
-    '{{GIFT_NAME}}': data.gift.name
-  };
-
-  // 4. Lakukan penggantian teks (Replace All)
-  for (const [key, value] of Object.entries(replacements)) {
-    const regex = new RegExp(key, 'g'); 
-    html = html.replace(regex, value || '');
-  }
+  // 4. Lakukan replace placeholder (ini adalah implementasi sederhana, Handlebars lebih baik untuk logika kompleks)
+  html = html
+    .replace(/{{groom.nick}}/g, data.groom.nick)
+    .replace(/{{groom.full}}/g, data.groom.full)
+    .replace(/{{groom.parents}}/g, data.groom.parents)
+    .replace(/{{groom.img}}/g, data.groom.img)
+    .replace(/{{bride.nick}}/g, data.bride.nick)
+    .replace(/{{bride.full}}/g, data.bride.full)
+    .replace(/{{bride.parents}}/g, data.bride.parents)
+    .replace(/{{bride.img}}/g, data.bride.img)
+    .replace(/{{event.date}}/g, data.event.date)
+    .replace(/{{event.time}}/g, data.event.time)
+    .replace(/{{event.loc}}/g, data.event.loc)
+    .replace(/{{event.map}}/g, data.event.map)
+    .replace(/{{gift.bank}}/g, data.gift.bank)
+    .replace(/{{gift.num}}/g, data.gift.num)
+    .replace(/{{gift.name}}/g, data.gift.name)
+    .replace(/{{cover.img}}/g, data.cover?.img || '');
 
   return html;
 };
+'''
