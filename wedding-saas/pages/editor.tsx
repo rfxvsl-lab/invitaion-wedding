@@ -60,28 +60,43 @@ const INITIAL_DATA: InvitationData = {
     }
 };
 
+import { useRouter } from 'next/router';
+
 export default function EditorPage() {
-    const [data, setData] = useState<InvitationData>(INITIAL_DATA);
+    const router = useRouter();
+    const [data, setData] = useState<InvitationData>(() => ({
+        ...INITIAL_DATA,
+        metadata: {
+            ...INITIAL_DATA.metadata,
+            slug: `invitation-${Math.random().toString(36).substr(2, 6)}`
+        }
+    }));
     const [saveStatus, setSaveStatus] = useState<'saved' | 'unsaved' | 'saving' | 'error'>('saved');
     const [showPublishModal, setShowPublishModal] = useState(false);
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Initial Fetch (Simplified for Demo: fetching hardcoded slug)
     // In production, you might want to fetch based on query param or user session
+    // Load Data from URL Slug if present
     useEffect(() => {
-        const fetchData = async () => {
-            const { data: remoteData, error } = await supabase
-                .from('invitations')
-                .select('data')
-                .eq('slug', INITIAL_DATA.metadata.slug)
-                .single();
+        if (!router.isReady) return;
 
-            if (remoteData?.data) {
-                setData(remoteData.data as InvitationData);
-            }
-        };
-        fetchData();
-    }, []);
+        const slug = router.query.edit as string; // use ?edit=slug to load
+        if (slug) {
+            const fetchData = async () => {
+                const { data: remoteData, error } = await supabase
+                    .from('invitations')
+                    .select('data')
+                    .eq('slug', slug)
+                    .single();
+
+                if (remoteData?.data) {
+                    setData(remoteData.data as InvitationData);
+                }
+            };
+            fetchData();
+        }
+    }, [router.isReady, router.query]);
 
     const handleUpdate = useCallback((path: string, value: any) => {
         setData((prev) => {
@@ -99,6 +114,12 @@ export default function EditorPage() {
     }, []);
 
     const saveToSupabase = useCallback(async () => {
+        if (data.metadata.slug.startsWith('invitation-')) {
+            alert('Mohon ubah "Link Undangan (Slug)" di menu Pengaturan (Settings) sebelum mempublish! Gunakan nama unik Anda.');
+            // setActiveTab('settings'); // Cannot access child state directly
+            return;
+        }
+
         setSaveStatus('saving');
         try {
             const { error } = await supabase.from('invitations').upsert({
