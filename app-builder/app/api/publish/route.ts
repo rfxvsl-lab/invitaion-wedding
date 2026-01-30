@@ -1,4 +1,3 @@
-'''
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase'; // Pastikan path ini benar
 import { generateHTML, InvitationData } from '@/lib/generator';
@@ -75,4 +74,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: err.message || 'An unexpected error occurred' }, { status: 500 });
   }
 }
-'''

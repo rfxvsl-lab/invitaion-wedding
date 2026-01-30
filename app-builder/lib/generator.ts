@@ -1,4 +1,3 @@
-'''
 import fs from 'fs';
 import path from 'path';
 
@@ -65,4 +64,3 @@ export const generateHTML = (data: InvitationData) => {
 
   return html;
 };
-'''

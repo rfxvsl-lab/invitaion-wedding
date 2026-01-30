@@ -1,4 +1,3 @@
-'''
 import { supabase } from '@/lib/supabase';
 import { generateHTML, InvitationData } from '@/lib/generator'; // Menggunakan generator yang sudah diperbaiki
 import { notFound } from 'next/navigation';
@@ -71,4 +70,3 @@ export default async function InvitationPage({ params }: PageProps) {
     );
   }
 }
-'''
