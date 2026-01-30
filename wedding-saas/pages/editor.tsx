@@ -1,16 +1,15 @@
-'use client';
-
+// Path: /pages/editor.tsx
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Loader2, CheckCircle, Save, Globe, Eye } from 'lucide-react';
-import { InvitationData } from '../../types/invitation';
-import EditorSidebar from '../../components/EditorSidebar';
+import { InvitationData } from '../types/invitation';
+import EditorSidebar from '../components/EditorSidebar';
 
 // Templates
-import ModernArch from '../../templates/ModernArch';
-import ClassicSerif from '../../templates/ClassicSerif';
-import BotanicalLine from '../../templates/BotanicalLine';
-import RusticWood from '../../templates/RusticWood';
-import DarkLuxury from '../../templates/DarkLuxury';
+import ModernArch from '../templates/ModernArch';
+import ClassicSerif from '../templates/ClassicSerif';
+import BotanicalLine from '../templates/BotanicalLine';
+import RusticWood from '../templates/RusticWood';
+import DarkLuxury from '../templates/DarkLuxury';
 
 // Initial Data
 const INITIAL_DATA: InvitationData = {
