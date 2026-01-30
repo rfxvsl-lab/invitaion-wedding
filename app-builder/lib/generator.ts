@@ -1,9 +1,22 @@
 /**  
  * @fileoverview Template loader for wedding invitation themes
- * Loads templates via static imports (guaranteed to work in Vercel)
+ * Direct imports - guaranteed to work in Vercel
  */
 
-import * as templates from './templates';
+// Direct imports (no index file needed)
+import { template as luxuryDark } from './templates/luxury-dark';
+import { template as rusticWood } from './templates/rustic-wood';
+import { template as pixelArt } from './templates/pixel-art';
+import { template as magicLove } from './templates/magic-love';
+import { template as cartoonCars } from './templates/cartoon-cars';
+import { template as cartoonSpongebob } from './templates/cartoon-spongebob';
+import { template as cartoonAvatar } from './templates/cartoon-avatar';
+import { template as streamingNetflix } from './templates/streaming-netflix';
+import { template as streamingCinema } from './templates/streaming-cinema';
+import { template as traditionJavanese } from './templates/tradition-javanese';
+import { template as traditionMinang } from './templates/tradition-minang';
+import { template as traditionBalinese } from './templates/tradition-balinese';
+import { template as regularInvitation } from './templates/regular-invitation';
 
 export interface FormData {
     slug: string;
@@ -15,43 +28,41 @@ export interface FormData {
     accountNumber: string;
 }
 
-// Map theme IDs to camelCase template names
-const themeMap: Record<string, keyof typeof templates> = {
-    'luxury-dark': 'luxuryDark',
-    'rustic-wood': 'rusticWood',
-    'pixel-art': 'pixelArt',
-    'magic-love': 'magicLove',
-    'cartoon-cars': 'cartoonCars',
-    'cartoon-spongebob': 'cartoonSpongebob',
-    'cartoon-avatar': 'cartoonAvatar',
-    'streaming-netflix': 'streamingNetflix',
-    'streaming-cinema': 'streamingCinema',
-    'tradition-javanese': 'traditionJavanese',
-    'tradition-minang': 'traditionMinang',
-    'tradition-balinese': 'traditionBalinese',
-    'regular-invitation': 'regularInvitation',
+// Map theme IDs to imported templates
+const templateMap: Record<string, string> = {
+    'luxury-dark': luxuryDark,
+    'rustic-wood': rusticWood,
+    'pixel-art': pixelArt,
+    'magic-love': magicLove,
+    'cartoon-cars': cartoonCars,
+    'cartoon-spongebob': cartoonSpongebob,
+    'cartoon-avatar': cartoonAvatar,
+    'streaming-netflix': streamingNetflix,
+    'streaming-cinema': streamingCinema,
+    'tradition-javanese': traditionJavanese,
+    'tradition-minang': traditionMinang,
+    'tradition-balinese': traditionBalinese,
+    'regular-invitation': regularInvitation,
 };
 
 /**
- * Load template via static import
- * Templates are bundled at build time
+ * Load template - all templates imported at build time
  */
 function loadTemplate(themeId: string): string {
     try {
         console.log(`[Generator] Loading template: ${themeId}`);
 
-        const templateKey = themeMap[themeId];
-        if (!templateKey) {
-            console.error(`[Generator] Unknown theme: ${themeId}`);
-            return templates.regularInvitation; // fallback
+        const template = templateMap[themeId];
+        if (!template) {
+            console.error(`[Generator] Unknown theme: ${themeId}, using fallback`);
+            return regularInvitation;
         }
 
-        const template = templates[templateKey];
         console.log(`[Generator] Successfully loaded template: ${themeId} (${template.length} bytes)`);
         return template;
     } catch (error) {
         console.error(`[Generator] Failed to load template ${themeId}:`, error);
-        return templates.regularInvitation; // fallback
+        return regularInvitation;
     }
 }
 
