@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Loader2, CheckCircle, Save, Globe, Eye } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
 import EditorSidebar from '../components/EditorSidebar';
+import { supabase } from '../lib/supabase';
 
 // Templates
 import ModernArch from '../templates/ModernArch';
@@ -38,18 +39,27 @@ const INITIAL_DATA: InvitationData = {
     }
 };
 
-// Mock Supabase
-const mockSupabase = {
-    upsert: async (payload: any) => {
-        await new Promise(r => setTimeout(r, 800));
-        console.log("[DB] Saved:", payload);
-    }
-};
-
 export default function EditorPage() {
     const [data, setData] = useState<InvitationData>(INITIAL_DATA);
-    const [saveStatus, setSaveStatus] = useState<'saved' | 'unsaved' | 'saving'>('saved');
+    const [saveStatus, setSaveStatus] = useState<'saved' | 'unsaved' | 'saving' | 'error'>('saved');
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Initial Fetch (Simplified for Demo: fetching hardcoded slug)
+    // In production, you might want to fetch based on query param or user session
+    useEffect(() => {
+        const fetchData = async () => {
+            const { data: remoteData, error } = await supabase
+                .from('invitations')
+                .select('data')
+                .eq('slug', INITIAL_DATA.metadata.slug)
+                .single();
+
+            if (remoteData?.data) {
+                setData(remoteData.data as InvitationData);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleUpdate = useCallback((path: string, value: any) => {
         setData((prev) => {
@@ -68,8 +78,20 @@ export default function EditorPage() {
 
     const saveToSupabase = useCallback(async () => {
         setSaveStatus('saving');
-        await mockSupabase.upsert({ slug: data.metadata.slug, data });
-        setSaveStatus('saved');
+        try {
+            const { error } = await supabase.from('invitations').upsert({
+                slug: data.metadata.slug,
+                data: data,
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'slug' });
+
+            if (error) throw error;
+            setSaveStatus('saved');
+        } catch (err: any) {
+            console.error(err);
+            setSaveStatus('error');
+            alert(`Gagal menyimpan: ${err.message || 'Unknown error'}. Pastikan Anda sudah menjalankan query SQL di Supabase.`);
+        }
     }, [data]);
 
     useEffect(() => {
@@ -97,12 +119,14 @@ export default function EditorPage() {
             <main className="flex-1 flex flex-col relative bg-gray-200">
                 <div className="h-14 bg-white border-b flex items-center justify-between px-6 shadow-sm z-10">
                     <div className="flex items-center gap-2 text-gray-600 text-sm font-medium">
-                        <Globe size={16} /> <span>invit.id/{data.metadata.slug}</span>
+                        <Globe size={16} /> <span>weddinginvitation-18.vercel.app/{data.metadata.slug}</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <span className="text-[10px] font-bold uppercase text-gray-400 flex items-center gap-1">
-                            {saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} className={saveStatus === 'saved' ? 'text-green-500' : 'text-amber-500'} />}
-                            {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'All Saved' : 'Unsaved'}
+                            {saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin" /> :
+                                saveStatus === 'error' ? <span className="text-red-500">Error!</span> :
+                                    <CheckCircle size={12} className={saveStatus === 'saved' ? 'text-green-500' : 'text-amber-500'} />}
+                            {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'All Saved' : saveStatus === 'error' ? 'Failed' : 'Unsaved'}
                         </span>
                         <button onClick={() => saveToSupabase()} className="bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-black transition-colors">
                             <Save size={14} /> Deploy

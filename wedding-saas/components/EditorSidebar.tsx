@@ -9,30 +9,31 @@ interface EditorSidebarProps {
     onUpdate: (path: string, value: any) => void;
 }
 
+// Moved Input component outside to prevent re-mounting on every render
+const Input = ({ label, value, onChange, placeholder }: { label: string, value: any, onChange: (val: string) => void, placeholder?: string }) => (
+    <div className="mb-4">
+        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">{label}</label>
+        <input
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
+        />
+    </div>
+);
+
 const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
-    const [activeTab, setActiveTab] = useState<'content' | 'events' | 'design'>('content');
+    const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design'>('content');
 
     // Helper untuk resolve nested value (safe access)
     const getValue = (path: string) => {
         return path.split('.').reduce((o: any, i) => (o ? o[i] : ''), data);
     };
 
-    const Input = ({ label, path, placeholder }: { label: string, path: string, placeholder?: string }) => (
-        <div className="mb-4">
-            <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">{label}</label>
-            <input
-                value={getValue(path)}
-                onChange={(e) => onUpdate(path, e.target.value)}
-                placeholder={placeholder}
-                className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all"
-            />
-        </div>
-    );
-
     return (
         <aside className="w-[450px] flex flex-col bg-white border-r border-gray-200 h-full shadow-xl z-20">
             <div className="flex border-b border-gray-100 bg-gray-50/50">
-                {['content', 'events', 'design'].map(tab => (
+                {['content', 'events', 'media', 'design'].map(tab => (
                     <button key={tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest ${activeTab === tab ? 'border-b-2 border-indigo-600 text-indigo-600 bg-white' : 'text-gray-400 hover:text-gray-600'}`}>{tab}</button>
                 ))}
             </div>
@@ -42,18 +43,20 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                     <>
                         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                             <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Layout size={14} className="text-indigo-500" /> HERO SECTION</h3>
-                            <Input label="Judul / Nicknames" path="content.hero.nicknames" />
-                            <Input label="Tanggal (Teks)" path="content.hero.date" placeholder="Contoh: 12 Desember 2024" />
+                            <Input label="Judul / Nicknames" value={getValue('content.hero.nicknames')} onChange={(v) => onUpdate('content.hero.nicknames', v)} />
+                            <Input label="Tanggal (Teks)" value={getValue('content.hero.date')} onChange={(v) => onUpdate('content.hero.date', v)} placeholder="Contoh: 12 Desember 2024" />
                             <ImageUploader label="Foto Sampul Utama" currentUrl={data.content.hero.main_image} onUpdate={(url) => onUpdate('content.hero.main_image', url)} />
                         </div>
                         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                             <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Users size={14} className="text-indigo-500" /> MEMPELAI</h3>
-                            <Input label="Nama Pria" path="content.couples.pria.name" />
-                            <Input label="Orang Tua Pria" path="content.couples.pria.parents" />
+                            <Input label="Nama Pria" value={getValue('content.couples.pria.name')} onChange={(v) => onUpdate('content.couples.pria.name', v)} />
+                            <Input label="Orang Tua Pria" value={getValue('content.couples.pria.parents')} onChange={(v) => onUpdate('content.couples.pria.parents', v)} />
+                            <Input label="Instagram Pria (@username)" value={getValue('content.couples.pria.ig')} onChange={(v) => onUpdate('content.couples.pria.ig', v)} />
                             <ImageUploader label="Foto Pria" currentUrl={data.content.couples.pria.photo} onUpdate={(url) => onUpdate('content.couples.pria.photo', url)} />
                             <div className="my-6 border-t border-dashed border-gray-200"></div>
-                            <Input label="Nama Wanita" path="content.couples.wanita.name" />
-                            <Input label="Orang Tua Wanita" path="content.couples.wanita.parents" />
+                            <Input label="Nama Wanita" value={getValue('content.couples.wanita.name')} onChange={(v) => onUpdate('content.couples.wanita.name', v)} />
+                            <Input label="Orang Tua Wanita" value={getValue('content.couples.wanita.parents')} onChange={(v) => onUpdate('content.couples.wanita.parents', v)} />
+                            <Input label="Instagram Wanita (@username)" value={getValue('content.couples.wanita.ig')} onChange={(v) => onUpdate('content.couples.wanita.ig', v)} />
                             <ImageUploader label="Foto Wanita" currentUrl={data.content.couples.wanita.photo} onUpdate={(url) => onUpdate('content.couples.wanita.photo', url)} />
                         </div>
                     </>
@@ -64,19 +67,48 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                         <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Calendar size={14} className="text-indigo-500" /> DETAIL ACARA</h3>
                         <div className="p-3 bg-gray-50 rounded-lg mb-4">
                             <p className="text-[10px] font-bold text-gray-400 mb-2">AKAD NIKAH</p>
-                            <Input label="Tanggal (YYYY-MM-DD)" path="content.events.akad.date" />
-                            <Input label="Waktu" path="content.events.akad.time" />
-                            <Input label="Lokasi" path="content.events.akad.venue" />
-                            <Input label="Alamat" path="content.events.akad.address" />
+                            <Input label="Tanggal (YYYY-MM-DD)" value={getValue('content.events.akad.date')} onChange={(v) => onUpdate('content.events.akad.date', v)} />
+                            <Input label="Waktu" value={getValue('content.events.akad.time')} onChange={(v) => onUpdate('content.events.akad.time', v)} />
+                            <Input label="Lokasi" value={getValue('content.events.akad.venue')} onChange={(v) => onUpdate('content.events.akad.venue', v)} />
+                            <Input label="Alamat" value={getValue('content.events.akad.address')} onChange={(v) => onUpdate('content.events.akad.address', v)} />
+                            <Input label="Link Google Maps" value={getValue('content.events.akad.map_url')} onChange={(v) => onUpdate('content.events.akad.map_url', v)} placeholder="https://maps.app.goo.gl/..." />
                         </div>
                         <div className="p-3 bg-gray-50 rounded-lg">
                             <p className="text-[10px] font-bold text-gray-400 mb-2">RESEPSI</p>
-                            <Input label="Tanggal (YYYY-MM-DD)" path="content.events.resepsi.date" />
-                            <Input label="Waktu" path="content.events.resepsi.time" />
-                            <Input label="Lokasi" path="content.events.resepsi.venue" />
-                            <Input label="Alamat" path="content.events.resepsi.address" />
+                            <Input label="Tanggal (YYYY-MM-DD)" value={getValue('content.events.resepsi.date')} onChange={(v) => onUpdate('content.events.resepsi.date', v)} />
+                            <Input label="Waktu" value={getValue('content.events.resepsi.time')} onChange={(v) => onUpdate('content.events.resepsi.time', v)} />
+                            <Input label="Lokasi" value={getValue('content.events.resepsi.venue')} onChange={(v) => onUpdate('content.events.resepsi.venue', v)} />
+                            <Input label="Alamat" value={getValue('content.events.resepsi.address')} onChange={(v) => onUpdate('content.events.resepsi.address', v)} />
+                            <Input label="Link Google Maps" value={getValue('content.events.resepsi.map_url')} onChange={(v) => onUpdate('content.events.resepsi.map_url', v)} placeholder="https://maps.app.goo.gl/..." />
                         </div>
                     </div>
+                )}
+
+                {activeTab === 'media' && (
+                    <>
+                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Layout size={14} className="text-indigo-500" /> VIDEO PREWEDDING</h3>
+                            <Input label="Youtube / Vimeo URL" value={getValue('content.gallery.video_url')} onChange={(v) => onUpdate('content.gallery.video_url', v)} placeholder="https://youtube.com/..." />
+                        </div>
+
+                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Layout size={14} className="text-indigo-500" /> GALERI FOTO</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {[0, 1, 2, 3, 4, 5].map((idx) => (
+                                    <ImageUploader
+                                        key={idx}
+                                        label={`Foto ${idx + 1}`}
+                                        currentUrl={data.content.gallery.images[idx] || ''}
+                                        onUpdate={(url) => {
+                                            const newImages = [...(data.content.gallery.images || [])];
+                                            newImages[idx] = url;
+                                            onUpdate('content.gallery.images', newImages);
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </>
                 )}
 
                 {activeTab === 'design' && (
@@ -90,7 +122,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                     </button>
                                 ))}
                             </div>
-                            <Input label="Musik Latar (MP3 URL)" path="metadata.music_url" placeholder="https://..." />
+                            <Input label="Musik Latar (MP3 URL)" value={getValue('metadata.music_url')} onChange={(v) => onUpdate('metadata.music_url', v)} placeholder="https://..." />
                         </div>
 
                         <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
