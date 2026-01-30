@@ -1,16 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     // ====================================================================
-    //  KONFIGURASI EKSPLISIT UNTUK MENYERTAKAN FOLDER 'templates'
+    //  KONFIGURASI WEBPACK UNTUK RAW LOADER
     // ====================================================================
-    // Ini adalah instruksi langsung untuk Next.js/Vercel agar SELALU 
-    // menyertakan folder 'templates' beserta seluruh isinya ke dalam 
-    // output build. Ini adalah solusi pasti untuk error 'file not found'.
-    experimental: {
-        outputFileTracingIncludes: {
-            '/api/preview': ['./templates/**/*'],
-            '/v/[slug]': ['./templates/**/*'],
-        },
+    // Ini memberitahu Next.js (melalui Webpack) untuk memperlakukan 
+    // file yang diimpor dengan akhiran .html sebagai string mentah. 
+    // Ini adalah inti dari pendekatan baru kita.
+    webpack: (config, {
+        isServer
+    }) => {
+        config.module.rules.push({
+            test: /\.html$/,
+            use: 'raw-loader',
+        });
+        return config;
     },
 };
 

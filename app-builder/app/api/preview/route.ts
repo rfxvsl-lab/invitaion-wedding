@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server';
 import { generateHTML, InvitationData } from '@/lib/generator';
 
@@ -7,8 +6,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json() as InvitationData;
 
-    // Gunakan generator yang sudah diperbaiki path-nya
-    const htmlContent = generateHTML(body);
+    // PENTING: Tambahkan 'await' karena generateHTML sekarang async
+    const htmlContent = await generateHTML(body);
 
     return new Response(htmlContent, {
       headers: { 'Content-Type': 'text/html' },
