@@ -19,30 +19,11 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
     const [wish, setWish] = useState('');
     const storyRef = React.useRef<HTMLDivElement>(null);
 
+    /* Full download removed as requested
     const handleDownload = async (type: 'full') => {
-        if (!targetRef.current) return;
-        setIsDownloading(true);
-
-        try {
-            // Filter out control buttons from capture
-            const filter = (node: HTMLElement) => {
-                return !node.className?.includes?.('exclude-from-capture');
-            };
-
-            const dataUrl = await toJpeg(targetRef.current, {
-                quality: 0.95,
-                filter: filter,
-                backgroundColor: '#ffffff' // Ensure white background
-            });
-
-            download(dataUrl, `invitation-${slug}.jpg`);
-        } catch (error) {
-            console.error('Download failed', error);
-            alert('Gagal mengunduh gambar. Silakan coba lagi atau gunakan screenshot manual.');
-        } finally {
-            setIsDownloading(false);
-        }
+        ...
     };
+    */
 
     const handleStoryDownload = async () => {
         if (!storyRef.current) return;
@@ -65,23 +46,21 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
     return (
         <>
             <div className="fixed top-6 left-6 z-50 flex flex-col gap-2 exclude-from-capture">
-                <div className="bg-white/90 backdrop-blur shadow-lg rounded-xl p-2 border border-gray-200">
-                    <p className="text-[10px] font-bold text-gray-400 uppercase text-center mb-2">Simpan Desain</p>
-                    <button
-                        onClick={() => handleDownload('full')}
-                        disabled={isDownloading}
-                        className="w-full flex items-center gap-2 text-xs font-bold text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition-colors mb-1"
-                    >
-                        <Image size={14} /> Desain Utuh
-                    </button>
+                <div className="bg-white/90 backdrop-blur shadow-lg rounded-full p-2 border border-gray-200 hover:scale-105 transition-transform cursor-pointer group relative">
                     <button
                         onClick={() => setShowModal(true)}
                         disabled={isDownloading}
-                        className="w-full flex items-center gap-2 text-xs font-bold text-gray-700 hover:bg-gray-100 p-2 rounded-lg transition-colors"
+                        className="flex items-center justify-center text-gray-700 hover:text-indigo-600 transition-colors p-1"
+                        title="Unduh Template Story"
                     >
-                        <Camera size={14} /> Story IG
+                        <Download size={24} />
                     </button>
-                    {isDownloading && <p className="text-[8px] text-center text-indigo-500 mt-1 animate-pulse">Memproses...</p>}
+                    {isDownloading && (
+                        <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500"></span>
+                        </span>
+                    )}
                 </div>
             </div>
 

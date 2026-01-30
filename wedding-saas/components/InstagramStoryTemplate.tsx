@@ -56,9 +56,8 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
             </div>
 
             {/* Footer */}
-            <div className="absolute bottom-10 left-0 w-full flex justify-between px-16 text-[#6B705C] text-2xl font-medium tracking-wide opacity-60">
-                <span>www.wevitation.com</span>
-                <span>@wevitation</span>
+            <div className="absolute bottom-12 left-0 w-full flex justify-center text-[#6B705C] text-xl font-medium tracking-widest opacity-60">
+                <span>@rfx.builder</span>
             </div>
 
             {/* Styles for fonts to ensure they load in the captured image */}
