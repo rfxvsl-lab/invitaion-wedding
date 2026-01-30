@@ -24,14 +24,12 @@
     # Enable previews
     previews = {
       enable = true;
-      previews = {
-        web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
-          manager = "web";
-          workingDirectory = "app-builder";
-          env = {
-            PORT = "$PORT";
-          };
+      web = {
+        command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
+        manager = "web";
+        dir = "app-builder";
+        env = {
+          PORT = "$PORT";
         };
       };
     };
