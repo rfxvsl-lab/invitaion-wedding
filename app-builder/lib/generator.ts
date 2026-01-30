@@ -1,10 +1,10 @@
 /** 
  * @fileoverview Template loader for wedding invitation themes
- * Dynamically loads templates from .js file to avoid Turbopack parsing issues
+ * Loads templates dynamically from public/templates/ directory
  */
 
-// Import templates as plain JS to avoid Turbopack parsing the large HTML strings
-import { TEMPLATES_COLLECTION } from './templates-data.js';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 export interface FormData {
   slug: string;
@@ -16,10 +16,30 @@ export interface FormData {
   accountNumber: string;
 }
 
-export const generateHTML = (formData: FormData, themeId: string): string => {
-  const template = TEMPLATES_COLLECTION[themeId] || TEMPLATES_COLLECTION['luxury-dark'] || '';
+/**
+ * Load template HTML from public/templates/ directory
+ * This runs server-side only (API routes and Server Components)
+ */
+function loadTemplate(themeId: string): string {
+  try {
+    const templatePath = join(process.cwd(), 'public', 'templates', `${themeId}.html`);
+    return readFileSync(templatePath, 'utf-8');
+  } catch (error) {
+    console.error(`Failed to load template ${themeId}:`, error);
+    // Fallback to default template
+    try {
+      const fallbackPath = join(process.cwd(), 'public', 'templates', 'regular-invitation.html');
+      return readFileSync(fallbackPath, 'utf-8');
+    } catch {
+      return '<html><body><h1>Template not found</h1></body></html>';
+    }
+  }
+}
 
-  if (!template) {
+export const generateHTML = (formData: FormData, themeId: string): string => {
+  const template = loadTemplate(themeId);
+
+  if (!template || template.includes('Template not found')) {
     return '<html><body><h1>Template not found</h1></body></html>';
   }
 
