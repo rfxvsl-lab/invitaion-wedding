@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Failed to publish invitation.' }, { status: 500 });
     }
 
-    const publishedUrl = `https://weddinginvitation-six-mauve.vercel.app/v/${slug}`;
+    const publishedUrl = `https://weddinginvitation-18.vercel.app/v/${slug}`;
     
     return NextResponse.json({ message: 'Invitation published successfully!', url: publishedUrl, data });
   } catch (error) {
