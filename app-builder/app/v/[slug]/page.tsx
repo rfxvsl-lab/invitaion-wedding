@@ -46,10 +46,12 @@ export default async function InvitationPage({ params }: PageProps) {
   );
 }
 
-// Optional: Metadata dinamis untuk SEO sharing (WA/Facebook)
+// Temporarily disabled to prevent build-time errors
+// Metadata can be added after deployment succeeds
+/*
 export async function generateMetadata({ params }: PageProps) {
   const record = await getInvitationData(params.slug);
-
+  
   if (!record) return { title: 'Undangan Tidak Ditemukan' };
 
   const data = record.data_json as FormData;
@@ -58,3 +60,4 @@ export async function generateMetadata({ params }: PageProps) {
     description: `Kami mengundang Anda ke acara pernikahan kami pada ${data.eventDate}`,
   };
 }
+*/
