@@ -6,8 +6,8 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const { formData, theme } = body;
 
-        // Generate HTML on server-side
-        const html = generateHTML(formData as FormData, theme);
+        // Generate HTML on server-side (now async)
+        const html = await generateHTML(formData as FormData, theme);
 
         return NextResponse.json({ html });
     } catch (error) {
