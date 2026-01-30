@@ -1,6 +1,8 @@
+/** @type {import('next').Config} */
 const config = {
   plugins: {
-    "@tailwindcss/postcss": {},
+    '@tailwindcss/postcss': {},
+    'autoprefixer': {},
   },
 };
 
