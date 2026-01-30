@@ -6,6 +6,11 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get current directory (ES modules compatible)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export interface FormData {
   slug: string;
@@ -24,19 +29,21 @@ export interface FormData {
  */
 function loadTemplate(themeId: string): string {
   try {
-    const templatePath = path.join(process.cwd(), 'lib', 'templates', `${themeId}.html`);
+    // Use path relative to this file (lib/generator.ts)
+    // Templates are in lib/templates/ (same parent directory)
+    const templatePath = path.join(__dirname, 'templates', `${themeId}.html`);
     console.log(`[Generator] Loading template: ${themeId} from ${templatePath}`);
     const content = fs.readFileSync(templatePath, 'utf-8');
     console.log(`[Generator] Successfully loaded template: ${themeId} (${content.length} bytes)`);
     return content;
   } catch (error) {
     console.error(`[Generator] Failed to load template ${themeId}:`, error);
-    console.error(`[Generator] CWD: ${process.cwd()}`);
-    console.error(`[Generator] Attempted path: ${path.join(process.cwd(), 'lib', 'templates', `${themeId}.html`)}`);
+    console.error(`[Generator] __dirname: ${__dirname}`);
+    console.error(`[Generator] Attempted path: ${path.join(__dirname, 'templates', `${themeId}.html`)}`);
 
     // Fallback to default template
     try {
-      const fallbackPath = path.join(process.cwd(), 'lib', 'templates', 'regular-invitation.html');
+      const fallbackPath = path.join(__dirname, 'templates', 'regular-invitation.html');
       console.log(`[Generator] Attempting fallback to regular-invitation.html`);
       const fallbackContent = fs.readFileSync(fallbackPath, 'utf-8');
       console.log(`[Generator] Fallback success (${fallbackContent.length} bytes)`);
