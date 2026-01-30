@@ -11,16 +11,37 @@ export interface InvitationData {
   theme: string;
 }
 
-export const generateHTML = (data: InvitationData) => {
-  // Hapus semua logika path yang kompleks.
-  // Asumsikan folder 'templates' akan selalu ada di root direktori kerja (CWD).
-  // Di Vercel, CWD adalah /var/task. Jadi, path-nya menjadi /var/task/templates/[theme].html.
-  const templatePath = path.join(process.cwd(), 'templates', `${data.theme}.html`);
+// Fungsi baru untuk mencari path template yang andal
+const getTemplatePath = (theme: string): string => {
+  const baseDir = process.cwd();
+  
+  // Daftar path yang mungkin, untuk menangani lingkungan lokal dan Vercel
+  const possiblePaths = [
+    // Path utama di Vercel, di mana direktori proyek berada di root
+    path.join(baseDir, 'public', 'templates', `${theme}.html`),
+    // Path fallback untuk pengembangan lokal, di mana CWD mungkin adalah root monorepo
+    path.join(baseDir, 'app-builder', 'public', 'templates', `${theme}.html`)
+  ];
 
-  // Cek jika file template ada di path yang sudah pasti tersebut.
+  // Cari path pertama yang ada
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      console.log(`Template found at: ${p}`);
+      return p;
+    }
+  }
+  
+  // Jika tidak ada yang ditemukan, kembalikan path default dan biarkan readFileSync yang menangani error
+  const defaultPath = path.join(baseDir, 'public', 'templates', `${theme}.html`);
+  console.log(`Template not found in checked paths, defaulting to: ${defaultPath}`);
+  return defaultPath;
+};
+
+export const generateHTML = (data: InvitationData) => {
+  const templatePath = getTemplatePath(data.theme);
+
   if (!fs.existsSync(templatePath)) {
-    // Jika tidak ada, berikan pesan error yang sangat jelas.
-    throw new Error(`CRITICAL: Template file not found at the expected path: ${templatePath}. The 'templates' directory was likely not copied to the build output.`);
+    throw new Error(`CRITICAL: Template file not found at the expected path: ${templatePath}. Ensure the file exists in the 'public/templates' directory.`);
   }
 
   let html = fs.readFileSync(templatePath, 'utf-8');
