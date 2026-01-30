@@ -46,12 +46,18 @@ export default function BuilderPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      if (!res.ok) throw new Error('Failed to fetch preview');
-      const html = await res.text();
-      setPreviewHtml(html);
+      const text = await res.text(); // Baca respons sebagai teks
+
+      if (!res.ok) {
+        // Jika respons tidak OK (misal, status 500), lempar error dengan isi respons
+        throw new Error(text); 
+      }
+      
+      setPreviewHtml(text);
     } catch (err: any) {
       console.error(err);
-      setPreviewHtml(`<div class="p-4 text-red-600">Error: ${err.message}</div>`);
+      // Sekarang, 'err.message' akan berisi HTML error yang dikirim dari server
+      setPreviewHtml(`<div class="p-4 text-red-600 bg-red-100"><strong>Error Fetching Preview:</strong><pre class="whitespace-pre-wrap">${err.message}</pre></div>`);
     } finally {
       setLoading(false);
     }
