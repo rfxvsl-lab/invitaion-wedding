@@ -11,54 +11,20 @@ export interface InvitationData {
   theme: string;
 }
 
-// VERSI DIAGNOSTIK: Fungsi ini akan melaporkan struktur filesystem saat error
+// Fungsi yang disederhanakan dan definitif untuk mendapatkan path template
 const getTemplatePath = (theme: string): string => {
-  const baseDir = process.cwd(); // Harusnya /var/task di Vercel
+  const baseDir = process.cwd(); // Ini adalah /var/task/app-builder di Vercel
   
-  // Path yang akan kita selidiki
-  const expectedPathInAppBuilder = path.join(baseDir, 'app-builder', 'public', 'templates', `${theme}.html`);
-  const expectedPathInRoot = path.join(baseDir, 'public', 'templates', `${theme}.html`);
+  // Path yang benar dan satu-satunya, berdasarkan konfigurasi next.config.mjs
+  const templatePath = path.join(baseDir, 'templates', `${theme}.html`);
 
-  let debugInfo = `\n--- Laporan Diagnostik Filesystem Vercel ---\n`;
-  debugInfo += `Waktu: ${new Date().toISOString()}\n`;
-  debugInfo += `Direktori Kerja (process.cwd()): ${baseDir}\n`;
-  debugInfo += `Path 1 (di dalam app-builder): ${expectedPathInAppBuilder}\n`;
-  debugInfo += `Path 2 (di root): ${expectedPathInRoot}\n\n`;
-
-  const pathsToScan = [
-      baseDir,
-      path.join(baseDir, 'public'),
-      path.join(baseDir, 'app-builder'),
-      path.join(baseDir, 'app-builder', 'public'),
-  ];
-
-  // Baca isi dari setiap direktori yang relevan
-  for (const dir of pathsToScan) {
-      try {
-          const contents = fs.readdirSync(dir);
-          debugInfo += `Isi dari '${dir}': [${contents.join(', ')}]\n`;
-      } catch (e: any) {
-          debugInfo += `Gagal membaca isi dari '${dir}': ${e.message}\n`;
-      }
-  }
-  debugInfo += `--- Akhir Laporan Diagnostik ---\n`;
-
-  // Coba path pertama
-  if (fs.existsSync(expectedPathInAppBuilder)) {
-      return expectedPathInAppBuilder;
-  }
-  // Coba path kedua
-  if (fs.existsSync(expectedPathInRoot)) {
-      return expectedPathInRoot;
-  }
-
-  // Jika keduanya gagal, lemparkan error dengan semua info debug.
-  throw new Error(`CRITICAL: Template tidak ditemukan di kedua path yang dicoba. ${debugInfo}`);
+  return templatePath;
 };
 
 export const generateHTML = (data: InvitationData) => {
+  const templatePath = getTemplatePath(data.theme);
+
   try {
-    const templatePath = getTemplatePath(data.theme);
     let html = fs.readFileSync(templatePath, 'utf-8');
 
     // Ganti placeholder dengan data
@@ -81,8 +47,10 @@ export const generateHTML = (data: InvitationData) => {
       .replace(/{{cover.img}}/g, data.cover?.img || '');
 
     return html;
+
   } catch (error: any) {
-    // Lempar kembali error dari getTemplatePath agar pesan diagnostik lengkap muncul di preview
-    throw new Error(error.message);
+    // Jika error terjadi, kemungkinan besar karena build gagal menyertakan templates.
+    // Pesan error ini lebih relevan sekarang.
+    throw new Error(`Gagal membaca file template di: ${templatePath}. Pastikan konfigurasi 'outputFileTracingIncludes' di next.config.mjs sudah benar dan menunjuk ke folder 'templates'. Error asli: ${error.message}`);
   }
 };
