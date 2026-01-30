@@ -36,9 +36,11 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
     };
 
     const toggleMusic = () => {
-        if (isPlaying) audioRef.current.pause();
-        else audioRef.current.play();
-        setIsPlaying(!isPlaying);
+        if (audioRef.current) {
+            if (isPlaying) audioRef.current.pause();
+            else audioRef.current.play();
+            setIsPlaying(!isPlaying);
+        }
     };
 
     const formatDate = (dateStr: string) => {

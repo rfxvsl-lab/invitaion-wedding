@@ -17,8 +17,8 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
     // --- STATE & REFS ---
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef(null);
-    const scrollRef = useRef(null);
+    const audioRef = useRef<HTMLAudioElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     // --- MAPPED DATA ---
     // Transform existing data structure to match new template expectations
@@ -40,9 +40,11 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
     };
 
     const toggleMusic = () => {
-        if (isPlaying) audioRef.current.pause();
-        else audioRef.current.play();
-        setIsPlaying(!isPlaying);
+        if (audioRef.current) {
+            if (isPlaying) audioRef.current.pause();
+            else audioRef.current.play();
+            setIsPlaying(!isPlaying);
+        }
     };
 
     const formatDate = (dateStr: string) => {
@@ -54,9 +56,9 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
     };
 
     // --- ANIMATION COMPONENT ---
-    const FadeIn = ({ children, delay = 0 }) => {
+    const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => {
         const [isVisible, setIsVisible] = useState(false);
-        const domRef = useRef();
+        const domRef = useRef<HTMLDivElement>(null);
 
         useEffect(() => {
             const observer = new IntersectionObserver(entries => {
