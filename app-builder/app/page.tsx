@@ -1,187 +1,224 @@
-"use client";
-import { useState, useEffect } from 'react';
+'use client';
 
-// Daftar Template
-const TEMPLATES = [
-  { id: 'theme-luxury-dark', name: 'Luxury Dark' },
-  { id: 'theme-rustic-wood', name: 'Rustic Wood' },
-  { id: 'theme-pixel-art', name: 'Pixel Art' },
-  { id: 'theme-magic-love', name: 'Magic Love' },
-  { id: 'theme-cartoon-cars', name: 'Cartoon Cars' },
-  { id: 'theme-cartoon-spongebob', name: 'Cartoon Spongebob' },
-  { id: 'theme-cartoon-avatar', name: 'Cartoon Avatar' },
-  { id: 'theme-streaming-netflix', name: 'Streaming Netflix' },
-  { id: 'theme-streaming-cinema', name: 'Streaming Cinema' },
-  { id: 'theme-tradition-javanese', name: 'Adat Jawa (Javanese)' },
-  { id: 'theme-tradition-minang', name: 'Adat Minang' },
-  { id: 'theme-tradition-balinese', name: 'Adat Bali (Balinese)' },
-  { id: 'theme-regular-invitation', name: 'Regular Invitation' },
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { User, Calendar, Gift, Link2, Eye, Code, ArrowRight } from 'lucide-react';
+import { generateHTML } from '@/app-builder/lib/generator';
+import { TEMPLATES_COLLECTION } from '@/app-builder/lib/templates-data';
+
+const tabs = [
+  { id: 'mempelai', label: 'Mempelai', icon: User },
+  { id: 'acara', label: 'Acara', icon: Calendar },
+  { id: 'kado', label: 'Kado', icon: Gift },
+  { id: 'url', label: 'Custom URL', icon: Link2 },
 ];
 
-export default function BuilderPage() {
+const themeThumbnails = {
+    "1": "/theme1-thumb.png",
+    "2": "/theme2-thumb.png",
+    "3": "/theme3-thumb.png",
+    "4": "/theme4-thumb.png",
+    "5": "/theme5-thumb.png",
+    "6": "/theme6-thumb.png",
+    "7": "/theme7-thumb.png",
+    "8": "/theme8-thumb.png",
+    "9": "/theme9-thumb.png",
+    "10": "/theme10-thumb.png",
+    "11": "/theme11-thumb.png",
+    "12": "/theme12-thumb.png",
+    "13": "/theme13-thumb.png",
+}
+
+export default function Home() {
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
   const [formData, setFormData] = useState({
-    theme: 'theme-luxury-dark', // Tema default
-    cover: { img: 'https://placehold.co/600x800?text=Cover' },
-    groom: { nick: 'Nicola', full: 'Nicola Valentino', parents: 'Bpk. Misno & Ibu Atik', img: 'https://placehold.co/400x600?text=Groom' },
-    bride: { nick: 'Salsa', full: 'Salsabillah Putri', parents: 'Bpk. Rofiek & Ibu Sri', img: 'https://placehold.co/400x600?text=Bride' },
-    event: { date: '2025-10-09', time: '10:00 WIB', loc: 'Malang, Jawa Timur', map: 'https://maps.google.com' },
-    gift: { bank: 'BCA', num: '1234567890', name: 'Nicola Valentino' }
+    GROOM_NAME: 'Aditya',
+    BRIDE_NAME: 'Sarah',
+    EVENT_DATE: 'Sabtu, 28 Desember 2024',
+    EVENT_TIME: '10:00 WIB',
+    EVENT_LOCATION: 'Grand Ballroom Hotel Indonesia, Jakarta',
+    GIFT_BANK_NAME: 'BCA',
+    GIFT_BANK_ACCOUNT: '1234567890',
+    CUSTOM_URL: 'aditya-sarah-wedding'
   });
-
-  const [slug, setSlug] = useState('budi-doremi');
-  const [previewHtml, setPreviewHtml] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [isPublishing, setIsPublishing] = useState(false); // State untuk proses publikasi
-  const [publishedUrl, setPublishedUrl] = useState('');
-  const [publishError, setPublishError] = useState('');
-
-  const fetchPreview = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/preview', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      const text = await res.text();
-      if (!res.ok) throw new Error(text);
-      setPreviewHtml(text);
-    } catch (err: any) {
-      setPreviewHtml(`<div class="p-4 text-red-600 bg-red-100"><strong>Error Fetching Preview:</strong><pre class="whitespace-pre-wrap">${err.message}</pre></div>`);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [selectedTheme, setSelectedTheme] = useState('1');
+  const [liveHtml, setLiveHtml] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => fetchPreview(), 1000);
-    return () => clearTimeout(timer);
-  }, [formData]);
+    const generated = generateHTML(formData, selectedTheme);
+    setLiveHtml(generated || '');
+  }, [formData, selectedTheme]);
 
-  const handleChange = (section: string, field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [section]: { ...prev[section as keyof typeof prev] as any, [field]: value }
-    }));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handlePublish = async () => {
-    if (!slug) {
-      setPublishError('Nama URL (slug) tidak boleh kosong.');
-      return;
-    }
+    setIsLoading(true);
+    // Logika untuk menyimpan ke Supabase akan ada di sini
+    console.log("Publishing...");
+    console.log({ slug: formData.CUSTOM_URL, themeId: selectedTheme, data_json: formData });
     
-    setIsPublishing(true); // <--- TUGAS 4: Atur state ke true
-    setPublishedUrl('');
-    setPublishError('');
-
-    try {
-      const sanitizedSlug = slug.toLowerCase().replace(/[^a-z0-9-]/g, '');
-      const response = await fetch('/api/publish', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          slug: sanitizedSlug,
-          theme: formData.theme,
-          formData: formData,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        // Menampilkan error dari API yang sudah kita perbaiki (Tugas 2)
-        throw new Error(result.error || 'Gagal mempublikasikan undangan.');
-      }
-
-      setPublishedUrl(result.url);
-
-    } catch (error: any) {
-      setPublishError(error.message);
-    } finally {
-      setIsPublishing(false); // Atur kembali ke false setelah selesai
-    }
+    // Simulasikan network request
+    setTimeout(() => {
+      setIsLoading(false);
+      console.log("Published!");
+    }, 2000);
   };
 
   return (
-    <div className="flex h-screen overflow-hidden font-sans bg-gray-100">
-      <div className="w-1/3 h-full overflow-y-auto bg-white border-r shadow-xl p-6 z-10">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">RFX Builder</h1>
+    <div className="min-h-screen w-full bg-gradient-to-br from-blue-100 via-pink-100 to-white flex items-center justify-center p-4 font-sans">
+      <main className="w-full max-w-7xl h-[80vh] grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        <div className="mb-6">
-          <label className="block text-sm font-bold mb-2">Pilih Tema</label>
-          <select className="w-full p-2 border rounded" value={formData.theme} onChange={(e) => setFormData({...formData, theme: e.target.value})}>
-            {TEMPLATES.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-          </select>
-        </div>
-        
-        <div className="mb-6">
-          <label htmlFor="slug" className="block text-sm font-bold mb-2">Nama URL (Slug)</label>
-          <div className="flex items-center">
-            <span className="text-gray-500 text-sm p-2 bg-gray-100 border rounded-l">/v/</span>
-            <input id="slug" type="text" className="w-full p-2 border-t border-b border-r rounded-r" placeholder="contoh: budi-doremi" value={slug} onChange={(e) => setSlug(e.target.value)} />
+        {/* Left Panel: Controls */}
+        <div className="bg-white/30 backdrop-blur-lg rounded-2xl shadow-lg p-6 flex flex-col">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Digital Invitation Builder</h1>
+          <p className="text-gray-600 mb-6">Buat undangan pernikahan digital Anda dalam hitungan menit.</p>
+
+          <div className="border-b border-gray-200/80 mb-6">
+            <nav className="-mb-px flex space-x-6" aria-label="Tabs">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`${
+                    activeTab === tab.id
+                      ? 'text-blue-600'
+                      : 'text-gray-500 hover:text-gray-700'
+                  } relative whitespace-nowrap py-4 px-1 text-sm font-medium`}
+                >
+                  <div className="flex items-center gap-2">
+                    <tab.icon size={18} />
+                    {tab.label}
+                  </div>
+                  {activeTab === tab.id && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600"
+                      layoutId="underline"
+                      initial={false}
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </button>
+              ))}
+            </nav>
           </div>
-          <p className="text-xs text-gray-500 mt-1">Gunakan huruf kecil, angka, dan tanda hubung (-).</p>
-        </div>
 
-        {/* Form Groups... */}
-        <div className="mb-6 border-b pb-4">
-          <h3 className="font-bold text-gray-500 mb-3 uppercase text-sm">Mempelai Pria</h3>
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Panggilan" value={formData.groom.nick} onChange={e => handleChange('groom', 'nick', e.target.value)} />
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Lengkap" value={formData.groom.full} onChange={e => handleChange('groom', 'full', e.target.value)} />
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Orang Tua" value={formData.groom.parents} onChange={e => handleChange('groom', 'parents', e.target.value)} />
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="URL Foto Pria" value={formData.groom.img} onChange={e => handleChange('groom', 'img', e.target.value)} />
-        </div>
-        <div className="mb-6 border-b pb-4">
-          <h3 className="font-bold text-gray-500 mb-3 uppercase text-sm">Mempelai Wanita</h3>
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Panggilan" value={formData.bride.nick} onChange={e => handleChange('bride', 'nick', e.target.value)} />
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Lengkap" value={formData.bride.full} onChange={e => handleChange('bride', 'full', e.target.value)} />
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Orang Tua" value={formData.bride.parents} onChange={e => handleChange('bride', 'parents', e.target.value)} />
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="URL Foto Wanita" value={formData.bride.img} onChange={e => handleChange('bride', 'img', e.target.value)} />
-        </div>
-        <div className="mb-6 border-b pb-4">
-          <h3 className="font-bold text-gray-500 mb-3 uppercase text-sm">Detail Acara</h3>
-          <input type="date" className="w-full mb-2 p-2 border rounded text-sm" value={formData.event.date} onChange={e => handleChange('event', 'date', e.target.value)} />
-          <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Waktu (e.g. 10:00 WIB)" value={formData.event.time} onChange={e => handleChange('event', 'time', e.target.value)} />
-          <textarea className="w-full mb-2 p-2 border rounded text-sm" placeholder="Alamat Lokasi" rows={2} value={formData.event.loc} onChange={e => handleChange('event', 'loc', e.target.value)} />
-           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Google Maps Link" value={formData.event.map} onChange={e => handleChange('event', 'map', e.target.value)} />
-        </div>
-        <div className="mb-6 border-b pb-4">
-          <h3 className="font-bold text-gray-500 mb-3 uppercase text-sm">Hadiah</h3>
-           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nama Bank (e.g. BCA)" value={formData.gift.bank} onChange={e => handleChange('gift', 'bank', e.target.value)} />
-           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Nomor Rekening" value={formData.gift.num} onChange={e => handleChange('gift', 'num', e.target.value)} />
-           <input className="w-full mb-2 p-2 border rounded text-sm" placeholder="Atas Nama" value={formData.gift.name} onChange={e => handleChange('gift', 'name', e.target.value)} />
-        </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -10, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex-grow"
+            >
+              {activeTab === 'mempelai' && (
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg">Informasi Mempelai</h3>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Nama Mempelai Pria</label>
+                    <input type="text" name="GROOM_NAME" value={formData.GROOM_NAME} onChange={handleInputChange} className="mt-1 w-full p-2 border rounded-md shadow-sm" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Nama Mempelai Wanita</label>
+                    <input type="text" name="BRIDE_NAME" value={formData.BRIDE_NAME} onChange={handleInputChange} className="mt-1 w-full p-2 border rounded-md shadow-sm" />
+                  </div>
+                </div>
+              )}
+               {activeTab === 'acara' && (
+                <div className="space-y-4">
+                   <h3 className="font-semibold text-lg">Detail Acara</h3>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Tanggal</label>
+                    <input type="text" name="EVENT_DATE" value={formData.EVENT_DATE} onChange={handleInputChange} className="mt-1 w-full p-2 border rounded-md shadow-sm" />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-700">Waktu</label>
+                    <input type="text" name="EVENT_TIME" value={formData.EVENT_TIME} onChange={handleInputChange} className="mt-1 w-full p-2 border rounded-md shadow-sm" />
+                  </div>
+                   <div>
+                    <label className="text-sm font-medium text-gray-700">Lokasi</label>
+                    <input type="text" name="EVENT_LOCATION" value={formData.EVENT_LOCATION} onChange={handleInputChange} className="mt-1 w-full p-2 border rounded-md shadow-sm" />
+                  </div>
+                </div>
+              )}
+              {activeTab === 'kado' && (
+                 <div className="space-y-4">
+                    <h3 className="font-semibold text-lg">Hadiah Digital</h3>
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">Nama Bank</label>
+                        <input type="text" name="GIFT_BANK_NAME" value={formData.GIFT_BANK_NAME} onChange={handleInputChange} className="mt-1 w-full p-2 border rounded-md shadow-sm" />
+                    </div>
+                    <div>
+                        <label className="text-sm font-medium text-gray-700">Nomor Rekening</label>
+                        <input type="text" name="GIFT_BANK_ACCOUNT" value={formData.GIFT_BANK_ACCOUNT} onChange={handleInputChange} className="mt-1 w-full p-2 border rounded-md shadow-sm" />
+                    </div>
+                </div>
+              )}
+              {activeTab === 'url' && (
+                <div>
+                    <h3 className="font-semibold text-lg">Custom URL</h3>
+                    <label className="text-sm font-medium text-gray-700">Slug URL</label>
+                    <div className="flex items-center mt-1">
+                        <span className="text-gray-500 bg-gray-200 p-2 rounded-l-md">https://yourdomain.com/v/</span>
+                        <input type="text" name="CUSTOM_URL" value={formData.CUSTOM_URL} onChange={handleInputChange} className="w-full p-2 border rounded-r-md shadow-sm" />
+                    </div>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
 
-        <button onClick={handlePublish} disabled={isPublishing || !slug} className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-3 rounded-lg transition">
-          {isPublishing ? 'Memproses...' : 'Publikasikan Undangan'} {/* <--- TUGAS 4: Teks dinamis */}
-        </button>
-
-        {publishedUrl && (
-          <div className="mt-4 p-3 bg-green-100 border border-green-400 text-green-800 rounded">
-            <p className="font-bold">Publikasi Berhasil!</p>
-            <p className="text-sm mt-1">Bagikan link ini:</p>
-            <input type="text" readOnly value={publishedUrl} className="w-full bg-white p-2 mt-1 rounded border" onClick={(e) => (e.target as HTMLInputElement).select()} />
+          <div className="mt-auto pt-6">
+            <h3 className="font-semibold text-lg mb-3">Pilih Tema</h3>
+             <div className="grid grid-cols-4 gap-4 mb-6">
+                {Object.keys(TEMPLATES_COLLECTION).map(themeId => (
+                    <div key={themeId} onClick={() => setSelectedTheme(themeId)} className={`relative rounded-lg overflow-hidden cursor-pointer border-2 ${selectedTheme === themeId ? 'border-blue-500' : 'border-transparent'}`}>
+                        <img src={`https://via.placeholder.com/150/EEEEEE/808080?text=Tema+${themeId}`} alt={`Tema ${themeId}`} className="w-full h-auto aspect-video object-cover"/>
+                         {selectedTheme === themeId && (
+                            <div className="absolute inset-0 bg-blue-500/50 flex items-center justify-center">
+                                <Eye className="text-white" size={24} />
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
+            <button 
+              onClick={handlePublish} 
+              disabled={isLoading}
+              className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700 transition-all shadow-lg flex items-center justify-center gap-2 disabled:bg-gray-400">
+              {isLoading ? (
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                >
+                    <Code size={20} />
+                </motion.div>
+              ) : (
+                <>
+                  Publikasikan <ArrowRight size={20} />
+                </>
+              )}
+            </button>
           </div>
-        )}
-
-        {publishError && (
-          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-800 rounded">
-            <p className="font-bold">Error Publikasi</p>
-            <p className="text-sm mt-1">{publishError}</p>
-          </div>
-        )}
-      </div>
-
-      <div className="w-2/3 h-full bg-gray-200 flex items-center justify-center relative">
-        {loading && <div className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full text-xs font-bold shadow animate-pulse text-blue-600">Updating Preview...</div>}
-        <div className="mockup-browser border-4 border-gray-800 rounded-2xl overflow-hidden shadow-2xl h-[90vh] w-[95%] bg-white">
-          <div className="mockup-browser-toolbar">
-            <div className="input border border-gray-400 rounded-full px-4">{publishedUrl || `http://localhost:3000/v/${slug}`}</div>
-          </div>
-          <iframe srcDoc={previewHtml} className="w-full h-full" title="Preview Undangan" sandbox="allow-scripts allow-same-origin" />
         </div>
-      </div>
+
+        {/* Right Panel: Preview */}
+        <div className="hidden lg:flex items-center justify-center">
+            <div className="w-[375px] h-[750px] bg-gray-800 rounded-[40px] p-4 shadow-2xl ring-4 ring-gray-700">
+                <div className="w-full h-full bg-white rounded-[20px] overflow-hidden">
+                     <iframe 
+                        srcDoc={liveHtml} 
+                        title="Live Preview" 
+                        className="w-full h-full border-0"
+                        sandbox="allow-scripts allow-same-origin"
+                     />
+                </div>
+            </div>
+        </div>
+      </main>
     </div>
   );
 }

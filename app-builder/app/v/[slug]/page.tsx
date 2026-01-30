@@ -1,72 +1,45 @@
-import { supabase } from '@/lib/supabase';
-import { generateHTML, InvitationData } from '@/lib/generator'; // Menggunakan generator yang sudah diperbaiki
+import { supabase } from '@/app-builder/lib/supabase';
+import { generateHTML } from '@/app-builder/lib/generator';
 import { notFound } from 'next/navigation';
 
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
+type Props = {
+  params: { slug: string };
+};
 
-// Pastikan halaman ini selalu mengambil data terbaru dari server
-export const revalidate = 0;
+export default async function InvitationPage({ params }: Props) {
+  const { slug } = params;
 
-// Fungsi untuk mengambil data undangan dari Supabase
-async function getInvitationData(slug: string) {
   const { data, error } = await supabase
     .from('invitations')
-    .select('theme, data_json') // Pilih kolom theme dan data_json
+    .select('data_json, theme_id')
     .eq('slug', slug)
-    .single(); // Ambil satu baris data
+    .single();
 
-  // Jika ada error atau tidak ada data, log dan return null
   if (error || !data) {
-    console.error(`Error fetching invitation for slug [${slug}]:`, error);
-    return null;
+    notFound();
   }
-  
-  return data as { theme: string; data_json: InvitationData };
+
+  const { data_json: formData, theme_id: themeId } = data;
+
+  if (!formData || !themeId) {
+    return <div className="w-full h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: Data undangan tidak lengkap.</p></div>;
+  }
+
+  const finalHtml = generateHTML(formData, themeId);
+
+  if (!finalHtml) {
+      return <div className="w-full h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: Template tidak ditemukan.</p></div>;
+  }
+
+  return (
+    <div dangerouslySetInnerHTML={{ __html: finalHtml }} />
+  );
 }
 
-// Komponen Halaman Undangan Dinamis
-export default async function InvitationPage({ params }: PageProps) {
-  const { slug } = params;
-  const invitation = await getInvitationData(slug);
-
-  // Jika undangan tidak ditemukan, tampilkan pesan yang jelas
-  if (!invitation) {
-    return (
-        <div style={{ fontFamily: 'sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#4A5568', backgroundColor: '#F7FAFC' }}>
-            <h1>Undangan tidak ditemukan atau belum dipublikasikan.</h1>
-        </div>
-    );
-  }
-
-  // Gabungkan data dari database untuk dikirim ke generator
-  const fullData: InvitationData = {
-    ...invitation.data_json,
-    theme: invitation.theme,
-  };
-
-  try {
-    // Hasilkan HTML menggunakan fungsi generateHTML yang sudah diperbarui
-    const htmlContent = generateHTML(fullData);
-
-    // Render HTML ke dalam div
-    return (
-      <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-    );
-
-  } catch (error: any) {
-    // Tangkap error jika generateHTML gagal (misal, template tetap tidak ditemukan)
-    console.error('Error generating live page HTML:', error);
-    return (
-        <div style={{ fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', color: '#C53030', backgroundColor: '#FFF5F5' }}>
-            <h1>Error 500: Gagal Membuat Halaman Undangan</h1>
-            <pre style={{ marginTop: '1rem', whiteSpace: 'pre-wrap', background: '#FED7D7', padding: '1rem', borderRadius: '8px' }}>
-                {error.message}
-            </pre>
-        </div>
-    );
-  }
+// Optional: Prerender pages at build time if you have a list of popular slugs
+export async function generateStaticParams() {
+  // Example: Fetch top 10 most visited slugs
+  const { data: invitations } = await supabase.from('invitations').select('slug').limit(10);
+ 
+  return invitations?.map(({ slug }) => ({ slug })) || [];
 }
