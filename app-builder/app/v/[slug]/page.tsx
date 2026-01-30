@@ -35,8 +35,8 @@ export default async function InvitationPage({ params }: PageProps) {
     notFound(); // Tampilkan 404 jika slug tidak ditemukan
   }
 
-  // Generate HTML final berdasarkan data dari DB (now async)
-  const htmlContent = await generateHTML(record.data_json as FormData, record.theme);
+  // Generate HTML final berdasarkan data dari DB (synchronous with static imports)
+  const htmlContent = generateHTML(record.data_json as FormData, record.theme);
 
   return (
     <div
