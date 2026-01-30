@@ -1,20 +1,22 @@
-import { InvitationData } from '@/lib/generator';
+// Definisi interface yang hilang dikembalikan ke file ini.
+export interface InvitationData {
+  groom: { nick: string; full: string; parents: string; img: string };
+  bride: { nick: string; full: string; parents: string; img: string };
+  cover?: { img: string };
+  event: { date: string; time: string; loc: string; map: string };
+  gift: { bank: string; num: string; name: string };
+  theme: string;
+}
 
 // ====================================================================
 // PENDEKATAN BARU: Impor Template sebagai String saat Build
 // ====================================================================
-// Kita tidak lagi membaca file dari server saat runtime. Sebaliknya,
-// 'raw-loader' akan menyematkan konten HTML langsung ke dalam kode ini
-// saat Vercel melakukan build. Ini menghilangkan semua masalah filesystem.
 
 export const generateHTML = async (data: InvitationData): Promise<string> => {
     try {
-        // Import dinamis: Memberitahu Webpack untuk memuat file yang sesuai.
-        // Tanda /* webpackMode: "eager" */ adalah petunjuk penting agar 
-        // semua template disertakan dan siap digunakan.
-        const templateModule = await import(`@/templates/${data.theme}.html`, {
-             assert: { type: 'raw' }
-        });
+        // Import dinamis disederhanakan untuk kompatibilitas yang lebih baik.
+        // Webpack akan menangani ini menggunakan konfigurasi di next.config.mjs
+        const templateModule = await import(`@/templates/${data.theme}.html`);
 
         let html = (templateModule as any).default;
 
