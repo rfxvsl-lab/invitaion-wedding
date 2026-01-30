@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
 import { mapToTemplateData } from '../utils/templateMapper';
+import RsvpForm from '../components/RsvpForm';
 
 /**
  * TEMPLATE: THE CLASSIC SERIF
@@ -322,6 +323,20 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                                     </div>
                                 ))}
                             </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* RSVP SECTION */}
+                {invitation.rsvp?.enabled && (
+                    <section className="py-20 px-6 bg-[#FFFAF4] border-t border-[#EAEAEA]">
+                        <div className="max-w-xl mx-auto">
+                            <h3 className="font-cinzel text-3xl mb-8 text-center text-[#2D2D2D]">RSVP</h3>
+                            <RsvpForm
+                                whatsappNumber={invitation.rsvp.whatsapp_number}
+                                messageTemplate={invitation.rsvp.message_template}
+                                themeColor="#D4AF37"
+                            />
                         </div>
                     </section>
                 )}

@@ -4,6 +4,7 @@ import {
     Copy, Instagram, Music, ArrowDown, Star, Image as ImageIcon
 } from 'lucide-react';
 import { mapToTemplateData } from '../utils/templateMapper';
+import RsvpForm from '../components/RsvpForm';
 import { InvitationData } from '../types/invitation';
 
 /**
@@ -329,6 +330,20 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                         </div>
                     </div>
                 </section>
+
+                {/* RSVP SECTION */}
+                {invitation.rsvp?.enabled && (
+                    <section className="py-20 px-6 bg-[#0a0a0a] border-t border-[#222]">
+                        <div className="max-w-xl mx-auto">
+                            <h3 className="font-luxury text-3xl mb-8 text-center text-[#BF953F]">Rsvp</h3>
+                            <RsvpForm
+                                whatsappNumber={invitation.rsvp.whatsapp_number}
+                                messageTemplate={invitation.rsvp.message_template}
+                                themeColor="#BF953F"
+                            />
+                        </div>
+                    </section>
+                )}
 
                 {/* FOOTER */}
                 <footer className="bg-black py-16 text-center border-t border-[#222]">

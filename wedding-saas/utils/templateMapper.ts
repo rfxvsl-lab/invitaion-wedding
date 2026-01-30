@@ -36,9 +36,14 @@ export const mapToTemplateData = (data: InvitationData) => {
             wedding_date_time: safeDate(content.hero?.date) // Template expects ISO/Date-able string
         },
         quotes: {
-            title: "We Found Love",
-            content: "And over all these virtues put on love, which binds them all together in perfect unity.",
-            source: "Colossians 3:14"
+            title: "We Found Love", // You might want to make this dynamic too later
+            content: content.quote?.content || "And over all these virtues put on love, which binds them all together in perfect unity.",
+            source: content.quote?.source || "Colossians 3:14"
+        },
+        rsvp: {
+            enabled: engagement?.rsvp !== false,
+            whatsapp_number: engagement?.rsvp_settings?.whatsapp_number || "",
+            message_template: engagement?.rsvp_settings?.message_template || "Halo, saya [Nama] konfirmasi hadir."
         },
         couple: {
             groom: {

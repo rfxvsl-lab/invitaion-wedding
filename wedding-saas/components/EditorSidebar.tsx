@@ -1,6 +1,6 @@
 // Path: /components/EditorSidebar.tsx
 import React, { useState } from 'react';
-import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2, Settings } from 'lucide-react';
+import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2, Settings, Quote, MessageSquare } from 'lucide-react';
 import ImageUploader from './ImageUploader';
 import { InvitationData } from '../types/invitation';
 
@@ -138,6 +138,43 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                 </div>
                             ))}
                             <button onClick={() => onUpdate('engagement.gifts', [...data.engagement.gifts, { bank: '', acc_number: '', holder: '' }])} className="w-full py-2 border border-dashed border-indigo-300 text-indigo-600 rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:bg-indigo-50"><Plus size={14} /> Tambah Rekening</button>
+                        </div>
+
+                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Quote size={14} className="text-indigo-500" /> KUTIPAN / AYAT</h3>
+                            <div className="space-y-3">
+                                <Input label="Isi Kutipan / Ayat" value={getValue('content.quote.content')} onChange={(v) => onUpdate('content.quote.content', v)} />
+                                <Input label="Sumber (Surah/Kitab)" value={getValue('content.quote.source')} onChange={(v) => onUpdate('content.quote.source', v)} />
+                            </div>
+                        </div>
+
+                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                            <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><MessageSquare size={14} className="text-indigo-500" /> KONFIGURASI RSVP</h3>
+                            <div className="flex items-center justify-between mb-4">
+                                <span className="text-xs font-medium text-gray-600">Aktifkan RSVP</span>
+                                <input
+                                    type="checkbox"
+                                    checked={data.engagement.rsvp}
+                                    onChange={(e) => onUpdate('engagement.rsvp', e.target.checked)}
+                                    className="w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                                />
+                            </div>
+                            {data.engagement.rsvp && (
+                                <div className="space-y-3">
+                                    <Input label="Nomor WhatsApp (628...)" value={getValue('engagement.rsvp_settings.whatsapp_number')} onChange={(v) => onUpdate('engagement.rsvp_settings.whatsapp_number', v)} placeholder="628123456789" />
+                                    <div className="mb-4">
+                                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Template Pesan</label>
+                                        <textarea
+                                            value={getValue('engagement.rsvp_settings.message_template')}
+                                            onChange={(e) => onUpdate('engagement.rsvp_settings.message_template', e.target.value)}
+                                            placeholder="Halo, saya [Nama]..."
+                                            rows={3}
+                                            className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all resize-none"
+                                        />
+                                        <p className="text-[10px] text-gray-400 mt-1">Gunakan text [Nama] dan [Jumlah] sebagai placeholder dynamic.</p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </>
                 )}

@@ -11,6 +11,7 @@ import {
  */
 
 import { mapToTemplateData } from '../utils/templateMapper';
+import RsvpForm from '../components/RsvpForm';
 import { InvitationData } from '../types/invitation';
 
 const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
@@ -297,6 +298,18 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                         </FadeIn>
                     </div>
                 </section>
+
+                {/* RSVP SECTION */}
+                {invitation.rsvp?.enabled && (
+                    <section className="py-20 px-6 max-w-2xl mx-auto">
+                        <h2 className="font-cormorant text-4xl mb-8 text-center text-[#2D2D2D]">RSVP</h2>
+                        <RsvpForm
+                            whatsappNumber={invitation.rsvp.whatsapp_number}
+                            messageTemplate={invitation.rsvp.message_template}
+                            themeColor="#2D2D2D"
+                        />
+                    </section>
+                )}
 
                 {/* FOOTER */}
                 <footer className="bg-[#2D2D2D] text-[#E9ECEF] py-12 text-center">

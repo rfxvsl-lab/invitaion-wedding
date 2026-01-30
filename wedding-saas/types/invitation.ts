@@ -59,8 +59,16 @@ export interface InvitationData {
             gift_text: string;
             footer_text: string;
         };
+        quote: {
+            content: string;
+            source: string;
+        };
     };
     engagement: {
+        rsvp_settings: {
+            whatsapp_number: string;
+            message_template: string;
+        };
         rsvp: boolean;
         wishes: any[];
         gifts: GiftAccount[];

@@ -4,6 +4,7 @@ import {
     Copy, Instagram, Music, Gift, Image as ImageIcon
 } from 'lucide-react';
 import { mapToTemplateData } from '../utils/templateMapper';
+import RsvpForm from '../components/RsvpForm';
 import { InvitationData } from '../types/invitation';
 
 /**
@@ -261,6 +262,20 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                         </div>
                     </div>
                 </section>
+
+                {/* RSVP SECTION */}
+                {invitation.rsvp?.enabled && (
+                    <section className="py-20 px-6 max-w-2xl mx-auto">
+                        <div className="text-center mb-10">
+                            <h3 className="font-script text-4xl text-[#BCAAA4] mb-2">Rsvp</h3>
+                        </div>
+                        <RsvpForm
+                            whatsappNumber={invitation.rsvp.whatsapp_number}
+                            messageTemplate={invitation.rsvp.message_template}
+                            themeColor="#BCAAA4"
+                        />
+                    </section>
+                )}
 
                 {/* FOOTER */}
                 <footer className="bg-white py-12 text-center border-t border-[#F0F0F0]">

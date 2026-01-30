@@ -43,9 +43,17 @@ const INITIAL_DATA: InvitationData = {
             gift_title: "Wedding Gift",
             gift_text: "Doa Restu Anda merupakan karunia yang sangat berarti bagi kami. Dan jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara cashless.",
             footer_text: "Thank you for being part of our story"
+        },
+        quote: {
+            content: "And over all these virtues put on love, which binds them all together in perfect unity.",
+            source: "Colossians 3:14"
         }
     },
     engagement: {
+        rsvp_settings: {
+            whatsapp_number: "6281234567890",
+            message_template: "Halo, saya [Nama] ingin konfirmasi kehadiran untuk [Jumlah] orang. [Pesan]"
+        },
         rsvp: true,
         wishes: [],
         gifts: []

@@ -4,6 +4,7 @@ import {
     Copy, Instagram, Music, Gift, Leaf, Image as ImageIcon
 } from 'lucide-react';
 import { mapToTemplateData } from '../utils/templateMapper';
+import RsvpForm from '../components/RsvpForm';
 import { InvitationData } from '../types/invitation';
 
 /**
@@ -306,6 +307,20 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                         </div>
                     </div>
                 </section>
+
+                {/* RSVP SECTION */}
+                {invitation.rsvp?.enabled && (
+                    <section className="py-20 px-6 max-w-2xl mx-auto relative z-10">
+                        <PaperCard>
+                            <h2 className="font-hand text-4xl mb-8 text-center text-[#5D4037]">Konfirmasi Kehadiran</h2>
+                            <RsvpForm
+                                whatsappNumber={invitation.rsvp.whatsapp_number}
+                                messageTemplate={invitation.rsvp.message_template}
+                                themeColor="#8D6E63"
+                            />
+                        </PaperCard>
+                    </section>
+                )}
 
                 {/* FOOTER */}
                 <footer className="bg-[#5D4037] text-[#FFFDF5] py-12 text-center relative mt-12">
