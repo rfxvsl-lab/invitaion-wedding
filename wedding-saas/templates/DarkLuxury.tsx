@@ -109,7 +109,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                 </div>
 
                 <div className="relative z-10 text-center w-full max-w-lg border border-[#333] p-8 md:p-12 backdrop-blur-sm bg-black/30">
-                    <p className="font-body tracking-[0.4em] text-[#888] text-xs uppercase mb-6">The Wedding Celebration</p>
+                    <p className="font-body tracking-[0.4em] text-[#888] text-xs uppercase mb-6">{invitation.texts.hero_title}</p>
 
                     <h1 className="font-luxury text-5xl md:text-7xl mb-4 leading-tight">
                         <GoldText>{invitation.hero.groom_nickname}</GoldText>
@@ -123,7 +123,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                         onClick={handleOpen}
                         className="group relative px-8 py-3 border border-[#BF953F] text-[#BF953F] font-body text-xs font-bold tracking-[0.2em] uppercase transition-all hover:bg-[#BF953F] hover:text-black overflow-hidden"
                     >
-                        <span className="relative z-10">Unlock Invitation</span>
+                        <span className="relative z-10">{invitation.texts.open_button}</span>
                         <div className="absolute inset-0 bg-[#BF953F] transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-0"></div>
                     </button>
                 </div>
@@ -145,7 +145,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                         </p>
                         <div className="flex items-center justify-center gap-4 my-6">
                             <div className="h-[1px] w-12 bg-[#BF953F]"></div>
-                            <p className="font-body text-xs tracking-[0.3em] uppercase text-[#BF953F]">Save The Date</p>
+                            <p className="font-body text-xs tracking-[0.3em] uppercase text-[#BF953F]">{invitation.texts.hero_subtitle}</p>
                             <div className="h-[1px] w-12 bg-[#BF953F]"></div>
                         </div>
                         <p className="font-luxury text-xl text-[#888]">
@@ -175,7 +175,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
 
                 {/* 3. COUPLE PROFILES */}
                 <section className="py-10 px-6">
-                    <h2 className="text-center font-luxury text-4xl mb-16"><GoldText>The Couple</GoldText></h2>
+                    <h2 className="text-center font-luxury text-4xl mb-16"><GoldText>{invitation.texts.couple_title}</GoldText></h2>
 
                     <div className="grid md:grid-cols-2 gap-16 max-w-5xl mx-auto">
                         {/* Groom */}
@@ -220,7 +220,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
 
                 {/* 4. EVENTS (Dark Cards) */}
                 <section className="py-10 px-6">
-                    <h2 className="text-center font-luxury text-4xl mb-4">The Events</h2>
+                    <h2 className="text-center font-luxury text-4xl mb-4">{invitation.texts.events_title}</h2>
                     <p className="text-center font-body text-xs text-[#666] tracking-[0.3em] uppercase mb-16">Please join us</p>
 
                     <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -228,7 +228,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                         <div className="bg-[#1A1A1A] border border-[#333] p-10 text-center relative overflow-hidden group hover:border-[#BF953F] transition-colors duration-500">
                             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#BF953F] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                            <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">The Ceremony</h3>
+                            <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">{invitation.texts.akad_title}</h3>
                             <div className="space-y-4">
                                 <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
                                     <Calendar size={16} className="text-[#BF953F]" />
@@ -252,7 +252,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                         <div className="bg-[#1A1A1A] border border-[#333] p-10 text-center relative overflow-hidden group hover:border-[#BF953F] transition-colors duration-500">
                             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#BF953F] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                            <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">The Reception</h3>
+                            <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">{invitation.texts.resepsi_title}</h3>
                             <div className="space-y-4">
                                 <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
                                     <Calendar size={16} className="text-[#BF953F]" />
@@ -278,7 +278,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                 {invitation.gallery.images.length > 0 && (
                     <section className="py-20 px-4 bg-[#0A0A0A]">
                         <h2 className="text-center font-luxury text-3xl mb-12 tracking-widest">
-                            <GoldText>CAPTURED MOMENTS</GoldText>
+                            <GoldText>{invitation.texts.gallery_title}</GoldText>
                         </h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-1 max-w-6xl mx-auto">
                             {invitation.gallery.images.map((img, idx) => (
@@ -299,9 +299,9 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                 <section className="py-20 px-6">
                     <div className="max-w-xl mx-auto text-center">
                         <Star className="w-8 h-8 text-[#BF953F] mx-auto mb-6 animate-pulse" />
-                        <h2 className="font-luxury text-3xl mb-4">Wedding Gift</h2>
+                        <h2 className="font-luxury text-3xl mb-4">{invitation.texts.gift_title}</h2>
                         <p className="font-body text-xs text-[#888] mb-10 leading-relaxed">
-                            Your presence is the greatest gift. Should you wish to honor us with a token of love, a digital transfer would be appreciated.
+                            {invitation.texts.gift_text}
                         </p>
 
                         <div className="space-y-6">
@@ -333,7 +333,7 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                 {/* FOOTER */}
                 <footer className="bg-black py-16 text-center border-t border-[#222]">
                     <h2 className="font-luxury text-4xl mb-4 text-[#333]">{invitation.hero.groom_nickname} & {invitation.hero.bride_nickname}</h2>
-                    <p className="font-body text-[10px] uppercase tracking-[0.3em] text-[#BF953F]">The Beginning of Forever</p>
+                    <p className="font-body text-[10px] uppercase tracking-[0.3em] text-[#BF953F]">{invitation.texts.footer_text}</p>
                 </footer>
 
                 <div className="h-24"></div> {/* Spacer */}

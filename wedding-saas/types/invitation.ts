@@ -46,6 +46,19 @@ export interface InvitationData {
             images: string[];
             video_url: string;
         };
+        texts: {
+            open_button: string;
+            hero_title: string;
+            hero_subtitle: string;
+            couple_title: string;
+            events_title: string;
+            akad_title: string;
+            resepsi_title: string;
+            gallery_title: string;
+            gift_title: string;
+            gift_text: string;
+            footer_text: string;
+        };
     };
     engagement: {
         rsvp: boolean;

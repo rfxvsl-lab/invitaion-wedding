@@ -86,6 +86,19 @@ export const mapToTemplateData = (data: InvitationData) => {
                 holder_name: g.holder
             })) || [],
             address_for_gifts: ""
+        },
+        texts: {
+            open_button: content.texts?.open_button || "Buka Undangan",
+            hero_title: content.texts?.hero_title || "The Wedding Of",
+            hero_subtitle: content.texts?.hero_subtitle || "We Are Getting Married",
+            couple_title: content.texts?.couple_title || "The Couple",
+            events_title: content.texts?.events_title || "Save The Date",
+            akad_title: content.texts?.akad_title || "Akad Nikah",
+            resepsi_title: content.texts?.resepsi_title || "Resepsi",
+            gallery_title: content.texts?.gallery_title || "Our Memories",
+            gift_title: content.texts?.gift_title || "Wedding Gift",
+            gift_text: content.texts?.gift_text || "Doa Restu Anda merupakan karunia yang sangat berarti bagi kami. Dan jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara cashless.",
+            footer_text: content.texts?.footer_text || "Thank you for being part of our story"
         }
     };
 };

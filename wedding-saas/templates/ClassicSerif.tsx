@@ -128,7 +128,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                 </div>
 
                 <div className="relative z-10 text-center px-8 animate-fade-in-up w-full max-w-lg">
-                    <p className="font-lato text-sm tracking-[0.4em] uppercase text-[#666] mb-6">The Wedding Celebration of</p>
+                    <p className="font-lato text-sm tracking-[0.4em] uppercase text-[#666] mb-6">{invitation.texts.hero_title}</p>
                     <h1 className="font-cinzel text-4xl md:text-6xl text-[#2D2D2D] mb-4 leading-tight">
                         {invitation.hero.groom_nickname} <span className="text-[#A48874]">&</span> {invitation.hero.bride_nickname}
                     </h1>
@@ -143,7 +143,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                         onClick={handleOpen}
                         className="group relative px-8 py-3 bg-transparent border border-[#3E3E3E] text-[#3E3E3E] font-lato text-xs font-bold tracking-[0.2em] uppercase transition-all hover:bg-[#3E3E3E] hover:text-[#FFFAF4]"
                     >
-                        Open Invitation
+                        {invitation.texts.open_button}
                         <span className="absolute -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 text-[#D4AF37]">
                             <ArrowDown size={20} className="animate-bounce" />
                         </span>
@@ -158,7 +158,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                 <header className="relative min-h-[80vh] flex flex-col items-center justify-center text-center px-6 pt-20 pb-10">
                     <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }}></div>
 
-                    <p className="font-lato text-xs tracking-[0.3em] text-[#D4AF37] mb-6 uppercase">Save The Date</p>
+                    <p className="font-lato text-xs tracking-[0.3em] text-[#D4AF37] mb-6 uppercase">{invitation.texts.hero_subtitle}</p>
                     <h2 className="font-playfair text-5xl md:text-7xl text-[#2D2D2D] mb-4 leading-tight">
                         {invitation.hero.groom_nickname} <span className="text-[#A48874]">&</span> {invitation.hero.bride_nickname}
                     </h2>
@@ -182,7 +182,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
 
                 {/* COUPLE PROFILE */}
                 <section className="py-10 px-6 max-w-5xl mx-auto">
-                    <h3 className="font-cinzel text-3xl text-center mb-16">The Happy Couple</h3>
+                    <h3 className="font-cinzel text-3xl text-center mb-16">{invitation.texts.couple_title}</h3>
 
                     <div className="flex flex-col md:flex-row items-center justify-center gap-16 md:gap-24">
                         {/* Groom */}
@@ -231,7 +231,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
 
                 {/* EVENTS SECTION */}
                 <section className="py-10 px-6 max-w-4xl mx-auto">
-                    <h3 className="font-cinzel text-3xl text-center mb-16">Wedding Events</h3>
+                    <h3 className="font-cinzel text-3xl text-center mb-16">{invitation.texts.events_title}</h3>
 
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Akad Card */}
@@ -239,7 +239,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                             <div className="w-12 h-12 mx-auto bg-[#FFFAF4] rounded-full flex items-center justify-center text-[#D4AF37] mb-6">
                                 <Heart size={20} />
                             </div>
-                            <h4 className="font-playfair text-2xl mb-6">Akad Nikah</h4>
+                            <h4 className="font-playfair text-2xl mb-6">{invitation.texts.akad_title}</h4>
                             <div className="space-y-3 font-lato text-sm text-[#555]">
                                 <p className="flex items-center justify-center gap-2">
                                     <Calendar size={14} className="text-[#D4AF37]" /> {invitation.events.akad.date}
@@ -262,7 +262,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                             <div className="w-12 h-12 mx-auto bg-[#FFFAF4] rounded-full flex items-center justify-center text-[#D4AF37] mb-6">
                                 <Gift size={20} />
                             </div>
-                            <h4 className="font-playfair text-2xl mb-6">Wedding Reception</h4>
+                            <h4 className="font-playfair text-2xl mb-6">{invitation.texts.resepsi_title}</h4>
                             <div className="space-y-3 font-lato text-sm text-[#555]">
                                 <p className="flex items-center justify-center gap-2">
                                     <Calendar size={14} className="text-[#D4AF37]" /> {invitation.events.resepsi.date}
@@ -285,7 +285,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                 {/* GALLERY (Simple Grid) */}
                 {invitation.gallery.images && invitation.gallery.images.length > 0 && (
                     <section className="py-20 px-6">
-                        <h3 className="font-cinzel text-3xl text-center mb-12">Captured Moments</h3>
+                        <h3 className="font-cinzel text-3xl text-center mb-12">{invitation.texts.gallery_title}</h3>
                         <div className="grid grid-cols-2 gap-4 max-w-6xl mx-auto">
                             {invitation.gallery.images.map((img, idx) => (
                                 <div key={idx} className="relative overflow-hidden aspect-[3/4]">
@@ -304,8 +304,8 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                 {invitation.gifts.bank_accounts && invitation.gifts.bank_accounts.length > 0 && (
                     <section className="py-20 px-6 bg-white border-y border-[#EAEAEA]">
                         <div className="max-w-xl mx-auto text-center">
-                            <h3 className="font-cinzel text-3xl mb-4">Wedding Gift</h3>
-                            <p className="font-playfair italic text-[#666] mb-10">Your presence is the greatest gift of all. However, should you wish to honor us with a gift, a contribution can be made to:</p>
+                            <h3 className="font-cinzel text-3xl mb-4">{invitation.texts.gift_title}</h3>
+                            <p className="font-playfair italic text-[#666] mb-10">{invitation.texts.gift_text}</p>
 
                             <div className="space-y-6">
                                 {invitation.gifts.bank_accounts.map((bank, idx) => (
@@ -329,7 +329,7 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
                 {/* FOOTER */}
                 <footer className="py-12 text-center bg-[#2D2D2D] text-[#FFFAF4]">
                     <p className="font-cinzel text-xl md:text-2xl mb-2">{invitation.hero.groom_nickname} & {invitation.hero.bride_nickname}</p>
-                    <p className="font-lato text-[10px] tracking-[0.3em] opacity-60 uppercase">Forever & Always</p>
+                    <p className="font-lato text-[10px] tracking-[0.3em] opacity-60 uppercase">{invitation.texts.footer_text}</p>
                 </footer>
 
                 {/* BOTTOM PADDING for Floating Nav */}

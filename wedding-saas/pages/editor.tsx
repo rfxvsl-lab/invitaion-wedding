@@ -30,7 +30,20 @@ const INITIAL_DATA: InvitationData = {
             akad: { date: "2024-12-31", time: "08:00", venue: "Verona Cathedral", address: "Italy", map_url: "" },
             resepsi: { date: "2024-12-31", time: "18:00", venue: "Capulet Hall", address: "Italy", map_url: "" }
         },
-        gallery: { images: [], video_url: "" }
+        gallery: { images: [], video_url: "" },
+        texts: {
+            open_button: "Buka Undangan",
+            hero_title: "The Wedding Of",
+            hero_subtitle: "We Are Getting Married",
+            couple_title: "The Couple",
+            events_title: "Save The Date",
+            akad_title: "Akad Nikah",
+            resepsi_title: "Resepsi",
+            gallery_title: "Our Memories",
+            gift_title: "Wedding Gift",
+            gift_text: "Doa Restu Anda merupakan karunia yang sangat berarti bagi kami. Dan jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara cashless.",
+            footer_text: "Thank you for being part of our story"
+        }
     },
     engagement: {
         rsvp: true,
@@ -42,6 +55,7 @@ const INITIAL_DATA: InvitationData = {
 export default function EditorPage() {
     const [data, setData] = useState<InvitationData>(INITIAL_DATA);
     const [saveStatus, setSaveStatus] = useState<'saved' | 'unsaved' | 'saving' | 'error'>('saved');
+    const [showPublishModal, setShowPublishModal] = useState(false);
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Initial Fetch (Simplified for Demo: fetching hardcoded slug)
@@ -128,11 +142,48 @@ export default function EditorPage() {
                                     <CheckCircle size={12} className={saveStatus === 'saved' ? 'text-green-500' : 'text-amber-500'} />}
                             {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'All Saved' : saveStatus === 'error' ? 'Failed' : 'Unsaved'}
                         </span>
-                        <button onClick={() => saveToSupabase()} className="bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-black transition-colors">
-                            <Save size={14} /> Deploy
+                        <button onClick={() => { saveToSupabase(); setShowPublishModal(true); }} className="bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-black transition-colors">
+                            <Save size={14} /> Publish
                         </button>
                     </div>
                 </div>
+
+                {/* PUBLISH MODAL */}
+                {showPublishModal && (
+                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up">
+                            <div className="text-center mb-6">
+                                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <CheckCircle size={32} />
+                                </div>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">Undangan Terbit!</h2>
+                                <p className="text-gray-500 text-sm">Undangan pernikahan Anda berhasil disimpan dan siap dibagikan.</p>
+                            </div>
+
+                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 flex items-center gap-3">
+                                <Globe size={20} className="text-gray-400 flex-shrink-0" />
+                                <div className="flex-1 overflow-hidden">
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">PUBLIC LINK</p>
+                                    <p className="text-sm font-medium text-indigo-600 truncate">weddinginvitation-18.vercel.app/{data.metadata.slug}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button onClick={() => setShowPublishModal(false)} className="flex-1 py-3 text-gray-600 font-bold text-xs bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                                    Tutup
+                                </button>
+                                <a
+                                    href={`/${data.metadata.slug}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="flex-1 py-3 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 text-center"
+                                >
+                                    Buka Link <Globe size={14} />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex-1 flex items-center justify-center p-8 overflow-hidden">
                     <div className="relative h-[85vh] aspect-[9/19] bg-black rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden ring-4 ring-gray-300/50">

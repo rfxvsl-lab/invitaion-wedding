@@ -115,7 +115,7 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                         />
                     </div>
 
-                    <p className="font-opensans text-xs tracking-[0.3em] text-[#A48874] uppercase mb-2">The Wedding Of</p>
+                    <p className="font-opensans text-xs tracking-[0.3em] text-[#A48874] uppercase mb-2">{invitation.texts.hero_title}</p>
                     <h1 className="font-cormorant text-5xl text-[#2D2D2D] mb-4">
                         {invitation.hero.groom_nickname} <span className="text-[#A48874]">&</span> {invitation.hero.bride_nickname}
                     </h1>
@@ -127,7 +127,7 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                         onClick={handleOpen}
                         className="relative z-50 bg-[#A48874] text-white px-8 py-3 rounded-full font-opensans text-xs font-bold uppercase tracking-widest hover:bg-[#8B7362] transition-colors shadow-lg flex items-center gap-2 mx-auto animate-pulse cursor-pointer"
                     >
-                        Buka Undangan
+                        {invitation.texts.open_button}
                     </button>
                 </div>
             </div>
@@ -139,7 +139,7 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                 <section className="min-h-screen pt-12 pb-20 px-6 flex flex-col justify-center items-center bg-[#F8F9FA]">
                     <FadeIn>
                         <div className="text-center mb-12">
-                            <p className="font-opensans text-xs uppercase tracking-widest text-[#666] mb-2">We Are Getting Married</p>
+                            <p className="font-opensans text-xs uppercase tracking-widest text-[#666] mb-2">{invitation.texts.hero_subtitle}</p>
                             <h2 className="font-cormorant text-6xl text-[#2D2D2D]">{invitation.hero.groom_nickname} & {invitation.hero.bride_nickname}</h2>
                         </div>
                     </FadeIn>
@@ -199,15 +199,15 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                 {/* 3. EVENTS (Modern Cards) */}
                 <section className="py-20 px-6 bg-[#F8F9FA]">
                     <FadeIn>
-                        <h2 className="text-center font-cormorant text-4xl mb-16 text-[#2D2D2D]">Save The Date</h2>
+                        <h2 className="text-center font-cormorant text-4xl mb-16 text-[#2D2D2D]">{invitation.texts.events_title}</h2>
                     </FadeIn>
 
                     <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
                         {/* Akad */}
                         <FadeIn delay={200}>
                             <div className="bg-white p-8 rounded-[3rem] rounded-tl-none shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-[#E9ECEF] flex flex-col items-center text-center h-full hover:border-[#A48874] transition-colors">
-                                <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">The Ceremony</span>
-                                <h3 className="font-cormorant text-3xl mb-2">Akad Nikah</h3>
+                                <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">{invitation.texts.akad_title}</span>
+                                <h3 className="font-cormorant text-3xl mb-2">{invitation.texts.akad_title}</h3>
                                 <div className="w-12 h-[1px] bg-[#A48874] my-4"></div>
                                 <p className="font-opensans font-bold text-lg mb-1">{invitation.events.akad.date}</p>
                                 <p className="font-opensans text-sm text-[#666] mb-6">{invitation.events.akad.time}</p>
@@ -222,8 +222,8 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                         {/* Resepsi */}
                         <FadeIn delay={400}>
                             <div className="bg-white p-8 rounded-[3rem] rounded-br-none shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-[#E9ECEF] flex flex-col items-center text-center h-full hover:border-[#A48874] transition-colors">
-                                <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">The Celebration</span>
-                                <h3 className="font-cormorant text-3xl mb-2">Wedding Reception</h3>
+                                <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">{invitation.texts.resepsi_title}</span>
+                                <h3 className="font-cormorant text-3xl mb-2">{invitation.texts.resepsi_title}</h3>
                                 <div className="w-12 h-[1px] bg-[#A48874] my-4"></div>
                                 <p className="font-opensans font-bold text-lg mb-1">{invitation.events.resepsi.date}</p>
                                 <p className="font-opensans text-sm text-[#666] mb-6">{invitation.events.resepsi.time}</p>
@@ -241,7 +241,7 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                 {invitation.gallery.images.length > 0 && (
                     <section className="py-20 px-4 bg-[#FFFFFF]">
                         <div className="text-center mb-12">
-                            <h2 className="font-cormorant text-4xl">Our Moments</h2>
+                            <h2 className="font-cormorant text-4xl">{invitation.texts.gallery_title}</h2>
                         </div>
                         <div className="columns-2 md:columns-3 gap-4 max-w-6xl mx-auto space-y-4">
                             {invitation.gallery.images.map((img, idx) => (
@@ -270,9 +270,9 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
 
                                 <div className="relative z-10">
                                     <Gift className="mx-auto w-10 h-10 mb-6" />
-                                    <h2 className="font-cormorant text-3xl mb-2">Wedding Gift</h2>
+                                    <h2 className="font-cormorant text-3xl mb-2">{invitation.texts.gift_title}</h2>
                                     <p className="font-opensans text-xs opacity-80 mb-8 max-w-md mx-auto leading-relaxed">
-                                        Your presence is more than enough. However, if you wish to give a gift, you can send it via:
+                                        {invitation.texts.gift_text}
                                     </p>
 
                                     <div className="grid gap-4">

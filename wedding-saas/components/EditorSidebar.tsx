@@ -1,6 +1,6 @@
 // Path: /components/EditorSidebar.tsx
 import React, { useState } from 'react';
-import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2 } from 'lucide-react';
+import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2, Settings } from 'lucide-react';
 import ImageUploader from './ImageUploader';
 import { InvitationData } from '../types/invitation';
 
@@ -23,7 +23,7 @@ const Input = ({ label, value, onChange, placeholder }: { label: string, value: 
 );
 
 const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
-    const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design'>('content');
+    const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design' | 'settings'>('content');
 
     // Helper untuk resolve nested value (safe access)
     const getValue = (path: string) => {
@@ -33,9 +33,11 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
     return (
         <aside className="w-[450px] flex flex-col bg-white border-r border-gray-200 h-full shadow-xl z-20">
             <div className="flex border-b border-gray-100 bg-gray-50/50">
-                {['content', 'events', 'media', 'design'].map(tab => (
-                    <button key={tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 py-4 text-[10px] font-bold uppercase tracking-widest ${activeTab === tab ? 'border-b-2 border-indigo-600 text-indigo-600 bg-white' : 'text-gray-400 hover:text-gray-600'}`}>{tab}</button>
-                ))}
+                <div className="flex border-b border-gray-100 bg-gray-50/50 overflow-x-auto">
+                    {['content', 'events', 'media', 'design', 'settings'].map(tab => (
+                        <button key={tab} onClick={() => setActiveTab(tab as any)} className={`flex-1 min-w-[60px] py-4 text-[10px] font-bold uppercase tracking-widest ${activeTab === tab ? 'border-b-2 border-indigo-600 text-indigo-600 bg-white' : 'text-gray-400 hover:text-gray-600'}`}>{tab}</button>
+                    ))}
+                </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 bg-slate-50/50 space-y-6 custom-scrollbar">
@@ -138,6 +140,33 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                             <button onClick={() => onUpdate('engagement.gifts', [...data.engagement.gifts, { bank: '', acc_number: '', holder: '' }])} className="w-full py-2 border border-dashed border-indigo-300 text-indigo-600 rounded-lg text-xs font-bold flex items-center justify-center gap-2 hover:bg-indigo-50"><Plus size={14} /> Tambah Rekening</button>
                         </div>
                     </>
+                )}
+
+                {activeTab === 'settings' && (
+                    <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Settings size={14} className="text-indigo-500" /> PENGATURAN UMUM</h3>
+
+                        <div className="mb-6 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                            <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-2">LINK UNDANGAN (SLUG)</p>
+                            <Input label="Slug / URL Path" value={getValue('metadata.slug')} onChange={(v) => onUpdate('metadata.slug', v.toLowerCase().replace(/[^a-z0-9-]/g, '-'))} placeholder="contoh: romeo-juliet" />
+                            <p className="text-[10px] text-gray-500 mt-1">Hanya huruf kecil, angka, dan strip (-).</p>
+                        </div>
+
+                        <h3 className="text-xs font-bold text-gray-800 mb-4 flex items-center gap-2"><Type size={14} className="text-indigo-500" /> KUSTOMISASI TEKS</h3>
+                        <div className="space-y-1">
+                            <Input label="Tombol Buka" value={getValue('content.texts.open_button') || 'Buka Undangan'} onChange={(v) => onUpdate('content.texts.open_button', v)} />
+                            <Input label="Judul Hero (The Wedding Of)" value={getValue('content.texts.hero_title') || 'The Wedding Of'} onChange={(v) => onUpdate('content.texts.hero_title', v)} />
+                            <Input label="Sub-Judul Hero" value={getValue('content.texts.hero_subtitle') || 'We Are Getting Married'} onChange={(v) => onUpdate('content.texts.hero_subtitle', v)} />
+                            <Input label="Judul Bagian Pasangan" value={getValue('content.texts.couple_title') || 'The Couple'} onChange={(v) => onUpdate('content.texts.couple_title', v)} />
+                            <Input label="Judul Bagian Acara" value={getValue('content.texts.events_title') || 'Save The Date'} onChange={(v) => onUpdate('content.texts.events_title', v)} />
+                            <Input label="Judul Akad" value={getValue('content.texts.akad_title') || 'Akad Nikah'} onChange={(v) => onUpdate('content.texts.akad_title', v)} />
+                            <Input label="Judul Resepsi" value={getValue('content.texts.resepsi_title') || 'Resepsi'} onChange={(v) => onUpdate('content.texts.resepsi_title', v)} />
+                            <Input label="Judul Galeri" value={getValue('content.texts.gallery_title') || 'Our Memories'} onChange={(v) => onUpdate('content.texts.gallery_title', v)} />
+                            <Input label="Judul Kado/Gift" value={getValue('content.texts.gift_title') || 'Wedding Gift'} onChange={(v) => onUpdate('content.texts.gift_title', v)} />
+                            <Input label="Teks Kado/Gift" value={getValue('content.texts.gift_text') || ''} onChange={(v) => onUpdate('content.texts.gift_text', v)} />
+                            <Input label="Teks Footer" value={getValue('content.texts.footer_text') || 'Thank you'} onChange={(v) => onUpdate('content.texts.footer_text', v)} />
+                        </div>
+                    </div>
                 )}
             </div>
         </aside>

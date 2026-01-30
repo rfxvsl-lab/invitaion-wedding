@@ -118,7 +118,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                     <div className="text-center w-full">
                         <div className="mb-8">
                             <Leaf className="inline-block text-[#8FBC8F] mb-2" size={32} />
-                            <p className="font-serif text-xs uppercase tracking-widest text-[#8D6E63]">The Wedding Of</p>
+                            <p className="font-serif text-xs uppercase tracking-widest text-[#8D6E63]">{invitation.texts.hero_title}</p>
                         </div>
 
                         <div className="relative mb-8">
@@ -136,7 +136,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                         </div>
 
                         <WoodButton onClick={handleOpen}>
-                            Open Invitation
+                            {invitation.texts.open_button}
                         </WoodButton>
                     </div>
                 </div>
@@ -157,7 +157,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                     </div>
 
                     <div className="relative z-10 text-center text-white drop-shadow-md px-4">
-                        <p className="font-serif italic text-sm mb-2">We are getting married!</p>
+                        <p className="font-serif italic text-sm mb-2">{invitation.texts.hero_subtitle}</p>
                         <h2 className="font-hand text-6xl md:text-8xl font-bold mb-4">
                             {invitation.hero.groom_nickname} & {invitation.hero.bride_nickname}
                         </h2>
@@ -184,7 +184,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                 {/* 3. COUPLE */}
                 <section className="py-10 px-6">
                     <div className="text-center mb-12">
-                        <h2 className="font-hand text-5xl font-bold text-[#5D4037]">The Happy Couple</h2>
+                        <h2 className="font-hand text-5xl font-bold text-[#5D4037]">{invitation.texts.couple_title}</h2>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
@@ -219,7 +219,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                 {/* 4. EVENTS */}
                 <section className="py-10 px-6">
                     <div className="text-center mb-12">
-                        <h2 className="font-hand text-5xl font-bold text-[#5D4037]">Save The Date</h2>
+                        <h2 className="font-hand text-5xl font-bold text-[#5D4037]">{invitation.texts.events_title}</h2>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -227,7 +227,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                         <PaperCard className="-rotate-1">
                             <div className="border-2 border-dashed border-[#8FBC8F] p-6 text-center h-full flex flex-col items-center">
                                 <Leaf className="text-[#8FBC8F] mb-2" size={24} />
-                                <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">The Ceremony</h3>
+                                <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">{invitation.texts.akad_title}</h3>
                                 <div className="w-full h-[1px] bg-[#8D6E63] opacity-20 my-2"></div>
                                 <p className="font-serif font-bold text-lg">{invitation.events.akad.date}</p>
                                 <p className="font-serif text-sm italic mb-4">{invitation.events.akad.time}</p>
@@ -243,7 +243,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                         <PaperCard className="rotate-1">
                             <div className="border-2 border-dashed border-[#8FBC8F] p-6 text-center h-full flex flex-col items-center">
                                 <Gift className="text-[#8FBC8F] mb-2" size={24} />
-                                <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">The Reception</h3>
+                                <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">{invitation.texts.resepsi_title}</h3>
                                 <div className="w-full h-[1px] bg-[#8D6E63] opacity-20 my-2"></div>
                                 <p className="font-serif font-bold text-lg">{invitation.events.resepsi.date}</p>
                                 <p className="font-serif text-sm italic mb-4">{invitation.events.resepsi.time}</p>
@@ -261,7 +261,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                 {invitation.gallery.images.length > 0 && (
                     <section className="py-16 px-4">
                         <div className="bg-[#FFFDF5] p-8 max-w-6xl mx-auto shadow-inner rounded-sm">
-                            <h2 className="font-hand text-5xl font-bold text-[#5D4037] text-center mb-8">Our Memories</h2>
+                            <h2 className="font-hand text-5xl font-bold text-[#5D4037] text-center mb-8">{invitation.texts.gallery_title}</h2>
                             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                                 {invitation.gallery.images.map((img, i) => (
                                     <div key={i} className={`bg-white p-2 shadow-md transform hover:scale-105 transition-transform duration-300 ${i % 2 === 0 ? 'rotate-2' : '-rotate-1'}`}>
@@ -280,9 +280,9 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                 {/* 6. GIFTS */}
                 <section className="py-16 px-6">
                     <div className="max-w-2xl mx-auto text-center">
-                        <h2 className="font-hand text-5xl font-bold text-[#5D4037] mb-6">Wedding Gift</h2>
+                        <h2 className="font-hand text-5xl font-bold text-[#5D4037] mb-6">{invitation.texts.gift_title}</h2>
                         <p className="font-serif italic text-[#8D6E63] mb-8">
-                            If you'd like to send a gift to help us start our new life together, we've set up these funds:
+                            {invitation.texts.gift_text}
                         </p>
 
                         <div className="space-y-4">
@@ -313,7 +313,7 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                     <div className="absolute top-0 left-0 w-full h-4 bg-[#5D4037]" style={{ top: '-10px', clipPath: 'polygon(0% 100%, 5% 0%, 10% 100%, 15% 0%, 20% 100%, 25% 0%, 30% 100%, 35% 0%, 40% 100%, 45% 0%, 50% 100%, 55% 0%, 60% 100%, 65% 0%, 70% 100%, 75% 0%, 80% 100%, 85% 0%, 90% 100%, 95% 0%, 100% 100%)' }}></div>
 
                     <h2 className="font-hand text-4xl mb-4">{invitation.hero.groom_nickname} & {invitation.hero.bride_nickname}</h2>
-                    <p className="font-serif italic text-xs opacity-70">Thank you for being part of our story.</p>
+                    <p className="font-serif italic text-xs opacity-70">{invitation.texts.footer_text}</p>
                 </footer>
 
             </div>

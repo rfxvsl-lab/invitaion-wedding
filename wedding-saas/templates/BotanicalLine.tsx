@@ -99,7 +99,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                 <FloralCorner className="absolute bottom-0 right-0 rotate-180" />
 
                 <div className="relative z-10 text-center max-w-lg">
-                    <p className="font-sans text-xs tracking-[0.2em] uppercase text-[#BCAAA4] mb-4">The Wedding Of</p>
+                    <p className="font-sans text-xs tracking-[0.2em] uppercase text-[#BCAAA4] mb-4">{invitation.texts.hero_title}</p>
                     <h1 className="font-script text-6xl md:text-8xl text-[#555] leading-tight mb-6">
                         {invitation.hero.groom_nickname} <span className="text-[#BCAAA4] text-4xl">&</span> {invitation.hero.bride_nickname}
                     </h1>
@@ -116,7 +116,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                         onClick={handleOpen}
                         className="bg-white text-[#555] border border-[#BCAAA4] px-8 py-3 rounded-full font-sans text-xs font-semibold tracking-[0.2em] uppercase hover:bg-[#BCAAA4] hover:text-white transition-all duration-500 shadow-sm"
                     >
-                        Open Invitation
+                        {invitation.texts.open_button}
                     </button>
                 </div>
             </div>
@@ -129,7 +129,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                     <div className="absolute top-0 right-0 w-32 h-32 opacity-20"><FloralCorner /></div>
 
                     <div className="fade-in-up">
-                        <p className="font-sans text-xs uppercase tracking-widest text-[#999] mb-4">We Are Getting Married</p>
+                        <p className="font-sans text-xs uppercase tracking-widest text-[#999] mb-4">{invitation.texts.hero_subtitle}</p>
                         <h2 className="font-script text-6xl md:text-7xl mb-6">{invitation.hero.groom_nickname} <span className="text-[#BCAAA4]">&</span> {invitation.hero.bride_nickname}</h2>
                         <p className="font-sans italic text-sm text-[#777] max-w-md mx-auto">
                             Requests the honor of your presence at our wedding ceremony
@@ -185,7 +185,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                 <section className="px-6 bg-[#FAFAFA] py-16 relative">
                     <FloralCorner className="absolute top-0 right-0 opacity-30" />
                     <div className="text-center mb-12">
-                        <h2 className="font-script text-5xl mb-2">Save The Date</h2>
+                        <h2 className="font-script text-5xl mb-2">{invitation.texts.events_title}</h2>
                         <p className="font-sans text-xs tracking-widest uppercase">{new Date(invitation.events.akad.date).toLocaleDateString()}</p>
                     </div>
 
@@ -193,7 +193,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                         {/* Akad Card */}
                         <div className="bg-white p-8 rounded-lg shadow-sm border border-[#EAEAEA] text-center hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div className="absolute top-0 left-0 w-full h-1 bg-[#BCAAA4]"></div>
-                            <h3 className="font-script text-3xl mb-4">Akad Nikah</h3>
+                            <h3 className="font-script text-3xl mb-4">{invitation.texts.akad_title}</h3>
                             <div className="font-sans text-sm space-y-2 text-[#666]">
                                 <p className="font-bold flex items-center justify-center gap-2"><Clock size={14} className="text-[#BCAAA4]" /> {invitation.events.akad.time}</p>
                                 <p className="font-bold text-lg text-[#333] mt-4">{invitation.events.akad.location_name}</p>
@@ -205,7 +205,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                         {/* Resepsi Card */}
                         <div className="bg-white p-8 rounded-lg shadow-sm border border-[#EAEAEA] text-center hover:shadow-md transition-shadow relative overflow-hidden group">
                             <div className="absolute top-0 left-0 w-full h-1 bg-[#BCAAA4]"></div>
-                            <h3 className="font-script text-3xl mb-4">Reception</h3>
+                            <h3 className="font-script text-3xl mb-4">{invitation.texts.resepsi_title}</h3>
                             <div className="font-sans text-sm space-y-2 text-[#666]">
                                 <p className="font-bold flex items-center justify-center gap-2"><Clock size={14} className="text-[#BCAAA4]" /> {invitation.events.resepsi.time}</p>
                                 <p className="font-bold text-lg text-[#333] mt-4">{invitation.events.resepsi.location_name}</p>
@@ -220,7 +220,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                 {invitation.gallery.images.length > 0 && (
                     <section className="py-16 px-4">
                         <FloralDivider />
-                        <h2 className="text-center font-script text-4xl mb-8">Our Moments</h2>
+                        <h2 className="text-center font-script text-4xl mb-8">{invitation.texts.gallery_title}</h2>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-w-5xl mx-auto">
                             {invitation.gallery.images.map((img, i) => (
                                 <div key={i} className="aspect-square overflow-hidden rounded-lg bg-[#F5F5F5] group">
@@ -237,9 +237,9 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 text-[#BCAAA4] shadow-sm">
                             <Gift size={20} />
                         </div>
-                        <h2 className="font-script text-4xl mb-4">Wedding Gift</h2>
+                        <h2 className="font-script text-4xl mb-4">{invitation.texts.gift_title}</h2>
                         <p className="font-sans text-xs text-[#888] mb-8 leading-relaxed">
-                            Your presence at our wedding is the greatest gift of all. However, should you wish to honour us with a gift, a contribution can be made to:
+                            {invitation.texts.gift_text}
                         </p>
 
                         <div className="grid gap-4">
@@ -266,7 +266,7 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                 <footer className="bg-white py-12 text-center border-t border-[#F0F0F0]">
                     <FloralCorner className="w-16 h-16 mx-auto rotate-90 mb-4 opacity-40" />
                     <p className="font-script text-2xl">{invitation.hero.groom_nickname} & {invitation.hero.bride_nickname}</p>
-                    <p className="font-sans text-[10px] uppercase tracking-widest text-[#BCAAA4] mt-2">Thank You</p>
+                    <p className="font-sans text-[10px] uppercase tracking-widest text-[#BCAAA4] mt-2">{invitation.texts.footer_text}</p>
                 </footer>
 
             </div>
