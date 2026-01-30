@@ -1,5 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import React from 'react';
+import { DownloadControls } from '../components/DownloadControls';
 import { supabase } from '../lib/supabase';
 import { InvitationData } from '../types/invitation';
 
@@ -37,13 +39,18 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
         }
     };
 
+    const contentRef = React.useRef<HTMLDivElement>(null);
+
     return (
         <>
             <Head>
                 <title>{data.content.hero.nicknames} | Wedding Invitation</title>
                 <meta name="description" content={`Undangan pernikahan ${data.content.hero.nicknames}`} />
             </Head>
-            {renderTemplate()}
+            <DownloadControls targetRef={contentRef} slug={data.metadata.slug} />
+            <div ref={contentRef} className="bg-white min-h-screen">
+                {renderTemplate()}
+            </div>
         </>
     );
 }

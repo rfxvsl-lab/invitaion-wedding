@@ -1,6 +1,6 @@
 // Path: /pages/editor.tsx
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Loader2, CheckCircle, Save, Globe, Eye } from 'lucide-react';
+import { Loader2, CheckCircle, Save, Globe, Eye, Settings } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
 import EditorSidebar from '../components/EditorSidebar';
 import { supabase } from '../lib/supabase';
@@ -189,11 +189,21 @@ export default function EditorPage() {
                                 <p className="text-gray-500 text-sm">Undangan pernikahan Anda berhasil disimpan dan siap dibagikan.</p>
                             </div>
 
-                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 flex items-center gap-3">
-                                <Globe size={20} className="text-gray-400 flex-shrink-0" />
-                                <div className="flex-1 overflow-hidden">
-                                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">PUBLIC LINK</p>
-                                    <p className="text-sm font-medium text-indigo-600 truncate">weddinginvitation-18.vercel.app/{data.metadata.slug}</p>
+                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 space-y-3">
+                                <div className="flex items-center gap-3">
+                                    <Globe size={20} className="text-gray-400 flex-shrink-0" />
+                                    <div className="flex-1 overflow-hidden">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">PUBLIC LINK</p>
+                                        <p className="text-sm font-medium text-indigo-600 truncate">weddinginvitation-18.vercel.app/{data.metadata.slug}</p>
+                                    </div>
+                                </div>
+                                <div className="border-t border-gray-200 pt-3 flex items-center gap-3">
+                                    <Settings size={20} className="text-gray-400 flex-shrink-0" />
+                                    <div className="flex-1 overflow-hidden">
+                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">EDIT LINK (SIMPAN INI!)</p>
+                                        <p className="text-xs font-mono text-gray-600 truncate p-1 bg-gray-100 rounded">?edit={data.metadata.slug}</p>
+                                        <p className="text-[10px] text-gray-400 italic mt-0.5">Gunakan link ini untuk mengedit kembali undangan Anda.</p>
+                                    </div>
                                 </div>
                             </div>
 
