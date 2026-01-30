@@ -28,6 +28,7 @@
         web = {
           command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
           manager = "web";
+          workingDirectory = "app-builder";
           env = {
             PORT = "$PORT";
           };
@@ -40,7 +41,7 @@
       # Runs when a workspace is first created
       onCreate = {
         # Example: install JS dependencies from NPM
-        # npm-install = "npm install";
+        npm-install = "npm install --prefix app-builder";
       };
       # Runs when the workspace is (re)started
       onStart = {

@@ -1,21 +1,52 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { generateHTML, InvitationData } from '../../../lib/generator';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-export async function POST(req: NextRequest) {
+// Helper function to read the HTML template file
+async function getTemplate(theme: string): Promise<string> {
+  const filePath = path.join(process.cwd(), 'templates', `${theme}.html`);
   try {
-    // 1. Terima data JSON dari Frontend
+    return await fs.readFile(filePath, 'utf8');
+  } catch (error) {
+    console.error(`Error reading template ${theme}:`, error);
+    // Return a default error template or a simple message
+    return '<html><body><h1>Template not found</h1></body></html>';
+  }
+}
+
+// The main API route handler
+export async function POST(req: Request) {
+  try {
     const body = await req.json();
-    const data: InvitationData = body;
+    const { theme, ...data } = body;
 
-    // 2. Jalankan mesin generator
-    const htmlContent = generateHTML(data);
+    let template = await getTemplate(theme);
 
-    // 3. Kirim balik HTML sebagai text/html
-    return new NextResponse(htmlContent, {
+    // Replace placeholders in the template with data from the form
+    template = template.replace(/{{ G.NICK }}/g, data.groom.nick);
+    template = template.replace(/{{ B.NICK }}/g, data.bride.nick);
+    template = template.replace(/{{ G.FULL }}/g, data.groom.full);
+    template = template.replace(/{{ B.FULL }}/g, data.bride.full);
+    template = template.replace(/{{ G.PARENTS }}/g, data.groom.parents);
+    template = template.replace(/{{ B.PARENTS }}/g, data.bride.parents);
+    template = template.replace(/{{ G.IMG }}/g, data.groom.img);
+    template = template.replace(/{{ B.IMG }}/g, data.bride.img);
+    template = template.replace(/{{ C.IMG }}/g, data.cover.img);
+    template = template.replace(/{{ E.DATE }}/g, data.event.date);
+    template = template.replace(/{{ E.TIME }}/g, data.event.time);
+    template = template.replace(/{{ E.LOC }}/g, data.event.loc);
+    template = template.replace(/{{ E.MAP }}/g, data.event.map);
+    template = template.replace(/{{ GIFT.BANK }}/g, data.gift.bank);
+    template = template.replace(/{{ GIFT.NUM }}/g, data.gift.num);
+    template = template.replace(/{{ GIFT.NAME }}/g, data.gift.name);
+
+    return new Response(template, {
       headers: { 'Content-Type': 'text/html' },
     });
-  } catch (error: any) {
-    console.error("Error generating preview:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    console.error('Error in preview API:', error);
+    return new Response('<h1>Error generating preview</h1>', {
+      status: 500,
+      headers: { 'Content-Type': 'text/html' },
+    });
   }
 }
