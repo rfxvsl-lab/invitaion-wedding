@@ -2,12 +2,12 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Heart, Settings, Palette, Calendar, Users, Globe, Send, 
-  Copy, Check, Smartphone, ExternalLink, Sparkles, LayoutTemplate, 
+import {
+  Heart, Settings, Palette, Calendar, Users, Globe, Send,
+  Copy, Check, Smartphone, ExternalLink, Sparkles, LayoutTemplate,
   CreditCard, Monitor, Eye
 } from 'lucide-react';
-import { generateHTML, FormData } from '../lib/generator';
+import { FormData } from '../lib/generator';
 import { supabase } from '../lib/supabase';
 
 const THEMES = [
@@ -30,7 +30,9 @@ export default function BuilderPage() {
   const [activeTab, setActiveTab] = useState('couple');
   const [isPublishing, setIsPublishing] = useState(false);
   const [publishUrl, setPublishUrl] = useState('');
-  
+  const [previewHtml, setPreviewHtml] = useState<string>('');
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+
   const [formData, setFormData] = useState<FormData>({
     slug: 'wedding-nicola-salsa',
     theme: 'regular-invitation',
@@ -41,8 +43,28 @@ export default function BuilderPage() {
     accountNumber: '8163069596',
   });
 
-  const previewHtml = useMemo(() => {
-    return generateHTML(formData, formData.theme);
+  // Fetch preview from API
+  React.useEffect(() => {
+    const fetchPreview = async () => {
+      setIsLoadingPreview(true);
+      try {
+        const response = await fetch('/api/preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ formData, theme: formData.theme })
+        });
+        const data = await response.json();
+        if (data.html) {
+          setPreviewHtml(data.html);
+        }
+      } catch (error) {
+        console.error('Failed to load preview:', error);
+      } finally {
+        setIsLoadingPreview(false);
+      }
+    };
+
+    fetchPreview();
   }, [formData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -52,13 +74,13 @@ export default function BuilderPage() {
 
   const handlePublish = async () => {
     setIsPublishing(true);
-    
+
     const { error } = await supabase
       .from('invitations')
-      .upsert({ 
-        slug: formData.slug, 
-        theme: formData.theme, 
-        data_json: formData 
+      .upsert({
+        slug: formData.slug,
+        theme: formData.theme,
+        data_json: formData
       }, { onConflict: 'slug' });
 
     if (error) {
@@ -68,7 +90,7 @@ export default function BuilderPage() {
       const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
       setPublishUrl(`${baseUrl}/v/${formData.slug}`);
     }
-    
+
     setIsPublishing(false);
   };
 
@@ -84,18 +106,18 @@ export default function BuilderPage() {
             <p className="text-[10px] text-slate-500 font-medium tracking-widest uppercase">Premium Edition</p>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-2 bg-white/50 px-3 py-1.5 rounded-full border border-slate-200 text-xs text-slate-500 font-mono">
             invitation.site/v/{formData.slug}
           </div>
-          <button 
+          <button
             onClick={handlePublish}
             disabled={isPublishing}
             className="px-5 py-2 bg-gradient-to-r from-blue-600 to-pink-600 text-white text-sm font-semibold rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all flex items-center gap-2 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isPublishing ? (
-              <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"/> Saving...</span>
+              <span className="flex items-center gap-2"><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Saving...</span>
             ) : (
               <><Send size={14} /> Publikasikan</>
             )}
@@ -207,19 +229,28 @@ export default function BuilderPage() {
             <span className="text-xs font-bold text-slate-600 uppercase tracking-widest">Live Preview</span>
           </div>
 
-          <motion.div 
+          <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="relative w-[340px] md:w-[360px] h-[640px] md:h-[700px] bg-slate-900 rounded-[50px] p-3 shadow-2xl border-[8px] border-slate-800 ring-1 ring-black/5 z-10"
           >
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-b-2xl z-20" />
             <div className="w-full h-full rounded-[35px] overflow-hidden bg-white relative">
-              <iframe 
-                srcDoc={previewHtml}
-                title="Preview"
-                className="w-full h-full border-none"
-                sandbox="allow-scripts"
-              />
+              {isLoadingPreview ? (
+                <div className="w-full h-full flex items-center justify-center bg-slate-50">
+                  <div className="text-center">
+                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="text-xs text-slate-400">Loading preview...</p>
+                  </div>
+                </div>
+              ) : (
+                <iframe
+                  srcDoc={previewHtml}
+                  title="Preview"
+                  className="w-full h-full border-none"
+                  sandbox="allow-scripts"
+                />
+              )}
             </div>
           </motion.div>
 
@@ -232,18 +263,18 @@ export default function BuilderPage() {
 
       <AnimatePresence>
         {publishUrl && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-900/60 backdrop-blur-md"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }}
               className="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl text-center"
             >
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 text-green-600">
                 <Check size={32} strokeWidth={3} />
               </div>
-              
+
               <h2 className="text-2xl font-bold text-slate-800 mb-2">Undangan Siap!</h2>
               <p className="text-sm text-slate-500 mb-8 leading-relaxed">Undangan digital Anda dengan tema <span className="text-white font-bold">{THEMES.find(t => t.id === formData.theme)?.name}</span> telah berhasil dipublikasikan.</p>
 
@@ -251,7 +282,7 @@ export default function BuilderPage() {
                 <div className="flex-1 text-xs text-slate-600 font-mono truncate px-2 text-left">
                   {publishUrl}
                 </div>
-                <button 
+                <button
                   onClick={() => navigator.clipboard.writeText(publishUrl)}
                   className="p-2 hover:bg-white rounded-lg text-slate-500 hover:text-blue-600 hover:shadow-sm transition-all"
                   title="Salin Link"
@@ -261,16 +292,16 @@ export default function BuilderPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <button 
+                <button
                   onClick={() => setPublishUrl('')}
                   className="py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider rounded-xl transition-colors"
                 >
                   Tutup
                 </button>
-                <a 
-                  href={publishUrl} 
+                <a
+                  href={publishUrl}
                   target="_blank"
-                  rel="noreferrer" 
+                  rel="noreferrer"
                   className="py-3 bg-gradient-to-r from-blue-600 to-pink-600 text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:shadow-lg hover:shadow-blue-500/30 transition-all flex items-center justify-center gap-2"
                 >
                   Buka Link <ExternalLink size={14} />
