@@ -1,10 +1,10 @@
-/** 
+/**  
  * @fileoverview Template loader for wedding invitation themes
  * Loads templates dynamically from public/templates/ directory
  */
 
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import fs from 'fs';
+import path from 'path';
 
 export interface FormData {
   slug: string;
@@ -22,16 +22,26 @@ export interface FormData {
  */
 function loadTemplate(themeId: string): string {
   try {
-    const templatePath = join(process.cwd(), 'public', 'templates', `${themeId}.html`);
-    return readFileSync(templatePath, 'utf-8');
+    const templatePath = path.join(process.cwd(), 'public', 'templates', `${themeId}.html`);
+    console.log(`[Generator] Loading template: ${themeId} from ${templatePath}`);
+    const content = fs.readFileSync(templatePath, 'utf-8');
+    console.log(`[Generator] Successfully loaded template: ${themeId} (${content.length} bytes)`);
+    return content;
   } catch (error) {
-    console.error(`Failed to load template ${themeId}:`, error);
+    console.error(`[Generator] Failed to load template ${themeId}:`, error);
+    console.error(`[Generator] CWD: ${process.cwd()}`);
+    console.error(`[Generator] Attempted path: ${path.join(process.cwd(), 'public', 'templates', `${themeId}.html`)}`);
+
     // Fallback to default template
     try {
-      const fallbackPath = join(process.cwd(), 'public', 'templates', 'regular-invitation.html');
-      return readFileSync(fallbackPath, 'utf-8');
-    } catch {
-      return '<html><body><h1>Template not found</h1></body></html>';
+      const fallbackPath = path.join(process.cwd(), 'public', 'templates', 'regular-invitation.html');
+      console.log(`[Generator] Attempting fallback to regular-invitation.html`);
+      const fallbackContent = fs.readFileSync(fallbackPath, 'utf-8');
+      console.log(`[Generator] Fallback success (${fallbackContent.length} bytes)`);
+      return fallbackContent;
+    } catch (fallbackError) {
+      console.error(`[Generator] Fallback also failed:`, fallbackError);
+      return '<html><body><h1>Template not found</h1><p>Error loading templates</p></body></html>';
     }
   }
 }
