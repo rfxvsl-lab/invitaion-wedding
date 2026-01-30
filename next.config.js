@@ -8,8 +8,9 @@ const nextConfig = {
   
   // Kita perlu secara eksplisit memberitahu Next.js di mana root proyek kita
   // berada agar ia bisa men-trace file seperti `templates` dari `app-builder`.
+  // Path ini sekarang sudah dikoreksi.
   experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../../'),
+    outputFileTracingRoot: path.join(__dirname),
   },
 };
 
