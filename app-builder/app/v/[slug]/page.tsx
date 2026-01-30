@@ -2,6 +2,10 @@ import { supabase } from '@/lib/supabase';
 import { generateHTML, FormData } from '@/lib/generator';
 import { notFound } from 'next/navigation';
 
+// Force dynamic rendering - prevent static generation at build time
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface PageProps {
   params: {
     slug: string;
@@ -35,9 +39,9 @@ export default async function InvitationPage({ params }: PageProps) {
   const htmlContent = generateHTML(record.data_json as FormData, record.theme);
 
   return (
-    <div 
+    <div
       className="w-full h-screen overflow-hidden bg-black"
-      dangerouslySetInnerHTML={{ __html: htmlContent }} 
+      dangerouslySetInnerHTML={{ __html: htmlContent }}
     />
   );
 }
@@ -45,7 +49,7 @@ export default async function InvitationPage({ params }: PageProps) {
 // Optional: Metadata dinamis untuk SEO sharing (WA/Facebook)
 export async function generateMetadata({ params }: PageProps) {
   const record = await getInvitationData(params.slug);
-  
+
   if (!record) return { title: 'Undangan Tidak Ditemukan' };
 
   const data = record.data_json as FormData;
