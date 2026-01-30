@@ -15,16 +15,19 @@ export async function POST(request: Request) {
       .upsert({ slug, theme, data_json: formData })
       .select();
 
+    // --- DEBUGGING: Mengirim detail error Supabase ke frontend ---
     if (error) {
       console.error('Supabase error:', error);
-      return NextResponse.json({ error: 'Failed to publish invitation.' }, { status: 500 });
+      // Mengembalikan pesan error yang lebih spesifik untuk debugging
+      return NextResponse.json({ error: `Supabase error: ${error.message} (Code: ${error.code})` }, { status: 500 });
     }
 
     const publishedUrl = `https://weddinginvitation-18.vercel.app/v/${slug}`;
     
     return NextResponse.json({ message: 'Invitation published successfully!', url: publishedUrl, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Handler error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+     // --- DEBUGGING: Mengirim detail error umum ke frontend ---
+    return NextResponse.json({ error: `An unexpected handler error occurred: ${error.message}` }, { status: 500 });
   }
 }
