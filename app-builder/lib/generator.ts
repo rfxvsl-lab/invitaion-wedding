@@ -13,8 +13,7 @@ export interface InvitationData {
 
 export const generateHTML = (data: InvitationData) => {
   // 1. Cari lokasi file template
-  // process.cwd() akan mengarah ke root project (folder app-builder)
-  const templatePath = path.join(process.cwd(), 'templates', `${data.theme}.html`);
+  const templatePath = path.join(process.cwd(), 'app-builder', 'templates', `${data.theme}.html`);
   
   // Cek apakah file ada
   if (!fs.existsSync(templatePath)) {
