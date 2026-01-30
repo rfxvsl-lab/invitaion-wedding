@@ -47,7 +47,7 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
                 <title>{data.content.hero.nicknames} | Wedding Invitation</title>
                 <meta name="description" content={`Undangan pernikahan ${data.content.hero.nicknames}`} />
             </Head>
-            <DownloadControls targetRef={contentRef} slug={data.metadata.slug} />
+            <DownloadControls targetRef={contentRef} slug={data.metadata.slug} data={data} />
             <div ref={contentRef} className="bg-white min-h-screen">
                 {renderTemplate()}
             </div>
