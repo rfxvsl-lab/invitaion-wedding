@@ -1,4 +1,10 @@
-import { TEMPLATES_COLLECTION } from './templates-data';
+/** 
+ * @fileoverview Template loader for wedding invitation themes
+ * Dynamically loads templates from .js file to avoid Turbopack parsing issues
+ */
+
+// Import templates as plain JS to avoid Turbopack parsing the large HTML strings
+import { TEMPLATES_COLLECTION } from './templates-data.js';
 
 export interface FormData {
   slug: string;
@@ -11,8 +17,12 @@ export interface FormData {
 }
 
 export const generateHTML = (formData: FormData, themeId: string): string => {
-  const template = TEMPLATES_COLLECTION[themeId] || TEMPLATES_COLLECTION['regular-invitation'];
-  
+  const template = TEMPLATES_COLLECTION[themeId] || TEMPLATES_COLLECTION['luxury-dark'] || '';
+
+  if (!template) {
+    return '<html><body><h1>Template not found</h1></body></html>';
+  }
+
   let html = template
     .replaceAll('{{GROOM_NAME}}', formData.groomName || 'Pengantin Pria')
     .replaceAll('{{BRIDE_NAME}}', formData.brideName || 'Pengantin Wanita')
@@ -24,7 +34,7 @@ export const generateHTML = (formData: FormData, themeId: string): string => {
     <meta property="og:title" content="Undangan Pernikahan ${formData.groomName} & ${formData.brideName}" />
     <meta property="og:description" content="Kami mengundang Anda untuk hadir di acara pernikahan kami pada ${formData.eventDate}" />
   `;
-  
+
   html = html.replace('<head>', `<head>${metaTags}`);
 
   return html;
