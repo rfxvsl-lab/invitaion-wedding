@@ -8,42 +8,24 @@ export interface InvitationData {
   cover?: { img: string };
   event: { date: string; time: string; loc: string; map: string };
   gift: { bank: string; num: string; name: string };
-  theme: string; // Nama file template, misal: 'theme-luxury-dark'
+  theme: string;
 }
 
-// Fungsi cerdas untuk menemukan path template yang benar di lingkungan lokal dan Vercel
-const getTemplatePath = (theme: string) => {
-  const root = process.cwd();
-  // Cek apakah folder templates ada di root langsung (Vercel) atau di dalam subfolder (Local)
-  const possiblePaths = [
-    path.join(root, 'templates', `${theme}.html`),
-    path.join(root, 'app-builder', 'templates', `${theme}.html`)
-  ];
-
-  for (const p of possiblePaths) {
-    if (fs.existsSync(p)) return p;
-  }
-  
-  // Fallback jika tidak ditemukan, akan memunculkan error di langkah berikutnya
-  const fallbackPath = path.join(root, 'templates', `${theme}.html`);
-  console.error(`Template not found. Tried paths: ${possiblePaths.join(', ')}. Falling back to: ${fallbackPath}`);
-  return fallbackPath;
-};
-
 export const generateHTML = (data: InvitationData) => {
-  // 1. Dapatkan path yang benar menggunakan fungsi cerdas
-  const templatePath = getTemplatePath(data.theme);
+  // Hapus semua logika path yang kompleks.
+  // Asumsikan folder 'templates' akan selalu ada di root direktori kerja (CWD).
+  // Di Vercel, CWD adalah /var/task. Jadi, path-nya menjadi /var/task/templates/[theme].html.
+  const templatePath = path.join(process.cwd(), 'templates', `${data.theme}.html`);
 
-  // 2. Cek apakah file ada
+  // Cek jika file template ada di path yang sudah pasti tersebut.
   if (!fs.existsSync(templatePath)) {
-    // Lemparkan error yang akan ditangkap oleh API route
-    throw new Error(`Template not found at path: ${templatePath}`);
+    // Jika tidak ada, berikan pesan error yang sangat jelas.
+    throw new Error(`CRITICAL: Template file not found at the expected path: ${templatePath}. The 'templates' directory was likely not copied to the build output.`);
   }
 
-  // 3. Baca isi file HTML
   let html = fs.readFileSync(templatePath, 'utf-8');
 
-  // 4. Lakukan replace placeholder (ini adalah implementasi sederhana, Handlebars lebih baik untuk logika kompleks)
+  // Ganti placeholder dengan data
   html = html
     .replace(/{{groom.nick}}/g, data.groom.nick)
     .replace(/{{groom.full}}/g, data.groom.full)

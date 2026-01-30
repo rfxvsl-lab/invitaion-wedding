@@ -39,7 +39,6 @@ export async function POST(request: Request) {
           slug: slug,
           theme: theme,
           data_json: formData, // Simpan seluruh objek form
-          updated_at: new Date().toISOString(),
         },
         {
           onConflict: 'slug', // Jika ada slug yang sama, update datanya

@@ -1,16 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Menggunakan `output: 'standalone'` memaksa Next.js untuk menyalin semua file yang diperlukan
+  // ke folder build. Ini adalah pendekatan yang lebih andal daripada `experimental.outputFileTracingIncludes`.
+  output: 'standalone',
+  // Karena kita berada di dalam monorepo (`app-builder`), kita perlu memberi tahu Next.js
+  // letak file-file yang perlu dilacak.
   experimental: {
-    // Opsi ini menginstruksikan Next.js untuk secara eksplisit menyertakan file atau folder tambahan
-    // ke dalam output build, terutama saat mendeploy ke platform seperti Vercel.
-    // Ini sangat penting karena jika tidak, file yang hanya diakses melalui `fs` (seperti template kita)
-    // tidak akan disertakan secara default.
-    outputFileTracingIncludes: {
-      // Untuk setiap route yang terdaftar di sini, kita paksa Next.js untuk menyertakan pola file yang diberikan.
-      // Ini memastikan folder `./templates` beserta semua file `.html` di dalamnya akan tersedia di server.
-      '/api/preview': ['./templates/**/*.html'],
-      '/v/[slug]': ['./templates/**/*.html'],
-    },
+    // Path ini relatif dari direktori proyek Next.js (yaitu, `app-builder`)
+    outputFileTracingRoot: require('path').join(__dirname, '../'),
   },
 };
 
