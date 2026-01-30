@@ -12,12 +12,13 @@ export interface InvitationData {
 }
 
 export const generateHTML = (data: InvitationData) => {
-  // 1. Cari lokasi file template
-  const templatePath = path.join(process.cwd(), process.cwd().endsWith('app-builder') ? 'templates' : 'app-builder/templates', `${data.theme}.html`);
-  
+  // Path yang lebih robust untuk menemukan folder templates
+  const templatePath = path.join(process.cwd(), 'app-builder', 'templates', `${data.theme}.html`);
+
   // Cek apakah file ada
   if (!fs.existsSync(templatePath)) {
-    throw new Error(`Template ${data.theme} tidak ditemukan di: ${templatePath}`);
+    // Lemparkan error yang akan ditangkap oleh API route
+    throw new Error(`Template not found at path: ${templatePath}`);
   }
 
   // 2. Baca isi file HTML
