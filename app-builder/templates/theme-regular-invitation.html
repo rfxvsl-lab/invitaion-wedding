@@ -97,7 +97,7 @@
   </div>
 
   <!-- COVER SCREEN (Overlay) -->
-  <div id="cover" class="fixed inset-0 z-[100] bg-[url('{{COVER_IMG}}')] bg-cover bg-center h-screen w-full flex flex-col justify-end items-center pb-20 text-center before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/80 before:via-black/40 before:to-transparent">
+  <div id="cover" class="fixed inset-0 z-[100] bg-[url('{{C.IMG}}')] bg-cover bg-center h-screen w-full flex flex-col justify-end items-center pb-20 text-center before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/80 before:via-black/40 before:to-transparent">
     
     <div class="relative z-10 text-white px-6 animate-pulse">
       <p class="font-sans text-sm tracking-[0.3em] uppercase mb-4 text-secondary">The Wedding Of</p>
@@ -130,7 +130,7 @@
       <div class="relative w-full max-w-4xl mx-auto grid md:grid-cols-2 gap-8 items-center">
          <!-- Image Left -->
          <div data-aos="fade-right" class="hidden md:block">
-            <img src="{{COVER_IMG}}" class="rounded-t-[100px] rounded-b-[20px] shadow-xl w-full h-[500px] object-cover" alt="Couple">
+            <img src="{{C.IMG}}" class="rounded-t-[100px] rounded-b-[20px] shadow-xl w-full h-[500px] object-cover" alt="Couple">
          </div>
          
          <!-- Text Center/Right -->
@@ -276,8 +276,8 @@
              <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" onclick="openModal('https://placehold.co/600x800?text=Gallery+Photo')">
                <img src="https://placehold.co/600x800?text=Gallery+Photo" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery" onerror="this.src='https://placehold.co/400x600/png?text=Prewed+1'">
              </div>
-             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="100" onclick="openModal('{{COVER_IMG}}')">
-               <img src="{{COVER_IMG}}" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery">
+             <div class="overflow-hidden rounded-xl shadow-lg group cursor-pointer" data-aos="fade-up" data-aos-delay="100" onclick="openModal('{{C.IMG}}')">
+               <img src="{{C.IMG}}" class="w-full h-auto transform group-hover:scale-110 transition duration-700" alt="Gallery">
              </div>
            </div>
            
