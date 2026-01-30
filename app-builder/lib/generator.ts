@@ -1,6 +1,7 @@
 /**  
  * @fileoverview Template loader for wedding invitation themes
- * Loads templates dynamically from public/templates/ directory
+ * Loads templates dynamically from lib/templates/ directory
+ * Templates in lib/ are bundled with server code (accessible in production)
  */
 
 import fs from 'fs';
@@ -17,12 +18,13 @@ export interface FormData {
 }
 
 /**
- * Load template HTML from public/templates/ directory
+ * Load template HTML from lib/templates/ directory
  * This runs server-side only (API routes and Server Components)
+ * Templates in lib/ are bundled with server code and accessible in production
  */
 function loadTemplate(themeId: string): string {
   try {
-    const templatePath = path.join(process.cwd(), 'public', 'templates', `${themeId}.html`);
+    const templatePath = path.join(process.cwd(), 'lib', 'templates', `${themeId}.html`);
     console.log(`[Generator] Loading template: ${themeId} from ${templatePath}`);
     const content = fs.readFileSync(templatePath, 'utf-8');
     console.log(`[Generator] Successfully loaded template: ${themeId} (${content.length} bytes)`);
@@ -30,11 +32,11 @@ function loadTemplate(themeId: string): string {
   } catch (error) {
     console.error(`[Generator] Failed to load template ${themeId}:`, error);
     console.error(`[Generator] CWD: ${process.cwd()}`);
-    console.error(`[Generator] Attempted path: ${path.join(process.cwd(), 'public', 'templates', `${themeId}.html`)}`);
+    console.error(`[Generator] Attempted path: ${path.join(process.cwd(), 'lib', 'templates', `${themeId}.html`)}`);
 
     // Fallback to default template
     try {
-      const fallbackPath = path.join(process.cwd(), 'public', 'templates', 'regular-invitation.html');
+      const fallbackPath = path.join(process.cwd(), 'lib', 'templates', 'regular-invitation.html');
       console.log(`[Generator] Attempting fallback to regular-invitation.html`);
       const fallbackContent = fs.readFileSync(fallbackPath, 'utf-8');
       console.log(`[Generator] Fallback success (${fallbackContent.length} bytes)`);
