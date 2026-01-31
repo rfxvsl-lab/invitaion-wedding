@@ -120,102 +120,171 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
         }
       `}</style>
 
-            {/* Background Texture */}
-            <div className="fixed inset-0 pointer-events-none z-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
+            {/* Background Texture (Global Layer) */}
+            <div className="fixed inset-0 pointer-events-none z-0">
+                {/* Base Texture */}
+                <div className="absolute inset-0 bg-[#2c1215] opacity-100"></div>
+                {/* Overlay Image Layer (Ornaments/Texture) from reference */}
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1536510233921-8e5043bfcefe?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-[#722F37]/80 via-[#722F37]/90 to-[#2c1215]"></div>
+            </div>
 
             {metadata.music_url && <audio ref={audioRef} src={metadata.music_url} loop />}
 
             {/* === LOCK SCREEN (OPENING) === */}
-            <div className={`fixed inset-0 z-50 bg-[#722F37] flex flex-col items-center justify-center overflow-hidden transition-all duration-[1000ms] ease-in-out ${isOpen ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
+            <div className={`fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden transition-all duration-[1000ms] ease-in-out ${isOpen ? '-translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
 
-                {/* Layer 1: Waving Flowers (Top Corners) - SECRET RECIPE APPLIED */}
-                <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-20 overflow-hidden max-w-[414px]">
-                    {/* Top Left - Wave Left */}
-                    <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
-                        className="absolute -top-10 -left-10 w-[60%] opacity-80 mix-blend-screen wave-left"
+                {/* Background for Lock Screen */}
+                <div className="absolute inset-0 bg-[#722F37] z-0">
+                    <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent"></div>
+                </div>
+
+                {/* Layer 1: Waving Flowers (Top Corners) */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-20 overflow-hidden max-w-[414px] mx-auto left-0 right-0">
+                    <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60"
+                        className="absolute -top-10 -left-10 w-[60%] opacity-90 mix-blend-screen wave-left"
                         alt="Floral TL" />
-
-                    {/* Top Right - Wave Right */}
-                    <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3"
-                        className="absolute -top-10 -right-10 w-[60%] opacity-80 mix-blend-screen wave-right scale-x-[-1]"
+                    <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60"
+                        className="absolute -top-10 -right-10 w-[60%] opacity-90 mix-blend-screen wave-right scale-x-[-1]"
                         alt="Floral TR" />
                 </div>
 
-                {/* Layer 2: Main Content (Zoom Out Text) */}
-                <div className="relative z-10 text-center p-8 border border-[#D4AF37]/30 rounded-t-[100px] rounded-b-[20px] py-16 px-6 animate-zoom-out shadow-2xl bg-[#722F37]/50 backdrop-blur-sm max-w-[320px]">
-                    <p className="font-body tracking-[0.3em] text-[#D4AF37] mb-6 text-xs uppercase">The Wedding Of</p>
-                    <h1 className="font-signature text-6xl md:text-7xl text-[#EFDBB2] mb-4 drop-shadow-md leading-relaxed pr-2">{content.hero.nicknames}</h1>
-                    <div className="flex justify-center my-6 opacity-60">
-                        <div className="h-[1px] w-12 bg-[#D4AF37]"></div>
-                    </div>
-                    <p className="font-body italic text-sm text-[#EFDBB2] opacity-90 mb-10 font-light">Kepada Yth.<br />Bapak/Ibu/Saudara/i</p>
+                {/* Layer 2: Main Content with Photo Frame */}
+                <div className="relative z-10 text-center flex flex-col items-center w-full max-w-[320px] pb-32">
+                    <p className="font-body tracking-[0.3em] text-[#D4AF37] mb-4 text-xs uppercase animate-fade-up">The Wedding Of</p>
 
-                    <button
-                        onClick={handleOpen}
-                        className="px-8 py-3 bg-[#D4AF37] text-[#722F37] font-body font-semibold text-xs tracking-widest hover:bg-[#EFDBB2] transition-colors shadow-lg rounded-sm"
-                    >
-                        BUKA UNDANGAN
-                    </button>
+                    {/* Cover Photo Frame */}
+                    <div className="relative w-48 h-64 mb-6 border-[6px] border-[#D4AF37] shadow-2xl animate-zoom-out bg-gray-800 overflow-hidden rounded-sm outline outline-2 outline-[#722F37] outline-offset-[-8px]">
+                        <img
+                            src={content.couples.wanita.photo || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&auto=format&fit=crop&q=60"}
+                            className="w-full h-full object-cover opacity-90 sepia-[0.3]"
+                            alt="Cover Couple"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    </div>
+
+                    <h1 className="font-signature text-6xl text-[#EFDBB2] mb-2 drop-shadow-md leading-relaxed pr-2 animate-fade-up delay-100">{content.hero.nicknames}</h1>
+
+                    <div className="p-6 bg-white/10 backdrop-blur-md border border-[#D4AF37]/30 rounded-lg shadow-lg mt-4 animate-fade-up delay-200 w-full">
+                        <p className="font-body italic text-sm text-[#EFDBB2] opacity-90 mb-6 font-light">Kepada Yth.<br />Bapak/Ibu/Saudara/i</p>
+                        <button
+                            onClick={handleOpen}
+                            className="px-6 py-2 bg-[#D4AF37] text-[#722F37] font-body font-semibold text-xs tracking-widest hover:bg-[#EFDBB2] transition-colors shadow-lg rounded-sm border border-[#722F37]"
+                        >
+                            BUKA UNDANGAN
+                        </button>
+                    </div>
                 </div>
 
-                {/* Layer 3: Balcony/Railing (Bottom Slide Up) */}
-                <div className="absolute bottom-0 w-full max-w-[414px] h-32 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] opacity-50 z-20 animate-slide-up border-t-4 border-[#D4AF37]">
-                    <div className="absolute top-0 left-0 w-full h-full flex justify-around items-end">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="w-4 h-[80%] bg-[#5a2128] border-x border-[#D4AF37]/50"></div>
+                {/* Layer 3: Balcony/Railing (Blocking View - High Z-Index) */}
+                <div className="absolute bottom-0 w-full max-w-[414px] h-40 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] opacity-100 z-30 animate-slide-up border-t-[6px] border-[#D4AF37] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] bg-[#2c1215]">
+                    {/* Balcony Pillars */}
+                    <div className="absolute top-0 left-0 w-full h-full flex justify-around items-end px-4">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="w-8 h-[70%] bg-gradient-to-r from-[#5a2128] to-[#3d1216] border-x-2 border-[#D4AF37] shadow-lg relative rounded-t-sm">
+                                <div className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#D4AF37] rounded-full shadow-inner"></div>
+                            </div>
                         ))}
                     </div>
+                    {/* Handrail Shadow */}
+                    <div className="absolute top-0 w-full h-6 bg-gradient-to-b from-[#D4AF37] to-[#8a6e2f]"></div>
                 </div>
 
-                {/* Extra Floral Bottom (Behind Balcony) */}
-                <div className="absolute bottom-0 w-full max-w-[414px] pointer-events-none z-10 opacity-60 mix-blend-screen">
-                    <img src="https://images.unsplash.com/photo-1596500954932-68c0753a473a?w=800&auto=format&fit=crop&q=60" className="w-full h-64 object-cover" style={{ maskImage: 'linear-gradient(to top, black, transparent)' }} />
+                {/* Extra Floral Bottom (In front of Balcony for depth) */}
+                <div className="absolute bottom-0 w-full max-w-[414px] pointer-events-none z-40 opacity-100">
+                    <img src="https://images.unsplash.com/photo-1596500954932-68c0753a473a?w=800&auto=format&fit=crop&q=60"
+                        className="w-full h-48 object-cover mask-image-b-transparent brightness-75"
+                        style={{ maskImage: 'linear-gradient(to top, black 40%, transparent)' }}
+                        alt="Bottom Floral" />
                 </div>
 
             </div>
+
             {/* === CONTENT === */}
             <div ref={contentRef} className="container-mobile relative z-10 pb-24 text-[#FAEBD7]">
 
-                {/* 1. HERO */}
-                <header className="min-h-screen flex flex-col justify-center items-center text-center p-6 relative">
-                    <div className="border-y border-[#D4AF37]/50 py-12 w-full max-w-xs content-center relative">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#722F37] px-4">
-                            <Heart size={20} className="text-[#D4AF37]" fill="#D4AF37" />
-                        </div>
+                {/* Inner Background Pinned */}
+                <div className="absolute inset-0 z-0">
+                    <div className="absolute inset-0 bg-[#722F37] opacity-90"></div>
+                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-20"></div>
+                </div>
 
-                        <p className="font-body text-xs text-[#D4AF37] tracking-[0.2em] mb-6 uppercase">We Are Getting Married</p>
-                        <h2 className="font-signature text-7xl text-[#EFDBB2] mb-6 drop-shadow-lg pr-4">{content.hero.nicknames}</h2>
-                        <p className="font-body text-lg tracking-widest font-light">{content.hero.date}</p>
+                {/* 1. HERO (Inner) */}
+                <header className="min-h-screen flex flex-col justify-center items-center text-center p-6 relative z-10 w-full animate-fade-up">
+                    {/* Waving Florals Inner */}
+                    <div className="absolute top-0 left-0 w-full h-auto pointer-events-none z-0">
+                        <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60" className="absolute -top-12 -left-12 w-48 opacity-60 wave-left" />
+                        <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60" className="absolute -top-12 -right-12 w-48 opacity-60 wave-right scale-x-[-1]" />
+                    </div>
 
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-[#722F37] px-4">
-                            <div className="text-[#D4AF37] text-2xl">❦</div>
+                    <div className="border-[3px] border-[#D4AF37] p-2 rounded-full mb-8">
+                        <div className="border border-[#D4AF37] p-1 rounded-full">
+                            <img
+                                src={content.couples.wanita.photo || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8"}
+                                className="w-48 h-48 object-cover rounded-full sepia-[0.2]"
+                            />
                         </div>
                     </div>
+
+                    <p className="font-body text-xs text-[#D4AF37] tracking-[0.2em] mb-4 uppercase">The Wedding Of</p>
+                    <h2 className="font-signature text-7xl text-[#EFDBB2] mb-4 drop-shadow-lg pr-4">{content.hero.nicknames}</h2>
+                    <p className="font-body text-lg tracking-widest font-light border-y border-[#D4AF37] py-2 px-8">{content.hero.date}</p>
                 </header>
 
-                {/* 2. COUPLES (Text Only) */}
-                <section className="py-24 px-6">
-                    <div className="max-w-4xl mx-auto text-center space-y-16">
+                {/* 2. COUPLES (With Golden Frames) */}
+                <section className="py-24 px-6 relative z-10 w-full">
+                    <div className="max-w-4xl mx-auto text-center space-y-24">
                         {/* Groom */}
                         <div className="relative fade-in-up">
+                            {/* Golden Frame for Groom */}
+                            <div className="relative w-56 h-72 mx-auto mb-8 bg-[#2c1215] border-[8px] border-[#D4AF37] shadow-[0_0_25px_rgba(212,175,55,0.3)] outline outline-2 outline-[#722F37] outline-offset-4">
+                                <img
+                                    src={content.couples.pria.photo || "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=800&auto=format&fit=crop&q=60"}
+                                    className="w-full h-full object-cover"
+                                    alt="Groom"
+                                />
+                                <div className="absolute -bottom-4 -right-4 bg-[#D4AF37] text-[#722F37] p-2 rounded-full shadow-lg">
+                                    <Heart size={20} fill="#722F37" />
+                                </div>
+                            </div>
+
                             <h3 className="font-signature text-5xl text-[#D4AF37] mb-4 pr-2">{content.couples.pria.name}</h3>
-                            <p className="font-body text-sm opacity-70 max-w-md mx-auto leading-relaxed">{content.couples.pria.parents}</p>
-                            <div className="w-[1px] h-16 bg-gradient-to-b from-[#D4AF37] to-transparent mx-auto mt-8"></div>
+                            <p className="font-body text-sm opacity-70 max-w-xs mx-auto leading-relaxed">{content.couples.pria.parents}</p>
+
+                            <div className="flex justify-center gap-4 mt-6">
+                                <a href={content.couples.pria.ig} target="_blank" className="p-2 border border-[#D4AF37] text-[#D4AF37] rounded-full hover:bg-[#D4AF37] hover:text-[#722F37] transition-colors"><div className="w-4 h-4 bg-current rounded-sm" /></a>
+                            </div>
                         </div>
 
-                        <div className="font-vibe text-4xl text-[#EFDBB2]">&</div>
+                        <div className="font-vibe text-5xl text-[#EFDBB2]">&</div>
 
                         {/* Bride */}
                         <div className="relative fade-in-up delay-200">
-                            <div className="w-[1px] h-16 bg-gradient-to-t from-[#D4AF37] to-transparent mx-auto mb-8"></div>
+                            {/* Golden Frame for Bride */}
+                            <div className="relative w-56 h-72 mx-auto mb-8 bg-[#2c1215] border-[8px] border-[#D4AF37] shadow-[0_0_25px_rgba(212,175,55,0.3)] outline outline-2 outline-[#722F37] outline-offset-4">
+                                <img
+                                    src={content.couples.wanita.photo || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=60"}
+                                    className="w-full h-full object-cover"
+                                    alt="Bride"
+                                />
+                                <div className="absolute -bottom-4 -left-4 bg-[#D4AF37] text-[#722F37] p-2 rounded-full shadow-lg">
+                                    <Heart size={20} fill="#722F37" />
+                                </div>
+                            </div>
+
                             <h3 className="font-signature text-5xl text-[#D4AF37] mb-4 pr-2">{content.couples.wanita.name}</h3>
-                            <p className="font-body text-sm opacity-70 max-w-md mx-auto leading-relaxed">{content.couples.wanita.parents}</p>
+                            <p className="font-body text-sm opacity-70 max-w-xs mx-auto leading-relaxed">{content.couples.wanita.parents}</p>
+
+                            <div className="flex justify-center gap-4 mt-6">
+                                <a href={content.couples.wanita.ig} target="_blank" className="p-2 border border-[#D4AF37] text-[#D4AF37] rounded-full hover:bg-[#D4AF37] hover:text-[#722F37] transition-colors"><div className="w-4 h-4 bg-current rounded-sm" /></a>
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 {/* 3. EVENT DETAILS (Classic Cards) */}
-                <section className="py-20 px-6 bg-[#60232b]">
+                <section className="py-20 px-6 bg-[#60232b] relative z-20">
                     <div className="max-w-xl mx-auto space-y-12">
                         {/* Akad */}
                         {content.events.akad.enabled !== false && (
@@ -265,7 +334,7 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
 
                 {/* 4. RSVP & WISHES */}
                 {engagement.rsvp && (
-                    <section className="py-20 px-6">
+                    <section className="py-20 px-6 relative z-10">
                         <div className="max-w-lg mx-auto bg-[#5a2128] p-8 md:p-12 shadow-2xl border-t-4 border-[#D4AF37]">
                             <h3 className="font-body tracking-[0.2em] text-center text-[#D4AF37] mb-8 text-xl">RSVP</h3>
                             {/* Passing styling to RSVP Form to match theme context */}
@@ -284,7 +353,7 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                 )}
 
                 {/* FOOTER */}
-                <footer className="py-12 text-center opacity-60">
+                <footer className="py-12 text-center opacity-60 relative z-10">
                     <div className="font-signature text-4xl mb-4 text-[#D4AF37]">{content.hero.nicknames}</div>
                     <p className="text-[10px] tracking-widest uppercase font-body">Created with RFX Builder</p>
                 </footer>
