@@ -62,6 +62,45 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         </div>
                     </div>
                 </div>
+            ) : themeId === 'gamer-quest' ? (
+                /* SPECIAL DESIGN FOR GAMER-QUEST (VIP) */
+                <div className="w-full h-full relative bg-black text-[#00f3ff]" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                    {/* Cyber Grid Background */}
+                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `linear-gradient(#bc13fe 1px, transparent 1px), linear-gradient(90deg, #bc13fe 1px, transparent 1px)`, backgroundSize: '40px 40px' }}></div>
+
+                    {/* Neon HUD Borders */}
+                    <div className="absolute top-8 left-8 right-8 bottom-8 border-2 border-[#00f3ff] rounded-3xl" style={{ boxShadow: '0 0 20px #00f3ff, inset 0 0 20px #00f3ff' }}></div>
+
+                    {/* Hero Image in Hexagon Clip or Glitch Frame */}
+                    <div className="mt-32 mx-auto w-[700px] h-[700px] relative">
+                        <div className="absolute inset-0 border-4 border-[#bc13fe] transform rotate-3 shadow-[0_0_30px_#bc13fe]"></div>
+                        <div className="absolute inset-0 border-4 border-[#00f3ff] transform -rotate-2"></div>
+                        <img src={bgImage} alt="Player" className="w-full h-full object-cover grayscale contrast-125" />
+                        {/* Overlay Glitch Text */}
+                        <div className="absolute bottom-4 left-0 bg-black/80 px-4 py-2 border border-[#00f3ff]">
+                            <p className="text-xl font-bold tracking-widest">PLAYER 1 & 2 JOINED</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-20 text-center px-12 relative z-10">
+                        <p className="text-4xl font-bold text-[#bc13fe] mb-4 tracking-[0.3em] font-sans">MISSION START</p>
+                        <h1 className="text-9xl mb-8 text-white uppercase" style={{ textShadow: '4px 4px 0px #bc13fe' }}>{data.content.hero.nicknames}</h1>
+                        <p className="text-4xl text-gray-400 font-mono mb-12">{dateFormatted}</p>
+
+                        {/* Wish Content (Cyber Box) */}
+                        {wish && (
+                            <div className="bg-[#111] border-l-8 border-[#00f3ff] p-10 max-w-3xl mx-auto shadow-2xl relative">
+                                <div className="absolute -top-3 -right-3 w-6 h-6 bg-[#bc13fe]"></div>
+                                <p className="text-3xl text-white font-mono leading-relaxed blink-caret">"{wish}"</p>
+                                <p className="text-2xl text-[#00f3ff] font-bold mt-6 uppercase text-right">__{guestName}</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="absolute bottom-20 w-full text-center">
+                        <p className="text-2xl text-[#bc13fe] animate-pulse">PRESS START TO CONTINUE</p>
+                    </div>
+                </div>
             ) : (
                 /* GENERIC / STANDARD DESIGN */
                 <>

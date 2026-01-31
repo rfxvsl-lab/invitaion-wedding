@@ -12,6 +12,7 @@ import BotanicalLine from '../templates/BotanicalLine';
 import RusticWood from '../templates/RusticWood';
 import DarkLuxury from '../templates/DarkLuxury';
 import PremiumPeppy from '../templates/PremiumPeppy';
+import GamerQuest from '../templates/GamerQuest';
 
 interface InvitationPageProps {
     data: InvitationData | null;
@@ -37,6 +38,7 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
             case 'rustic-wood': return <RusticWood data={data} />;
             case 'dark-luxury': return <DarkLuxury data={data} />;
             case 'premium-peppy': return <PremiumPeppy data={data} />;
+            case 'gamer-quest': return <GamerQuest data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };

@@ -213,7 +213,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                             <SectionHeader icon={Palette} title="Tema & Musik" />
                             <div className="grid grid-cols-2 gap-3 mb-6">
-                                {['modern-arch', 'classic-serif', 'botanical-line', 'rustic-wood', 'dark-luxury', 'premium-peppy'].map(theme => (
+                                {['modern-arch', 'classic-serif', 'botanical-line', 'rustic-wood', 'dark-luxury', 'premium-peppy', 'gamer-quest'].map(theme => (
                                     <button
                                         key={theme}
                                         onClick={() => onUpdate('metadata.theme_id', theme)}
