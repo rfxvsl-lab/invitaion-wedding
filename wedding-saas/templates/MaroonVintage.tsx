@@ -45,37 +45,17 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
     );
 
     return (
-        <div className="mobile-wrapper font-serif overflow-x-hidden relative selection:bg-[#D4AF37] selection:text-[#722F37]">
+        <div className="min-h-screen bg-[#722F37] font-serif overflow-x-hidden relative selection:bg-[#D4AF37] selection:text-[#722F37]">
             {/* --- ASSETS & STYLES --- */}
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;600&family=Great+Vibes&family=Mrs+Saint+Delafield&display=swap');
         
         /* Typography Mapping */
-        .font-signature { font-family: 'Mrs Saint Delafield', cursive; } /* Approximating Brittany/Photograph Signature */
+        .font-signature { font-family: 'Mrs Saint Delafield', cursive; }
         .font-vibe { font-family: 'Great Vibes', cursive; }
         .font-body { font-family: 'Work Sans', sans-serif; }
         
-        /* Mobile Constraint & Scale Logic (Based on 'container-mobile' analysis) */
-        .mobile-wrapper {
-            background-color: #2c1215; /* Deep Maroon matching reference context */
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .container-mobile {
-            width: 100%;
-            max-width: 414px;
-            background-color: #722F37; /* var(--inv-bg) approx */
-            position: relative;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* --- SECRET RECIPE ANIMATIONS --- */
-        /* Wave Animation (Goyang Halus) */
+        /* --- ANIMATIONS --- */
         .wave-left {
             animation: wave-left 5s ease-in-out infinite alternate;
             transform-origin: top left;
@@ -95,7 +75,6 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
             100% { transform: rotate(-4deg); }
         }
 
-        /* Standard Entrances */
         .animate-zoom-out { animation: zoomOutSmooth 2s ease-out forwards; }
         .animate-slide-up { animation: slideUp 1.5s ease-out forwards; }
         .animate-fade-up { animation: fadeInUp 1.5s ease-out forwards; opacity: 0; }
@@ -113,7 +92,6 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
             to { transform: translateY(0); opacity: 1; }
         }
 
-        /* Arch Shape */
         .arch-window {
             border-top-left-radius: 50% 100px;
             border-top-right-radius: 50% 100px;
@@ -122,9 +100,7 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
 
             {/* Background Texture (Global Layer) */}
             <div className="fixed inset-0 pointer-events-none z-0">
-                {/* Base Texture */}
-                <div className="absolute inset-0 bg-[#2c1215] opacity-100"></div>
-                {/* Overlay Image Layer (Ornaments/Texture) from reference */}
+                <div className="absolute inset-0 bg-[#2c1215] opacity-50"></div>
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1536510233921-8e5043bfcefe?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-[#722F37]/80 via-[#722F37]/90 to-[#2c1215]"></div>
             </div>
@@ -140,18 +116,38 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent"></div>
                 </div>
 
-                {/* Layer 1: Waving Flowers (Top Corners) */}
-                <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-20 overflow-hidden max-w-[414px] mx-auto left-0 right-0">
-                    <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60"
-                        className="absolute -top-10 -left-10 w-[60%] opacity-90 mix-blend-screen wave-left"
+                {/* Layer 1: Waving Flowers (Top Corners) - Back Layer */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-hidden mx-auto left-0 right-0">
+                    <img src="/assets/maroon-vintage/leaf-1.png"
+                        className="absolute -top-10 -left-10 w-[60%] md:w-[30%] opacity-90 mix-blend-screen wave-left"
                         alt="Floral TL" />
-                    <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60"
-                        className="absolute -top-10 -right-10 w-[60%] opacity-90 mix-blend-screen wave-right scale-x-[-1]"
+                    <img src="/assets/maroon-vintage/leaf-2.png"
+                        className="absolute -top-10 -right-10 w-[60%] md:w-[30%] opacity-90 mix-blend-screen wave-right scale-x-[-1]"
                         alt="Floral TR" />
                 </div>
 
-                {/* Layer 2: Main Content with Photo Frame */}
-                <div className="relative z-10 text-center flex flex-col items-center w-full max-w-[320px] pb-32">
+                {/* Layer 2: Balcony/Railing (Blocking View - Z-Index 5) 
+                    MOVED BEFORE CONTENT so it is behind the button if overlapping, 
+                    OR user wants it 'paling belakang' (furthest back) relative to opening?
+                    User said: "balconnya pada buka undangan taruh layer paling belakang karena buka undangan tertutup oleh bagian tsb"
+                    So Balcony < Content.
+                    We set Balcony z-index to 5. Content z-index to 20.
+                 */}
+                <div className="absolute bottom-0 w-full h-40 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] opacity-100 z-5 animate-slide-up border-t-[6px] border-[#D4AF37] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] bg-[#2c1215]">
+                    {/* Balcony Pillars */}
+                    <div className="absolute top-0 left-0 w-full h-full flex justify-around items-end px-4">
+                        {[...Array(6)].map((_, i) => (
+                            <div key={i} className="w-8 h-[70%] bg-gradient-to-r from-[#5a2128] to-[#3d1216] border-x-2 border-[#D4AF37] shadow-lg relative rounded-t-sm">
+                                <div className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#D4AF37] rounded-full shadow-inner"></div>
+                            </div>
+                        ))}
+                    </div>
+                    {/* Handrail Shadow */}
+                    <div className="absolute top-0 w-full h-6 bg-gradient-to-b from-[#D4AF37] to-[#8a6e2f]"></div>
+                </div>
+
+                {/* Layer 3: Main Content with Photo Frame (Z-Index 20 - Top) */}
+                <div className="relative z-20 text-center flex flex-col items-center w-full max-w-[320px] pb-32">
                     <p className="font-body tracking-[0.3em] text-[#D4AF37] mb-4 text-xs uppercase animate-fade-up">The Wedding Of</p>
 
                     {/* Cover Photo Frame */}
@@ -177,22 +173,8 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                     </div>
                 </div>
 
-                {/* Layer 3: Balcony/Railing (Blocking View - High Z-Index) */}
-                <div className="absolute bottom-0 w-full max-w-[414px] h-40 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] opacity-100 z-30 animate-slide-up border-t-[6px] border-[#D4AF37] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] bg-[#2c1215]">
-                    {/* Balcony Pillars */}
-                    <div className="absolute top-0 left-0 w-full h-full flex justify-around items-end px-4">
-                        {[...Array(6)].map((_, i) => (
-                            <div key={i} className="w-8 h-[70%] bg-gradient-to-r from-[#5a2128] to-[#3d1216] border-x-2 border-[#D4AF37] shadow-lg relative rounded-t-sm">
-                                <div className="absolute top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#D4AF37] rounded-full shadow-inner"></div>
-                            </div>
-                        ))}
-                    </div>
-                    {/* Handrail Shadow */}
-                    <div className="absolute top-0 w-full h-6 bg-gradient-to-b from-[#D4AF37] to-[#8a6e2f]"></div>
-                </div>
-
-                {/* Extra Floral Bottom (In front of Balcony for depth) */}
-                <div className="absolute bottom-0 w-full max-w-[414px] pointer-events-none z-40 opacity-100">
+                {/* Extra Floral Bottom (In front of Balcony for depth but behind content?) - z-6 */}
+                <div className="absolute bottom-0 w-full pointer-events-none z-6 opacity-100">
                     <img src="https://images.unsplash.com/photo-1596500954932-68c0753a473a?w=800&auto=format&fit=crop&q=60"
                         className="w-full h-48 object-cover mask-image-b-transparent brightness-75"
                         style={{ maskImage: 'linear-gradient(to top, black 40%, transparent)' }}
@@ -202,7 +184,7 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
             </div>
 
             {/* === CONTENT === */}
-            <div ref={contentRef} className="container-mobile relative z-10 pb-24 text-[#FAEBD7]">
+            <div ref={contentRef} className="relative z-10 pb-24 text-[#FAEBD7] w-full md:max-w-xl md:mx-auto md:shadow-2xl md:bg-[#722F37]/80">
 
                 {/* Inner Background Pinned */}
                 <div className="absolute inset-0 z-0">
@@ -214,8 +196,8 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                 <header className="min-h-screen flex flex-col justify-center items-center text-center p-6 relative z-10 w-full animate-fade-up">
                     {/* Waving Florals Inner */}
                     <div className="absolute top-0 left-0 w-full h-auto pointer-events-none z-0">
-                        <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60" className="absolute -top-12 -left-12 w-48 opacity-60 wave-left" />
-                        <img src="https://images.unsplash.com/photo-1588352655610-1849f57eb269?w=500&auto=format&fit=crop&q=60" className="absolute -top-12 -right-12 w-48 opacity-60 wave-right scale-x-[-1]" />
+                        <img src="/assets/maroon-vintage/leaf-1.png" className="absolute -top-12 -left-12 w-48 opacity-60 wave-left" />
+                        <img src="/assets/maroon-vintage/leaf-2.png" className="absolute -top-12 -right-12 w-48 opacity-60 wave-right scale-x-[-1]" />
                     </div>
 
                     <div className="border-[3px] border-[#D4AF37] p-2 rounded-full mb-8">
