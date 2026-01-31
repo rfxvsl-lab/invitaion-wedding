@@ -156,86 +156,122 @@ export default function EditorPage() {
     };
 
     return (
-        <div className="h-screen flex bg-gray-100 font-sans overflow-hidden">
-            <EditorSidebar data={data} onUpdate={handleUpdate} />
+        <div className="min-h-screen flex flex-col lg:flex-row bg-[#F8FAFC] font-sans selection:bg-indigo-100 selection:text-indigo-900">
+            {/* Sidebar - top on mobile, left on desktop */}
+            <div className="w-full lg:w-[420px] lg:flex-shrink-0 z-30 lg:h-screen lg:sticky lg:top-0 shadow-2xl shadow-indigo-100/50">
+                <EditorSidebar data={data} onUpdate={handleUpdate} />
+            </div>
 
-            <main className="flex-1 flex flex-col relative bg-gray-200">
-                <div className="h-14 bg-white border-b flex items-center justify-between px-6 shadow-sm z-10">
-                    <div className="flex items-center gap-2 text-gray-600 text-sm font-medium">
-                        <Globe size={16} /> <span>weddinginvitation-18.vercel.app/{data.metadata.slug}</span>
+            <main className="flex-1 flex flex-col relative bg-[#F1F5F9]">
+                {/* Header Navbar */}
+                <div className="sticky top-0 lg:static h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/50 flex items-center justify-between px-4 lg:px-8 shadow-sm z-20">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-indigo-500/30">
+                            W
+                        </div>
+                        <div className="hidden sm:flex items-center gap-2 text-slate-500 text-xs font-medium bg-slate-100/50 px-3 py-1.5 rounded-full border border-slate-200">
+                            <Globe size={12} /> <span className="truncate max-w-[150px] lg:max-w-none">weddinginvitation-18.vercel.app/{data.metadata.slug}</span>
+                        </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-bold uppercase text-gray-400 flex items-center gap-1">
-                            {saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin" /> :
+                        <span className="hidden sm:flex text-[10px] font-bold uppercase text-slate-400 items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-100 shadow-sm">
+                            {saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin text-indigo-500" /> :
                                 saveStatus === 'error' ? <span className="text-red-500">Error!</span> :
-                                    <CheckCircle size={12} className={saveStatus === 'saved' ? 'text-green-500' : 'text-amber-500'} />}
-                            {saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'All Saved' : saveStatus === 'error' ? 'Failed' : 'Unsaved'}
+                                    <CheckCircle size={12} className={saveStatus === 'saved' ? 'text-emerald-500' : 'text-amber-500'} />}
+                            <span className="tracking-wider">{saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Failed' : 'Unsaved'}</span>
                         </span>
-                        <button onClick={() => { saveToSupabase(); setShowPublishModal(true); }} className="bg-gray-900 text-white px-4 py-1.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-black transition-colors">
-                            <Save size={14} /> Publish
+                        <button
+                            onClick={() => { saveToSupabase(); setShowPublishModal(true); }}
+                            className="group relative overflow-hidden bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:shadow-xl hover:shadow-indigo-500/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
+                        >
+                            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                            <span className="relative flex items-center gap-2">
+                                <Save size={14} /> Publish
+                            </span>
                         </button>
                     </div>
                 </div>
 
                 {/* PUBLISH MODAL */}
                 {showPublishModal && (
-                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 animate-fade-in-up">
-                            <div className="text-center mb-6">
-                                <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <CheckCircle size={32} />
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                        <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-in zoom-in-95 duration-300 border border-white/20">
+                            <div className="text-center mb-8">
+                                <div className="w-20 h-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+                                    <CheckCircle size={36} strokeWidth={2.5} />
                                 </div>
-                                <h2 className="text-2xl font-bold text-gray-900 mb-2">Undangan Terbit!</h2>
-                                <p className="text-gray-500 text-sm">Undangan pernikahan Anda berhasil disimpan dan siap dibagikan.</p>
+                                <h2 className="text-2xl font-bold text-slate-800 mb-2">Undangan Terbit!</h2>
+                                <p className="text-slate-500 text-sm leading-relaxed">Undangan pernikahan Anda berhasil disimpan dan siap disebarkan kepada tamu undangan.</p>
                             </div>
 
-                            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-6 space-y-3">
-                                <div className="flex items-center gap-3">
-                                    <Globe size={20} className="text-gray-400 flex-shrink-0" />
-                                    <div className="flex-1 overflow-hidden">
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">PUBLIC LINK</p>
-                                        <p className="text-sm font-medium text-indigo-600 truncate">weddinginvitation-18.vercel.app/{data.metadata.slug}</p>
+                            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 mb-8 space-y-4 shadow-sm">
+                                <div className="flex items-start gap-3">
+                                    <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm text-indigo-500">
+                                        <Globe size={18} />
+                                    </div>
+                                    <div className="flex-1 overflow-hidden min-w-0">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">PUBLIC LINK</p>
+                                        <p className="text-sm font-semibold text-slate-700 truncate">weddinginvitation-18.vercel.app/{data.metadata.slug}</p>
                                     </div>
                                 </div>
-                                <div className="border-t border-gray-200 pt-3 flex items-center gap-3">
-                                    <Settings size={20} className="text-gray-400 flex-shrink-0" />
-                                    <div className="flex-1 overflow-hidden">
-                                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">EDIT LINK (SIMPAN INI!)</p>
-                                        <p className="text-xs font-mono text-gray-600 truncate p-1 bg-gray-100 rounded">?edit={data.metadata.slug}</p>
-                                        <p className="text-[10px] text-gray-400 italic mt-0.5">Gunakan link ini untuk mengedit kembali undangan Anda.</p>
+                                <div className="border-t border-slate-100 pt-4 flex items-start gap-3">
+                                    <div className="p-2 bg-white rounded-lg border border-slate-100 shadow-sm text-amber-500">
+                                        <Settings size={18} />
+                                    </div>
+                                    <div className="flex-1 overflow-hidden min-w-0">
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">EDIT LINK (SECRET)</p>
+                                        <div className="relative group">
+                                            <p className="text-xs font-mono text-slate-600 truncate p-2 bg-white border border-slate-200 rounded-lg select-all">?edit={data.metadata.slug}</p>
+                                        </div>
+                                        <p className="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1">
+                                            <span className="w-1 h-1 rounded-full bg-amber-500"></span>
+                                            Simpan link ini untuk mengedit undangan
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="flex gap-3">
-                                <button onClick={() => setShowPublishModal(false)} className="flex-1 py-3 text-gray-600 font-bold text-xs bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
+                                <button onClick={() => setShowPublishModal(false)} className="flex-1 py-3.5 text-slate-600 font-bold text-sm bg-slate-100 hover:bg-slate-200 rounded-xl transition-all">
                                     Tutup
                                 </button>
                                 <a
                                     href={`/${data.metadata.slug}`}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="flex-1 py-3 bg-indigo-600 text-white font-bold text-xs rounded-xl hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2 text-center"
+                                    className="flex-1 py-3.5 bg-indigo-600 text-white font-bold text-sm rounded-xl hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/30 transition-all flex items-center justify-center gap-2"
                                 >
-                                    Buka Link <Globe size={14} />
+                                    Buka Link <Globe size={16} />
                                 </a>
                             </div>
                         </div>
                     </div>
                 )}
 
-                <div className="flex-1 flex items-center justify-center p-8 overflow-hidden">
-                    <div className="relative h-[85vh] aspect-[9/19] bg-black rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden ring-4 ring-gray-300/50">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-b-xl z-50"></div>
-                        <div className="w-full h-full bg-white overflow-y-auto scrollbar-hide">
+                {/* MAIN PREVIEW AREA */}
+                <div className="flex-1 flex items-center justify-center p-4 lg:p-10 shrink-0 min-h-[600px] lg:min-h-0">
+                    <div className="relative w-full max-w-[380px] lg:h-[85vh] lg:w-auto lg:aspect-[9/19] bg-slate-900 rounded-[2.5rem] shadow-2xl border-[6px] border-slate-800 ring-1 ring-white/10 overflow-hidden transform transition-all hover:scale-[1.002]">
+                        {/* Notch */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-800 rounded-b-xl z-50 flex items-center justify-center gap-2">
+                            <div className="w-12 h-1 bg-slate-700 rounded-full opacity-50"></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-slate-900 ring-1 ring-slate-600"></div>
+                        </div>
+
+                        {/* Screen Content */}
+                        <div className="w-full h-full bg-white overflow-y-auto scrollbar-hide overscroll-none scroll-smooth">
                             {renderTemplate()}
                         </div>
-                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur px-4 py-1.5 rounded-full shadow-lg border border-gray-200 flex items-center gap-2 z-40">
-                            <Eye size={12} className="text-gray-500" />
-                            <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">Live Preview</span>
+
+                        {/* Floating Badge */}
+                        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-white/50 flex items-center gap-2 z-40 pointer-events-none">
+                            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Live Preview</span>
                         </div>
                     </div>
                 </div>
+
+                {/* Mobile Spacing for scrolling */}
+                <div className="h-10 lg:hidden"></div>
             </main>
         </div>
     );
