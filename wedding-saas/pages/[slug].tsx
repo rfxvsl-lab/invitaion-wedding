@@ -11,6 +11,7 @@ import ClassicSerif from '../templates/ClassicSerif';
 import BotanicalLine from '../templates/BotanicalLine';
 import RusticWood from '../templates/RusticWood';
 import DarkLuxury from '../templates/DarkLuxury';
+import PremiumPeppy from '../templates/PremiumPeppy';
 
 interface InvitationPageProps {
     data: InvitationData | null;
@@ -35,6 +36,7 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
             case 'botanical-line': return <BotanicalLine data={data} />;
             case 'rustic-wood': return <RusticWood data={data} />;
             case 'dark-luxury': return <DarkLuxury data={data} />;
+            case 'premium-peppy': return <PremiumPeppy data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };

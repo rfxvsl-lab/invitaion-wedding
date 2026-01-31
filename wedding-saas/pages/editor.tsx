@@ -11,6 +11,7 @@ import ClassicSerif from '../templates/ClassicSerif';
 import BotanicalLine from '../templates/BotanicalLine';
 import RusticWood from '../templates/RusticWood';
 import DarkLuxury from '../templates/DarkLuxury';
+import PremiumPeppy from '../templates/PremiumPeppy';
 
 // Initial Data
 const INITIAL_DATA: InvitationData = {
@@ -151,6 +152,7 @@ export default function EditorPage() {
             case 'botanical-line': return <BotanicalLine data={data} />;
             case 'rustic-wood': return <RusticWood data={data} />;
             case 'dark-luxury': return <DarkLuxury data={data} />;
+            case 'premium-peppy': return <PremiumPeppy data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };
