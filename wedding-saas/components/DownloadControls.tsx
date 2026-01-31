@@ -45,7 +45,7 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
 
     return (
         <>
-            <div className="fixed top-6 left-6 z-50 flex flex-col gap-2 exclude-from-capture">
+            <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 exclude-from-capture">
                 <div className="bg-white/90 backdrop-blur shadow-lg rounded-full p-2 border border-gray-200 hover:scale-105 transition-transform cursor-pointer group relative">
                     <button
                         onClick={() => setShowModal(true)}
@@ -53,7 +53,7 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                         className="flex items-center justify-center text-gray-700 hover:text-indigo-600 transition-colors p-1"
                         title="Unduh Template Story"
                     >
-                        <Download size={24} />
+                        <Download size={20} />
                     </button>
                     {isDownloading && (
                         <span className="absolute -top-1 -right-1 flex h-3 w-3">
