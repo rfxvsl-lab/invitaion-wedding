@@ -111,8 +111,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                             </div>
                             <div className="space-y-1">
                                 <div className="flex items-center justify-end mb-2">
-                                    <label className="text-[10px] font-bold text-slate-400 uppercase mr-2">Tampilkan Acara Ini?</label>
-                                    <div className="relative inline-flex items-center cursor-pointer">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase mr-2">Tampilkan Acara Ini?</span>
+                                    <label className="relative inline-flex items-center cursor-pointer">
                                         <input
                                             type="checkbox"
                                             checked={data.content.events.akad.enabled !== false}
@@ -120,7 +120,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             className="sr-only peer"
                                         />
                                         <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
-                                    </div>
+                                    </label>
                                 </div>
 
                                 {data.content.events.akad.enabled !== false && (
@@ -141,11 +141,28 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                 <p className="text-xs font-bold text-slate-700">RESEPSI</p>
                             </div>
                             <div className="space-y-1">
-                                <Input label="Tanggal (YYYY-MM-DD)" value={getValue('content.events.resepsi.date')} onChange={(v) => onUpdate('content.events.resepsi.date', v)} />
-                                <Input label="Waktu" value={getValue('content.events.resepsi.time')} onChange={(v) => onUpdate('content.events.resepsi.time', v)} />
-                                <Input label="Lokasi" value={getValue('content.events.resepsi.venue')} onChange={(v) => onUpdate('content.events.resepsi.venue', v)} />
-                                <Input label="Alamat" value={getValue('content.events.resepsi.address')} onChange={(v) => onUpdate('content.events.resepsi.address', v)} />
-                                <Input label="Link Google Maps" value={getValue('content.events.resepsi.map_url')} onChange={(v) => onUpdate('content.events.resepsi.map_url', v)} placeholder="https://maps.app.goo.gl/..." />
+                                <div className="flex items-center justify-end mb-2">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase mr-2">Tampilkan Acara Ini?</span>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={data.content.events.resepsi.enabled !== false}
+                                            onChange={(e) => onUpdate('content.events.resepsi.enabled', e.target.checked)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                                    </label>
+                                </div>
+
+                                {data.content.events.resepsi.enabled !== false && (
+                                    <>
+                                        <Input label="Tanggal (YYYY-MM-DD)" value={getValue('content.events.resepsi.date')} onChange={(v) => onUpdate('content.events.resepsi.date', v)} />
+                                        <Input label="Waktu" value={getValue('content.events.resepsi.time')} onChange={(v) => onUpdate('content.events.resepsi.time', v)} />
+                                        <Input label="Lokasi" value={getValue('content.events.resepsi.venue')} onChange={(v) => onUpdate('content.events.resepsi.venue', v)} />
+                                        <Input label="Alamat" value={getValue('content.events.resepsi.address')} onChange={(v) => onUpdate('content.events.resepsi.address', v)} />
+                                        <Input label="Link Google Maps" value={getValue('content.events.resepsi.map_url')} onChange={(v) => onUpdate('content.events.resepsi.map_url', v)} placeholder="https://maps.app.goo.gl/..." />
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -238,7 +255,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                             <SectionHeader icon={MessageSquare} title="Konfigurasi RSVP" />
                             <div className="flex items-center justify-between mb-4 p-3 bg-indigo-50 rounded-xl">
                                 <span className="text-xs font-bold text-indigo-900">Aktifkan Fitur RSVP</span>
-                                <div className="relative inline-flex items-center cursor-pointer">
+                                <label className="relative inline-flex items-center cursor-pointer">
                                     <input
                                         type="checkbox"
                                         checked={data.engagement.rsvp}
@@ -246,7 +263,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         className="sr-only peer"
                                     />
                                     <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
-                                </div>
+                                </label>
                             </div>
                             {data.engagement.rsvp && (
                                 <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
