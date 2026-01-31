@@ -138,7 +138,20 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                     <>
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                             <SectionHeader icon={Layout} title="Video Prewedding" />
-                            <Input label="Youtube / Vimeo URL" value={getValue('content.gallery.video_url')} onChange={(v) => onUpdate('content.gallery.video_url', v)} placeholder="https://youtube.com/..." />
+                            <Input
+                                label="Youtube / Vimeo URL"
+                                value={getValue('content.gallery.video_url')}
+                                onChange={(v) => {
+                                    // Auto-format YouTube links to Embed format
+                                    const ytMatch = v.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+                                    if (ytMatch && ytMatch[1]) {
+                                        onUpdate('content.gallery.video_url', `https://www.youtube.com/embed/${ytMatch[1]}`);
+                                    } else {
+                                        onUpdate('content.gallery.video_url', v);
+                                    }
+                                }}
+                                placeholder="https://youtube.com/..."
+                            />
                         </div>
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
