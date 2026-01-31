@@ -25,7 +25,7 @@ export interface GiftAccount {
 export interface InvitationData {
     metadata: {
         slug: string;
-        theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest';
+        theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest' | 'maroon-vintage';
         music_url: string;
         is_active: boolean;
     };

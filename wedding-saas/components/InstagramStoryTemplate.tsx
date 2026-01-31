@@ -101,6 +101,47 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         <p className="text-2xl text-[#bc13fe] animate-pulse">PRESS START TO CONTINUE</p>
                     </div>
                 </div>
+            ) : themeId === 'maroon-vintage' ? (
+                /* SPECIAL DESIGN FOR MAROON VINTAGE (No-Photo) */
+                <div className="w-full h-full relative" style={{ backgroundColor: '#722F37', color: '#D4AF37' }}>
+                    {/* Texture */}
+                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/cream-paper.png")` }}></div>
+
+                    {/* Ornamental Border */}
+                    <div className="absolute top-12 left-12 right-12 bottom-12 border-4 border-[#D4AF37] flex items-center justify-center p-8">
+                        <div className="border border-[#D4AF37] w-full h-full flex flex-col justify-between py-24 px-12 relative text-center">
+                            {/* Corners */}
+                            <div className="absolute top-4 left-4 text-6xl">╔</div>
+                            <div className="absolute top-4 right-4 text-6xl">╗</div>
+                            <div className="absolute bottom-4 left-4 text-6xl">╚</div>
+                            <div className="absolute bottom-4 right-4 text-6xl">╝</div>
+
+                            <div className="space-y-8">
+                                <p className="text-3xl font-serif tracking-[0.4em] uppercase mb-12">The Wedding Of</p>
+                                <h1 className="text-8xl mb-8 leading-tight" style={{ fontFamily: 'Great Vibes, cursive', color: '#EFDBB2' }}>{data.content.hero.nicknames}</h1>
+
+                                <div className="flex justify-center items-center my-12 opacity-80">
+                                    <div className="h-[2px] w-24 bg-[#D4AF37]"></div>
+                                    <div className="mx-4 text-[#D4AF37] text-4xl">❦</div>
+                                    <div className="h-[2px] w-24 bg-[#D4AF37]"></div>
+                                </div>
+
+                                <p className="text-5xl font-serif">{dateFormatted}</p>
+                            </div>
+
+                            {wish && (
+                                <div className="bg-[#60232b] p-12 border border-[#D4AF37]/50 relative mt-12">
+                                    <p className="text-4xl italic font-serif leading-relaxed text-[#EFDBB2]">"{wish}"</p>
+                                    <p className="text-2xl font-bold mt-8 uppercase tracking-widest text-[#D4AF37]">- {guestName} -</p>
+                                </div>
+                            )}
+
+                            <div className="mt-auto">
+                                <p className="text-2xl opacity-60 font-serif">@rfx.builder</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             ) : (
                 /* GENERIC / STANDARD DESIGN */
                 <>
