@@ -102,6 +102,17 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
             <div className="fixed inset-0 pointer-events-none z-0">
                 <div className="absolute inset-0 bg-[#2c1215] opacity-50"></div>
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1536510233921-8e5043bfcefe?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+
+                {/* Global Parallax Leaves (Fixed) */}
+                <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
+                    <img src="/assets/maroon-vintage/leaf-1.png"
+                        className="absolute -top-10 -left-10 w-[60%] md:w-[30%] opacity-80 mix-blend-screen wave-left"
+                        alt="Floral TL" />
+                    <img src="/assets/maroon-vintage/leaf-2.png"
+                        className="absolute -top-10 -right-10 w-[60%] md:w-[30%] opacity-80 mix-blend-screen wave-right scale-x-[-1]"
+                        alt="Floral TR" />
+                </div>
+
                 <div className="absolute inset-0 bg-gradient-to-b from-[#722F37]/80 via-[#722F37]/90 to-[#2c1215]"></div>
             </div>
 
@@ -116,7 +127,9 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent"></div>
                 </div>
 
-                {/* Layer 1: Waving Flowers (Top Corners) - Back Layer */}
+                {/* Lock Screen Leaves - Duplicated if needed, or rely on transparency? 
+                    Since bg-[#722F37] is opaque, we need these here if we want them visible on lock screen.
+                */}
                 <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10 overflow-hidden mx-auto left-0 right-0">
                     <img src="/assets/maroon-vintage/leaf-1.png"
                         className="absolute -top-10 -left-10 w-[60%] md:w-[30%] opacity-90 mix-blend-screen wave-left"
@@ -126,13 +139,7 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                         alt="Floral TR" />
                 </div>
 
-                {/* Layer 2: Balcony/Railing (Blocking View - Z-Index 5) 
-                    MOVED BEFORE CONTENT so it is behind the button if overlapping, 
-                    OR user wants it 'paling belakang' (furthest back) relative to opening?
-                    User said: "balconnya pada buka undangan taruh layer paling belakang karena buka undangan tertutup oleh bagian tsb"
-                    So Balcony < Content.
-                    We set Balcony z-index to 5. Content z-index to 20.
-                 */}
+                {/* Layer 2: Balcony/Railing (Blocking View - Z-Index 5) */}
                 <div className="absolute bottom-0 w-full h-40 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')] opacity-100 z-5 animate-slide-up border-t-[6px] border-[#D4AF37] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] bg-[#2c1215]">
                     {/* Balcony Pillars */}
                     <div className="absolute top-0 left-0 w-full h-full flex justify-around items-end px-4">
@@ -183,22 +190,20 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
 
             </div>
 
-            {/* === CONTENT === */}
-            <div ref={contentRef} className="relative z-10 pb-24 text-[#FAEBD7] w-full md:max-w-xl md:mx-auto md:shadow-2xl md:bg-[#722F37]/80">
+            {/* === CONTENT (PANEL LAYER) === */}
+            {/* Added backdrop-blur and slight transparency to Panel to enhance parallax feel */}
+            <div ref={contentRef} className="relative z-10 pb-24 text-[#FAEBD7] w-full md:max-w-xl md:mx-auto md:shadow-2xl md:bg-[#722F37]/90 backdrop-blur-sm">
 
-                {/* Inner Background Pinned */}
+                {/* Inner Background Pinned - Now Transparent Pattern Only */}
                 <div className="absolute inset-0 z-0">
-                    <div className="absolute inset-0 bg-[#722F37] opacity-90"></div>
+                    {/* No opaque bg color here, relying on panel bg color above. 
+                         Just texture pattern. */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-20"></div>
                 </div>
 
                 {/* 1. HERO (Inner) */}
                 <header className="min-h-screen flex flex-col justify-center items-center text-center p-6 relative z-10 w-full animate-fade-up">
-                    {/* Waving Florals Inner */}
-                    <div className="absolute top-0 left-0 w-full h-auto pointer-events-none z-0">
-                        <img src="/assets/maroon-vintage/leaf-1.png" className="absolute -top-12 -left-12 w-48 opacity-60 wave-left" />
-                        <img src="/assets/maroon-vintage/leaf-2.png" className="absolute -top-12 -right-12 w-48 opacity-60 wave-right scale-x-[-1]" />
-                    </div>
+                    {/* Removed local leaves here, now relying on fixed global leaves for Parallax */}
 
                     <div className="border-[3px] border-[#D4AF37] p-2 rounded-full mb-8">
                         <div className="border border-[#D4AF37] p-1 rounded-full">
