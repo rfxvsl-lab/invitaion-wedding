@@ -153,7 +153,7 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                     {/* Cover Photo Frame */}
                     <div className="relative w-48 h-64 mb-6 border-[6px] border-[#D4AF37] shadow-2xl animate-zoom-out bg-gray-800 overflow-hidden rounded-sm outline outline-2 outline-[#722F37] outline-offset-[-8px]">
                         <img
-                            src={content.couples.wanita.photo || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&auto=format&fit=crop&q=60"}
+                            src={content.hero.main_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=800&auto=format&fit=crop&q=60"}
                             className="w-full h-full object-cover opacity-90 sepia-[0.3]"
                             alt="Cover Couple"
                         />
@@ -203,7 +203,7 @@ const MaroonVintage: React.FC<{ data: InvitationData }> = ({ data }) => {
                     <div className="border-[3px] border-[#D4AF37] p-2 rounded-full mb-8">
                         <div className="border border-[#D4AF37] p-1 rounded-full">
                             <img
-                                src={content.couples.wanita.photo || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8"}
+                                src={content.hero.main_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8"}
                                 className="w-48 h-48 object-cover rounded-full sepia-[0.2]"
                             />
                         </div>
