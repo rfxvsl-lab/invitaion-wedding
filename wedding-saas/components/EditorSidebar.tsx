@@ -45,10 +45,10 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
         <aside className="w-full h-full lg:h-screen flex flex-col bg-white border-b lg:border-b-0 lg:border-r border-gray-200 z-30">
             {/* Logo area for desktop */}
             <div className="hidden lg:flex items-center gap-3 px-6 py-5 border-b border-gray-100 bg-white">
-                <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg shadow-lg shadow-indigo-200 flex items-center justify-center">
-                    <span className="text-white font-black italic text-sm">W</span>
+                <div className="w-8 h-8 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-200 flex items-center justify-center">
+                    <Settings className="text-white animate-spin-slow" size={20} strokeWidth={2.5} />
                 </div>
-                <span className="font-bold text-slate-800 tracking-tight">Wevitation<span className="text-indigo-600">.</span></span>
+                <span className="font-bold text-slate-800 tracking-tight">RFX Builder<span className="text-indigo-600">.</span></span>
             </div>
 
             {/* Navigation Tabs */}

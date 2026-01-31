@@ -73,6 +73,7 @@ export default function EditorPage() {
     }));
     const [saveStatus, setSaveStatus] = useState<'saved' | 'unsaved' | 'saving' | 'error'>('saved');
     const [showPublishModal, setShowPublishModal] = useState(false);
+    const [showSlugWarning, setShowSlugWarning] = useState(false);
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Initial Fetch (Simplified for Demo: fetching hardcoded slug)
@@ -115,8 +116,7 @@ export default function EditorPage() {
 
     const saveToSupabase = useCallback(async () => {
         if (data.metadata.slug.startsWith('invitation-')) {
-            alert('Mohon ubah "Link Undangan (Slug)" di menu Pengaturan (Settings) sebelum mempublish! Gunakan nama unik Anda.');
-            // setActiveTab('settings'); // Cannot access child state directly
+            setShowSlugWarning(true);
             return;
         }
 
@@ -166,8 +166,8 @@ export default function EditorPage() {
                 {/* Header Navbar */}
                 <div className="sticky top-0 lg:static h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/50 flex items-center justify-between px-4 lg:px-8 shadow-sm z-20">
                     <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-indigo-500/30">
-                            W
+                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                            <Settings className="animate-spin-slow" size={18} />
                         </div>
                         <div className="hidden sm:flex items-center gap-2 text-slate-500 text-xs font-medium bg-slate-100/50 px-3 py-1.5 rounded-full border border-slate-200">
                             <Globe size={12} /> <span className="truncate max-w-[150px] lg:max-w-none">weddinginvitation-18.vercel.app/{data.metadata.slug}</span>
@@ -191,6 +191,27 @@ export default function EditorPage() {
                         </button>
                     </div>
                 </div>
+
+                {/* SLUG WARNING MODAL */}
+                {showSlugWarning && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                        <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 duration-200">
+                            <div className="w-12 h-12 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mb-4 mx-auto">
+                                <Settings size={24} />
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-800 text-center mb-2">Ganti Link Undangan</h3>
+                            <p className="text-slate-500 text-sm text-center mb-6">
+                                Sebelum mempublish, mohon ubah <b>Slug / Link Undangan</b> di menu <b>Settings</b> menjadi nama unik Anda (contoh: romeo-juliet).
+                            </p>
+                            <button
+                                onClick={() => setShowSlugWarning(false)}
+                                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors"
+                            >
+                                Oke, Saya Ganti Sekarang
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 {/* PUBLISH MODAL */}
                 {showPublishModal && (
@@ -249,8 +270,9 @@ export default function EditorPage() {
                 )}
 
                 {/* MAIN PREVIEW AREA */}
-                <div className="flex-1 flex items-center justify-center p-4 lg:p-10 shrink-0 min-h-[600px] lg:min-h-0">
-                    <div className="relative w-full max-w-[380px] lg:h-[85vh] lg:w-auto lg:aspect-[9/19] bg-slate-900 rounded-[2.5rem] shadow-2xl border-[6px] border-slate-800 ring-1 ring-white/10 overflow-hidden transform transition-all hover:scale-[1.002]">
+                <div className="flex-1 flex items-center justify-center p-4 lg:p-10 shrink-0 min-h-[600px] lg:min-h-0 bg-[#F1F5F9] w-full">
+                    {/* Phone Frame: Fixed aspect ratio on mobile too, locked height for scrolling */}
+                    <div className="relative w-full max-w-[360px] aspect-[9/19] h-auto lg:h-[85vh] lg:w-auto lg:aspect-[9/19] bg-slate-900 rounded-[2.5rem] shadow-2xl border-[6px] border-slate-800 ring-1 ring-white/10 overflow-hidden transform-gpu translate-z-0">
                         {/* Notch */}
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-7 bg-slate-800 rounded-b-xl z-50 flex items-center justify-center gap-2">
                             <div className="w-12 h-1 bg-slate-700 rounded-full opacity-50"></div>
