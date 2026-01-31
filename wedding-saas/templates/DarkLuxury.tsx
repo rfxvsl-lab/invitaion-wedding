@@ -226,52 +226,56 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
 
                     <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                         {/* Akad Card */}
-                        <div className="bg-[#1A1A1A] border border-[#333] p-10 text-center relative overflow-hidden group hover:border-[#BF953F] transition-colors duration-500">
-                            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#BF953F] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        {invitation.events.akad.enabled !== false && (
+                            <div className="bg-[#1A1A1A] border border-[#333] p-10 text-center relative overflow-hidden group hover:border-[#BF953F] transition-colors duration-500">
+                                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#BF953F] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                            <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">{invitation.texts.akad_title}</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
-                                    <Calendar size={16} className="text-[#BF953F]" />
-                                    <span className="font-body text-sm tracking-wide">{invitation.events.akad.date}</span>
+                                <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">{invitation.texts.akad_title}</h3>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
+                                        <Calendar size={16} className="text-[#BF953F]" />
+                                        <span className="font-body text-sm tracking-wide">{invitation.events.akad.date}</span>
+                                    </div>
+                                    <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
+                                        <Clock size={16} className="text-[#BF953F]" />
+                                        <span className="font-body text-sm tracking-wide">{invitation.events.akad.time}</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
-                                    <Clock size={16} className="text-[#BF953F]" />
-                                    <span className="font-body text-sm tracking-wide">{invitation.events.akad.time}</span>
-                                </div>
+                                <div className="my-8 w-12 h-[1px] bg-[#333] mx-auto"></div>
+                                <h4 className="font-luxury text-xl mb-2">{invitation.events.akad.location_name}</h4>
+                                <p className="font-body text-xs text-[#888] mb-8">{invitation.events.akad.address}</p>
+
+                                <a href={invitation.events.akad.map_url} target="_blank" className="inline-block border border-[#BF953F] text-[#BF953F] px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#BF953F] hover:text-black transition-all">
+                                    View Location
+                                </a>
                             </div>
-                            <div className="my-8 w-12 h-[1px] bg-[#333] mx-auto"></div>
-                            <h4 className="font-luxury text-xl mb-2">{invitation.events.akad.location_name}</h4>
-                            <p className="font-body text-xs text-[#888] mb-8">{invitation.events.akad.address}</p>
-
-                            <a href={invitation.events.akad.map_url} target="_blank" className="inline-block border border-[#BF953F] text-[#BF953F] px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#BF953F] hover:text-black transition-all">
-                                View Location
-                            </a>
-                        </div>
+                        )}
 
                         {/* Resepsi Card */}
-                        <div className="bg-[#1A1A1A] border border-[#333] p-10 text-center relative overflow-hidden group hover:border-[#BF953F] transition-colors duration-500">
-                            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#BF953F] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        {invitation.events.resepsi.enabled !== false && (
+                            <div className="bg-[#1A1A1A] border border-[#333] p-10 text-center relative overflow-hidden group hover:border-[#BF953F] transition-colors duration-500">
+                                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#BF953F] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                            <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">{invitation.texts.resepsi_title}</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
-                                    <Calendar size={16} className="text-[#BF953F]" />
-                                    <span className="font-body text-sm tracking-wide">{invitation.events.resepsi.date}</span>
+                                <h3 className="font-luxury text-2xl text-[#BF953F] mb-6 uppercase tracking-wider">{invitation.texts.resepsi_title}</h3>
+                                <div className="space-y-4">
+                                    <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
+                                        <Calendar size={16} className="text-[#BF953F]" />
+                                        <span className="font-body text-sm tracking-wide">{invitation.events.resepsi.date}</span>
+                                    </div>
+                                    <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
+                                        <Clock size={16} className="text-[#BF953F]" />
+                                        <span className="font-body text-sm tracking-wide">{invitation.events.resepsi.time}</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-center justify-center gap-3 text-[#E2E8F0]">
-                                    <Clock size={16} className="text-[#BF953F]" />
-                                    <span className="font-body text-sm tracking-wide">{invitation.events.resepsi.time}</span>
-                                </div>
+                                <div className="my-8 w-12 h-[1px] bg-[#333] mx-auto"></div>
+                                <h4 className="font-luxury text-xl mb-2">{invitation.events.resepsi.location_name}</h4>
+                                <p className="font-body text-xs text-[#888] mb-8">{invitation.events.resepsi.address}</p>
+
+                                <a href={invitation.events.resepsi.map_url} target="_blank" className="inline-block border border-[#BF953F] text-[#BF953F] px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#BF953F] hover:text-black transition-all">
+                                    View Location
+                                </a>
                             </div>
-                            <div className="my-8 w-12 h-[1px] bg-[#333] mx-auto"></div>
-                            <h4 className="font-luxury text-xl mb-2">{invitation.events.resepsi.location_name}</h4>
-                            <p className="font-body text-xs text-[#888] mb-8">{invitation.events.resepsi.address}</p>
-
-                            <a href={invitation.events.resepsi.map_url} target="_blank" className="inline-block border border-[#BF953F] text-[#BF953F] px-6 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-[#BF953F] hover:text-black transition-all">
-                                View Location
-                            </a>
-                        </div>
+                        )}
                     </div>
                 </section>
 

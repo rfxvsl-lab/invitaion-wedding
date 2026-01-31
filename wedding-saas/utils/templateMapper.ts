@@ -61,6 +61,7 @@ export const mapToTemplateData = (data: InvitationData) => {
         },
         events: {
             akad: {
+                enabled: content.events?.akad?.enabled !== false, // Pass enabled flag
                 date: content.events?.akad?.date, // Keep original string for display if template permits, but template uses new Date() sometimes.
                 // Wait, ModernArch uses: new Date(invitation.events.akad.date) ? No, ModernArch uses it as string in one place: 
                 // <p ...>{invitation.events.akad.date}</p>
@@ -73,6 +74,7 @@ export const mapToTemplateData = (data: InvitationData) => {
                 map_url: content.events?.akad?.map_url
             },
             resepsi: {
+                enabled: content.events?.resepsi?.enabled !== false,
                 date: content.events?.resepsi?.date,
                 time: content.events?.resepsi?.time,
                 location_name: content.events?.resepsi?.venue,

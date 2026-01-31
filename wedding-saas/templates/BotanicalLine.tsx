@@ -192,28 +192,32 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
 
                     <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
                         {/* Akad Card */}
-                        <div className="bg-white p-8 rounded-lg shadow-sm border border-[#EAEAEA] text-center hover:shadow-md transition-shadow relative overflow-hidden group">
-                            <div className="absolute top-0 left-0 w-full h-1 bg-[#BCAAA4]"></div>
-                            <h3 className="font-script text-3xl mb-4">{invitation.texts.akad_title}</h3>
-                            <div className="font-sans text-sm space-y-2 text-[#666]">
-                                <p className="font-bold flex items-center justify-center gap-2"><Clock size={14} className="text-[#BCAAA4]" /> {invitation.events.akad.time}</p>
-                                <p className="font-bold text-lg text-[#333] mt-4">{invitation.events.akad.location_name}</p>
-                                <p className="px-4 leading-relaxed opacity-80">{invitation.events.akad.address}</p>
+                        {invitation.events.akad.enabled !== false && (
+                            <div className="bg-white p-8 rounded-lg shadow-sm border border-[#EAEAEA] text-center hover:shadow-md transition-shadow relative overflow-hidden group">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-[#BCAAA4]"></div>
+                                <h3 className="font-script text-3xl mb-4">{invitation.texts.akad_title}</h3>
+                                <div className="font-sans text-sm space-y-2 text-[#666]">
+                                    <p className="font-bold flex items-center justify-center gap-2"><Clock size={14} className="text-[#BCAAA4]" /> {invitation.events.akad.time}</p>
+                                    <p className="font-bold text-lg text-[#333] mt-4">{invitation.events.akad.location_name}</p>
+                                    <p className="px-4 leading-relaxed opacity-80">{invitation.events.akad.address}</p>
+                                </div>
+                                <a href={invitation.events.akad.map_url} target="_blank" className="mt-6 inline-block text-[10px] font-bold border border-[#BCAAA4] text-[#BCAAA4] px-4 py-2 rounded-full uppercase tracking-widest group-hover:bg-[#BCAAA4] group-hover:text-white transition-all">View Map</a>
                             </div>
-                            <a href={invitation.events.akad.map_url} target="_blank" className="mt-6 inline-block text-[10px] font-bold border border-[#BCAAA4] text-[#BCAAA4] px-4 py-2 rounded-full uppercase tracking-widest group-hover:bg-[#BCAAA4] group-hover:text-white transition-all">View Map</a>
-                        </div>
+                        )}
 
                         {/* Resepsi Card */}
-                        <div className="bg-white p-8 rounded-lg shadow-sm border border-[#EAEAEA] text-center hover:shadow-md transition-shadow relative overflow-hidden group">
-                            <div className="absolute top-0 left-0 w-full h-1 bg-[#BCAAA4]"></div>
-                            <h3 className="font-script text-3xl mb-4">{invitation.texts.resepsi_title}</h3>
-                            <div className="font-sans text-sm space-y-2 text-[#666]">
-                                <p className="font-bold flex items-center justify-center gap-2"><Clock size={14} className="text-[#BCAAA4]" /> {invitation.events.resepsi.time}</p>
-                                <p className="font-bold text-lg text-[#333] mt-4">{invitation.events.resepsi.location_name}</p>
-                                <p className="px-4 leading-relaxed opacity-80">{invitation.events.resepsi.address}</p>
+                        {invitation.events.resepsi.enabled !== false && (
+                            <div className="bg-white p-8 rounded-lg shadow-sm border border-[#EAEAEA] text-center hover:shadow-md transition-shadow relative overflow-hidden group">
+                                <div className="absolute top-0 left-0 w-full h-1 bg-[#BCAAA4]"></div>
+                                <h3 className="font-script text-3xl mb-4">{invitation.texts.resepsi_title}</h3>
+                                <div className="font-sans text-sm space-y-2 text-[#666]">
+                                    <p className="font-bold flex items-center justify-center gap-2"><Clock size={14} className="text-[#BCAAA4]" /> {invitation.events.resepsi.time}</p>
+                                    <p className="font-bold text-lg text-[#333] mt-4">{invitation.events.resepsi.location_name}</p>
+                                    <p className="px-4 leading-relaxed opacity-80">{invitation.events.resepsi.address}</p>
+                                </div>
+                                <a href={invitation.events.resepsi.map_url} target="_blank" className="mt-6 inline-block text-[10px] font-bold border border-[#BCAAA4] text-[#BCAAA4] px-4 py-2 rounded-full uppercase tracking-widest group-hover:bg-[#BCAAA4] group-hover:text-white transition-all">View Map</a>
                             </div>
-                            <a href={invitation.events.resepsi.map_url} target="_blank" className="mt-6 inline-block text-[10px] font-bold border border-[#BCAAA4] text-[#BCAAA4] px-4 py-2 rounded-full uppercase tracking-widest group-hover:bg-[#BCAAA4] group-hover:text-white transition-all">View Map</a>
-                        </div>
+                        )}
                     </div>
                 </section>
 

@@ -110,11 +110,28 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                 <p className="text-xs font-bold text-slate-700">AKAD NIKAH</p>
                             </div>
                             <div className="space-y-1">
-                                <Input label="Tanggal (YYYY-MM-DD)" value={getValue('content.events.akad.date')} onChange={(v) => onUpdate('content.events.akad.date', v)} />
-                                <Input label="Waktu" value={getValue('content.events.akad.time')} onChange={(v) => onUpdate('content.events.akad.time', v)} />
-                                <Input label="Lokasi" value={getValue('content.events.akad.venue')} onChange={(v) => onUpdate('content.events.akad.venue', v)} />
-                                <Input label="Alamat" value={getValue('content.events.akad.address')} onChange={(v) => onUpdate('content.events.akad.address', v)} />
-                                <Input label="Link Google Maps" value={getValue('content.events.akad.map_url')} onChange={(v) => onUpdate('content.events.akad.map_url', v)} placeholder="https://maps.app.goo.gl/..." />
+                                <div className="flex items-center justify-end mb-2">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase mr-2">Tampilkan Acara Ini?</label>
+                                    <div className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={data.content.events.akad.enabled !== false}
+                                            onChange={(e) => onUpdate('content.events.akad.enabled', e.target.checked)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                                    </div>
+                                </div>
+
+                                {data.content.events.akad.enabled !== false && (
+                                    <>
+                                        <Input label="Tanggal (YYYY-MM-DD)" value={getValue('content.events.akad.date')} onChange={(v) => onUpdate('content.events.akad.date', v)} />
+                                        <Input label="Waktu" value={getValue('content.events.akad.time')} onChange={(v) => onUpdate('content.events.akad.time', v)} />
+                                        <Input label="Lokasi" value={getValue('content.events.akad.venue')} onChange={(v) => onUpdate('content.events.akad.venue', v)} />
+                                        <Input label="Alamat" value={getValue('content.events.akad.address')} onChange={(v) => onUpdate('content.events.akad.address', v)} />
+                                        <Input label="Link Google Maps" value={getValue('content.events.akad.map_url')} onChange={(v) => onUpdate('content.events.akad.map_url', v)} placeholder="https://maps.app.goo.gl/..." />
+                                    </>
+                                )}
                             </div>
                         </div>
 

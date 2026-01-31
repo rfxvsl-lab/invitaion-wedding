@@ -27,8 +27,8 @@ const INITIAL_DATA: InvitationData = {
             wanita: { name: "Juliet Capulet", parents: "Putri Bpk. Capulet", ig: "@juliet", photo: "" }
         },
         events: {
-            akad: { date: "2024-12-31", time: "08:00", venue: "Verona Cathedral", address: "Italy", map_url: "" },
-            resepsi: { date: "2024-12-31", time: "18:00", venue: "Capulet Hall", address: "Italy", map_url: "" }
+            akad: { enabled: true, date: "2024-12-31", time: "08:00", venue: "Verona Cathedral", address: "Italy", map_url: "" },
+            resepsi: { enabled: true, date: "2024-12-31", time: "18:00", venue: "Capulet Hall", address: "Italy", map_url: "" }
         },
         gallery: { images: [], video_url: "" },
         texts: {

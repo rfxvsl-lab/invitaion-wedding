@@ -203,38 +203,42 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                         <h2 className="text-center font-cormorant text-4xl mb-16 text-[#2D2D2D]">{invitation.texts.events_title}</h2>
                     </FadeIn>
 
-                    <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+                    <div className="max-w-5xl mx-auto flex flex-col md:flex-row gap-8 justify-center">
                         {/* Akad */}
-                        <FadeIn delay={200}>
-                            <div className="bg-white p-8 rounded-[3rem] rounded-tl-none shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-[#E9ECEF] flex flex-col items-center text-center h-full hover:border-[#A48874] transition-colors">
-                                <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">{invitation.texts.akad_title}</span>
-                                <h3 className="font-cormorant text-3xl mb-2">{invitation.texts.akad_title}</h3>
-                                <div className="w-12 h-[1px] bg-[#A48874] my-4"></div>
-                                <p className="font-opensans font-bold text-lg mb-1">{invitation.events.akad.date}</p>
-                                <p className="font-opensans text-sm text-[#666] mb-6">{invitation.events.akad.time}</p>
-                                <p className="font-cormorant text-xl italic mb-2">{invitation.events.akad.location_name}</p>
-                                <p className="font-opensans text-xs text-[#888] mb-8 px-4">{invitation.events.akad.address}</p>
-                                <a href={invitation.events.akad.map_url} target="_blank" className="mt-auto inline-flex items-center gap-2 bg-[#2D2D2D] text-white px-6 py-2 rounded-full text-xs hover:bg-[#A48874] transition-colors">
-                                    <MapPin size={14} /> Google Maps
-                                </a>
-                            </div>
-                        </FadeIn>
+                        {invitation.events.akad.enabled !== false && (
+                            <FadeIn delay={200}>
+                                <div className="bg-white p-8 rounded-[3rem] rounded-tl-none shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-[#E9ECEF] flex flex-col items-center text-center h-full w-full md:w-[400px] hover:border-[#A48874] transition-colors">
+                                    <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">{invitation.texts.akad_title}</span>
+                                    <h3 className="font-cormorant text-3xl mb-2">{invitation.texts.akad_title}</h3>
+                                    <div className="w-12 h-[1px] bg-[#A48874] my-4"></div>
+                                    <p className="font-opensans font-bold text-lg mb-1">{invitation.events.akad.date}</p>
+                                    <p className="font-opensans text-sm text-[#666] mb-6">{invitation.events.akad.time}</p>
+                                    <p className="font-cormorant text-xl italic mb-2">{invitation.events.akad.location_name}</p>
+                                    <p className="font-opensans text-xs text-[#888] mb-8 px-4">{invitation.events.akad.address}</p>
+                                    <a href={invitation.events.akad.map_url} target="_blank" className="mt-auto inline-flex items-center gap-2 bg-[#2D2D2D] text-white px-6 py-2 rounded-full text-xs hover:bg-[#A48874] transition-colors">
+                                        <MapPin size={14} /> Google Maps
+                                    </a>
+                                </div>
+                            </FadeIn>
+                        )}
 
                         {/* Resepsi */}
-                        <FadeIn delay={400}>
-                            <div className="bg-white p-8 rounded-[3rem] rounded-br-none shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-[#E9ECEF] flex flex-col items-center text-center h-full hover:border-[#A48874] transition-colors">
-                                <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">{invitation.texts.resepsi_title}</span>
-                                <h3 className="font-cormorant text-3xl mb-2">{invitation.texts.resepsi_title}</h3>
-                                <div className="w-12 h-[1px] bg-[#A48874] my-4"></div>
-                                <p className="font-opensans font-bold text-lg mb-1">{invitation.events.resepsi.date}</p>
-                                <p className="font-opensans text-sm text-[#666] mb-6">{invitation.events.resepsi.time}</p>
-                                <p className="font-cormorant text-xl italic mb-2">{invitation.events.resepsi.location_name}</p>
-                                <p className="font-opensans text-xs text-[#888] mb-8 px-4">{invitation.events.resepsi.address}</p>
-                                <a href={invitation.events.resepsi.map_url} target="_blank" className="mt-auto inline-flex items-center gap-2 bg-[#2D2D2D] text-white px-6 py-2 rounded-full text-xs hover:bg-[#A48874] transition-colors">
-                                    <MapPin size={14} /> Google Maps
-                                </a>
-                            </div>
-                        </FadeIn>
+                        {invitation.events.resepsi.enabled !== false && (
+                            <FadeIn delay={400}>
+                                <div className="bg-white p-8 rounded-[3rem] rounded-br-none shadow-[0_10px_30px_rgba(0,0,0,0.03)] border border-[#E9ECEF] flex flex-col items-center text-center h-full w-full md:w-[400px] hover:border-[#A48874] transition-colors">
+                                    <span className="bg-[#E9ECEF] text-[#A48874] px-4 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-6">{invitation.texts.resepsi_title}</span>
+                                    <h3 className="font-cormorant text-3xl mb-2">{invitation.texts.resepsi_title}</h3>
+                                    <div className="w-12 h-[1px] bg-[#A48874] my-4"></div>
+                                    <p className="font-opensans font-bold text-lg mb-1">{invitation.events.resepsi.date}</p>
+                                    <p className="font-opensans text-sm text-[#666] mb-6">{invitation.events.resepsi.time}</p>
+                                    <p className="font-cormorant text-xl italic mb-2">{invitation.events.resepsi.location_name}</p>
+                                    <p className="font-opensans text-xs text-[#888] mb-8 px-4">{invitation.events.resepsi.address}</p>
+                                    <a href={invitation.events.resepsi.map_url} target="_blank" className="mt-auto inline-flex items-center gap-2 bg-[#2D2D2D] text-white px-6 py-2 rounded-full text-xs hover:bg-[#A48874] transition-colors">
+                                        <MapPin size={14} /> Google Maps
+                                    </a>
+                                </div>
+                            </FadeIn>
+                        )}
                     </div>
                 </section>
 

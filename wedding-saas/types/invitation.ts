@@ -8,6 +8,7 @@ export interface CoupleProfile {
 }
 
 export interface EventDetail {
+    enabled?: boolean; // Optional, default true
     date: string; // YYYY-MM-DD
     time: string;
     venue: string;

@@ -225,36 +225,40 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
 
                     <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                         {/* Akad */}
-                        <PaperCard className="-rotate-1">
-                            <div className="border-2 border-dashed border-[#8FBC8F] p-6 text-center h-full flex flex-col items-center">
-                                <Leaf className="text-[#8FBC8F] mb-2" size={24} />
-                                <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">{invitation.texts.akad_title}</h3>
-                                <div className="w-full h-[1px] bg-[#8D6E63] opacity-20 my-2"></div>
-                                <p className="font-serif font-bold text-lg">{invitation.events.akad.date}</p>
-                                <p className="font-serif text-sm italic mb-4">{invitation.events.akad.time}</p>
-                                <p className="font-bold text-[#5D4037] text-xl mb-2">{invitation.events.akad.location_name}</p>
-                                <p className="text-sm text-[#8D6E63] mb-6">{invitation.events.akad.address}</p>
-                                <a href={invitation.events.akad.map_url} target="_blank" className="mt-auto px-4 py-2 border-2 border-[#5D4037] rounded font-bold text-xs uppercase hover:bg-[#5D4037] hover:text-[#FFFDF5] transition-colors">
-                                    View Map
-                                </a>
-                            </div>
-                        </PaperCard>
+                        {invitation.events.akad.enabled !== false && (
+                            <PaperCard className="-rotate-1">
+                                <div className="border-2 border-dashed border-[#8FBC8F] p-6 text-center h-full flex flex-col items-center">
+                                    <Leaf className="text-[#8FBC8F] mb-2" size={24} />
+                                    <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">{invitation.texts.akad_title}</h3>
+                                    <div className="w-full h-[1px] bg-[#8D6E63] opacity-20 my-2"></div>
+                                    <p className="font-serif font-bold text-lg">{invitation.events.akad.date}</p>
+                                    <p className="font-serif text-sm italic mb-4">{invitation.events.akad.time}</p>
+                                    <p className="font-bold text-[#5D4037] text-xl mb-2">{invitation.events.akad.location_name}</p>
+                                    <p className="text-sm text-[#8D6E63] mb-6">{invitation.events.akad.address}</p>
+                                    <a href={invitation.events.akad.map_url} target="_blank" className="mt-auto px-4 py-2 border-2 border-[#5D4037] rounded font-bold text-xs uppercase hover:bg-[#5D4037] hover:text-[#FFFDF5] transition-colors">
+                                        View Map
+                                    </a>
+                                </div>
+                            </PaperCard>
+                        )}
 
                         {/* Resepsi */}
-                        <PaperCard className="rotate-1">
-                            <div className="border-2 border-dashed border-[#8FBC8F] p-6 text-center h-full flex flex-col items-center">
-                                <Gift className="text-[#8FBC8F] mb-2" size={24} />
-                                <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">{invitation.texts.resepsi_title}</h3>
-                                <div className="w-full h-[1px] bg-[#8D6E63] opacity-20 my-2"></div>
-                                <p className="font-serif font-bold text-lg">{invitation.events.resepsi.date}</p>
-                                <p className="font-serif text-sm italic mb-4">{invitation.events.resepsi.time}</p>
-                                <p className="font-bold text-[#5D4037] text-xl mb-2">{invitation.events.resepsi.location_name}</p>
-                                <p className="text-sm text-[#8D6E63] mb-6">{invitation.events.resepsi.address}</p>
-                                <a href={invitation.events.resepsi.map_url} target="_blank" className="mt-auto px-4 py-2 border-2 border-[#5D4037] rounded font-bold text-xs uppercase hover:bg-[#5D4037] hover:text-[#FFFDF5] transition-colors">
-                                    View Map
-                                </a>
-                            </div>
-                        </PaperCard>
+                        {invitation.events.resepsi.enabled !== false && (
+                            <PaperCard className="rotate-1">
+                                <div className="border-2 border-dashed border-[#8FBC8F] p-6 text-center h-full flex flex-col items-center">
+                                    <Gift className="text-[#8FBC8F] mb-2" size={24} />
+                                    <h3 className="font-hand text-4xl font-bold mb-4 text-[#5D4037]">{invitation.texts.resepsi_title}</h3>
+                                    <div className="w-full h-[1px] bg-[#8D6E63] opacity-20 my-2"></div>
+                                    <p className="font-serif font-bold text-lg">{invitation.events.resepsi.date}</p>
+                                    <p className="font-serif text-sm italic mb-4">{invitation.events.resepsi.time}</p>
+                                    <p className="font-bold text-[#5D4037] text-xl mb-2">{invitation.events.resepsi.location_name}</p>
+                                    <p className="text-sm text-[#8D6E63] mb-6">{invitation.events.resepsi.address}</p>
+                                    <a href={invitation.events.resepsi.map_url} target="_blank" className="mt-auto px-4 py-2 border-2 border-[#5D4037] rounded font-bold text-xs uppercase hover:bg-[#5D4037] hover:text-[#FFFDF5] transition-colors">
+                                        View Map
+                                    </a>
+                                </div>
+                            </PaperCard>
+                        )}
                     </div>
                 </section>
 
