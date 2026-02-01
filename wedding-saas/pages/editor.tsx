@@ -181,10 +181,7 @@ export default function EditorPage() {
                             <i className="fa-solid fa-arrow-left text-lg"></i>
                         </button>
 
-                        {/* Brand Logo */}
-                        <div className="flex items-center gap-2">
-                            <span className="font-serif text-xl font-bold text-gray-900 tracking-tight hidden sm:inline">Undangan<span className="text-pink-600">Kita</span></span>
-                        </div>
+
 
                         {/* Domain Preview (Clean) */}
                         <div className="hidden sm:flex items-center text-slate-500 text-xs font-medium bg-slate-100/50 px-3 py-1.5 rounded-full border border-slate-200">
