@@ -19,6 +19,7 @@ export default function Home() {
         category: '',
         image: '',
     });
+    const [showWelcome, setShowWelcome] = useState(false);
 
     // Dynamic Content State
     const [content, setContent] = useState<Record<string, string>>({});
@@ -49,6 +50,39 @@ export default function Home() {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Welcome Modal & Onboarding Check Logic
+    useEffect(() => {
+        if (user && user.email) {
+            // Check Profile
+            const checkProfile = async () => {
+                const { data, error } = await supabase.from('profiles').select('id').eq('id', user.id).single();
+
+                // If profiles table exists but row is missing -> Onboarding
+                // (Assuming user ran the migration script)
+                // Note: We need to be careful if the TABLE query fails (error 404 relation not found), we shouldn't loop redirect.
+                // But for now, assume happy path: script run.
+                if (!data && !error) {
+                    // Wait if it returns null but no error (meaning query succesful, but no row found)
+                    router.push('/onboarding');
+                    return;
+                }
+
+                if (error && error.code === 'PGRST116') { // PGRST116 is "JSON object requested, multiple (or no) results returned" -> No row found
+                    router.push('/onboarding');
+                    return;
+                }
+
+                // If profile exists, check welcome modal
+                const key = `welcome_shown_${user.email}`;
+                if (!localStorage.getItem(key)) {
+                    setShowWelcome(true);
+                    localStorage.setItem(key, 'true');
+                }
+            };
+            checkProfile();
+        }
+    }, [user, router]);
 
     const t = (key: string, fallback: string) => content[key] || fallback;
 
@@ -154,7 +188,20 @@ export default function Home() {
                     {/* Mobile Menu Panel */}
                     {mobileMenuOpen && (
                         <div className="md:hidden bg-white border-b border-gray-100 absolute w-full shadow-lg z-50">
-                            <div className="px-4 pt-2 pb-6 space-y-2">
+                            <div className="px-4 pt-4 pb-6 space-y-2">
+                                {/* Mobile User Info */}
+                                {user && (
+                                    <div className="mb-4 pb-4 border-b border-gray-100 flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-lg">
+                                            {user.email?.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div className="overflow-hidden">
+                                            <p className="text-xs text-gray-500 font-medium">Signed in as</p>
+                                            <p className="text-sm font-bold text-gray-900 truncate">{user.email}</p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 {[
                                     { label: 'Beranda', href: '#home' },
                                     { label: 'Fitur', href: '#fitur' },
@@ -173,9 +220,14 @@ export default function Home() {
 
                                 <div className="pt-4 border-t border-gray-100 mt-4 flex flex-col gap-3">
                                     {user ? (
-                                        <button onClick={handleCreateInvitation} className="w-full text-center py-3 bg-pink-600 text-white rounded-lg font-bold shadow-md hover:bg-pink-800">
-                                            Dashboard
-                                        </button>
+                                        <div className="flex flex-col gap-2">
+                                            <button onClick={handleCreateInvitation} className="w-full text-center py-3 bg-pink-600 text-white rounded-lg font-bold shadow-md hover:bg-pink-800">
+                                                Dashboard
+                                            </button>
+                                            <button onClick={() => signOut()} className="w-full text-center py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-bold border border-gray-200">
+                                                Logout
+                                            </button>
+                                        </div>
                                     ) : (
                                         <>
                                             <button onClick={handleLoginRedirect} className="w-full text-center py-2 text-gray-600 font-medium">Masuk</button>
@@ -476,6 +528,25 @@ export default function Home() {
                                     )}
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Welcome Modal */}
+                {showWelcome && user && (
+                    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+                        <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-in zoom-in-95 duration-300 relative">
+                            <button onClick={() => setShowWelcome(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                                <i className="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                            <div className="w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span className="text-3xl">🎉</span>
+                            </div>
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">Selamat Datang!</h3>
+                            <p className="text-gray-600 mb-6">Halo, <span className="font-semibold text-pink-600">{user.email?.split('@')[0]}</span>! Senang bertemu Anda kembali.</p>
+                            <button onClick={() => setShowWelcome(false)} className="w-full py-2.5 bg-pink-600 text-white font-bold rounded-xl hover:bg-pink-700 transition">
+                                Mulai Buat Undangan
+                            </button>
                         </div>
                     </div>
                 )}

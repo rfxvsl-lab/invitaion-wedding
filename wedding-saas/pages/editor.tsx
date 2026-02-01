@@ -166,9 +166,9 @@ export default function EditorPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col lg:flex-row bg-[#F8FAFC] font-sans selection:bg-indigo-100 selection:text-indigo-900">
+        <div className="min-h-screen flex flex-col lg:flex-row bg-[#F8FAFC] font-sans selection:bg-pink-100 selection:text-pink-900">
             {/* Sidebar - top on mobile, left on desktop */}
-            <div className="w-full lg:w-[420px] lg:flex-shrink-0 z-30 lg:h-screen lg:sticky lg:top-0 shadow-2xl shadow-indigo-100/50">
+            <div className="w-full lg:w-[420px] lg:flex-shrink-0 z-30 lg:h-screen lg:sticky lg:top-0 shadow-2xl shadow-pink-100/50">
                 <EditorSidebar data={data} onUpdate={handleUpdate} />
             </div>
 
@@ -188,22 +188,22 @@ export default function EditorPage() {
                         </div>
 
                         {/* Domain Preview (Clean) */}
-                        <div className="hidden sm:flex items-center gap-2 text-slate-500 text-xs font-medium bg-slate-100/50 px-3 py-1.5 rounded-full border border-slate-200">
-                            <Globe size={12} /> <span className="truncate max-w-[150px] lg:max-w-none">weddinginvitation-18.vercel.app/{data.metadata.slug}</span>
+                        <div className="hidden sm:flex items-center text-slate-500 text-xs font-medium bg-slate-100/50 px-3 py-1.5 rounded-full border border-slate-200">
+                            <span className="truncate max-w-[150px] lg:max-w-none">weddinginvitation-18.vercel.app/{data.metadata.slug}</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
                         <span className="hidden sm:flex text-[10px] font-bold uppercase text-slate-400 items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-100 shadow-sm">
-                            {saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin text-indigo-500" /> :
+                            {saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin text-pink-500" /> :
                                 saveStatus === 'error' ? <span className="text-red-500">Error!</span> :
                                     <CheckCircle size={12} className={saveStatus === 'saved' ? 'text-emerald-500' : 'text-amber-500'} />}
                             <span className="tracking-wider">{saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Failed' : 'Unsaved'}</span>
                         </span>
                         <button
                             onClick={() => { saveToSupabase(); setShowPublishModal(true); }}
-                            className="group relative overflow-hidden bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:shadow-xl hover:shadow-indigo-500/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
+                            className="group relative overflow-hidden bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:shadow-xl hover:shadow-pink-500/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
                         >
-                            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-pink-500 to-rose-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
                             <span className="relative flex items-center gap-2">
                                 <Save size={14} /> Publish
                             </span>
@@ -314,6 +314,6 @@ export default function EditorPage() {
                 {/* Mobile Spacing for scrolling */}
                 <div className="h-10 lg:hidden"></div>
             </main>
-        </div>
+        </div >
     );
 }
