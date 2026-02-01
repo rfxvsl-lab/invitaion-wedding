@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             setSession(session);
             setUser(session?.user ?? null);
-            setIsAdmin(session?.user?.email === "mhmmadridho.64@gmail.com");
+            setIsAdmin(session?.user?.email?.toLowerCase() === "mhmmadridho.64@gmail.com");
             setLoading(false);
         };
 
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
             setUser(session?.user ?? null);
-            setIsAdmin(session?.user?.email === "mhmmadridho.64@gmail.com");
+            setIsAdmin(session?.user?.email?.toLowerCase() === "mhmmadridho.64@gmail.com");
             setLoading(false);
         });
 

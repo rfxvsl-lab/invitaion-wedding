@@ -374,11 +374,78 @@ export default function Home() {
                 </section>
 
                 {/* Footer */}
-                <footer className="bg-slate-900 text-white pt-20 pb-10 border-t border-slate-800">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                        <p className="text-slate-400 mb-4">{t('footer_desc', 'Platform undangan digital.')}</p>
-                        <p className="text-slate-500 text-sm">{t('footer_copy', '© 2024 UndanganKita.')}</p>
-                    </div>
+                <footer className="bg-slate-900 text-slate-300 pt-20 pb-10 border-t border-slate-800">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                            {/* Brand Column */}
+                            <div className="space-y-6">
+                                <div className="flex items-center gap-2">
+                                    <i className="fa-solid fa-envelope-open-text text-2xl text-pink-600"></i>
+                                    <span className="font-serif text-xl font-bold text-white tracking-tight">Undangan<span className="text-pink-600">Kita</span></span>
+                                </div>
+                                <p className="text-sm leading-relaxed text-slate-400">
+                                    {t('footer_desc', 'Platform pembuatan undangan digital berbasis website yang praktis, elegan, dan ramah lingkungan.')}
+                                </p>
+                                <div className="flex gap-4">
+                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition duration-300">
+                                        <i className="fa-brands fa-instagram"></i>
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition duration-300">
+                                        <i className="fa-brands fa-tiktok"></i>
+                                    </a>
+                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition duration-300">
+                                        <i className="fa-brands fa-youtube"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* Menu Column */}
+                            <div>
+                                <h4 className="text-white font-bold text-lg mb-6">{t('footer_menu_title', 'Menu')}</h4>
+                                <ul className="space-y-4 text-sm">
+                                    <li><a href="#home" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Beranda</a></li>
+                                    <li><a href="#tema" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Katalog Tema</a></li>
+                                    <li><a href="#harga" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Harga</a></li>
+                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Tentang Kami</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Legal Column */}
+                            <div>
+                                <h4 className="text-white font-bold text-lg mb-6">{t('footer_legal_title', 'Legal')}</h4>
+                                <ul className="space-y-4 text-sm">
+                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Syarat & Ketentuan</a></li>
+                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Kebijakan Privasi</a></li>
+                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Refund Policy</a></li>
+                                </ul>
+                            </div>
+
+                            {/* Contact Column */}
+                            <div>
+                                <h4 className="text-white font-bold text-lg mb-6">{t('footer_contact_title', 'Hubungi Kami')}</h4>
+                                <div className="space-y-6">
+                                    <div className="flex gap-4 items-start">
+                                        <div className="mt-1"><i className="fa-brands fa-whatsapp text-green-500 text-xl"></i></div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">WhatsApp</p>
+                                            <p className="text-white font-medium hover:text-green-500 cursor-pointer transition">{t('contact_wa', '+62 812 3456 7890')}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-4 items-start">
+                                        <div className="mt-1"><i className="fa-regular fa-envelope text-pink-500 text-xl"></i></div>
+                                        <div>
+                                            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Email</p>
+                                            <p className="text-white font-medium hover:text-pink-500 cursor-pointer transition">{t('contact_email', 'hello@undangankita.com')}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+                            <p>{t('footer_copy', '© 2024 UndanganKita. All rights reserved.')}</p>
+                            <p dangerouslySetInnerHTML={{ __html: t('footer_bottom_right', 'Made with <span class="text-red-500">❤</span> in Indonesia.') }}></p>
+                        </div>
                 </footer>
 
                 {/* Preview Modal */}
