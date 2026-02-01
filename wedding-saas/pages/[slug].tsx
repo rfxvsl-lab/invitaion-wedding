@@ -14,6 +14,7 @@ import DarkLuxury from '../templates/DarkLuxury';
 import PremiumPeppy from '../templates/PremiumPeppy';
 import GamerQuest from '../templates/GamerQuest';
 import MaroonVintage from '../templates/MaroonVintage';
+import AdatBone from '../templates/AdatBone';
 
 interface InvitationPageProps {
     data: InvitationData | null;
@@ -41,6 +42,7 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
             case 'premium-peppy': return <PremiumPeppy data={data} />;
             case 'gamer-quest': return <GamerQuest data={data} />;
             case 'maroon-vintage': return <MaroonVintage data={data} />;
+            case 'adat-bone': return <AdatBone data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };
