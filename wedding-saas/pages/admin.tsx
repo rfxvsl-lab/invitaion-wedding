@@ -14,7 +14,7 @@ export default function Admin() {
 
     useEffect(() => {
         if (!loading) {
-            if (!user || user.email !== 'mhmmadridho.64@gmail.com') {
+            if (!user || user.email !== 'mhmmadridho64@gmail.com') {
                 router.push('/');
             } else {
                 fetchContent();
@@ -51,7 +51,7 @@ export default function Admin() {
         }
     };
 
-    if (loading || !user || user.email !== 'mhmmadridho.64@gmail.com') {
+    if (loading || !user || user.email !== 'mhmmadridho64@gmail.com') {
         return <div className="p-10 text-center">Loading Admin Panel...</div>;
     }
 

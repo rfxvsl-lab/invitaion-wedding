@@ -111,7 +111,7 @@ export default function Home() {
                                     </a>
                                 ))}
                                 {/* Admin Link (Only for specific user) */}
-                                {user?.email === 'mhmmadridho.64@gmail.com' && (
+                                {user?.email === 'mhmmadridho64@gmail.com' && (
                                     <button onClick={() => router.push('/admin')} className="text-red-600 font-bold hover:text-red-800">
                                         Admin Panel
                                     </button>
