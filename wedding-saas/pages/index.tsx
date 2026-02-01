@@ -18,12 +18,6 @@ export default function Home({ initialContent }: HomeProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [faqActive, setFaqActive] = useState<number | null>(1);
-    const [previewModal, setPreviewModal] = useState({
-        open: false,
-        title: '',
-        category: '',
-        image: '',
-    });
     const [showWelcome, setShowWelcome] = useState(false);
 
     // Use initialContent from Server
@@ -68,18 +62,8 @@ export default function Home({ initialContent }: HomeProps) {
 
     const t = (key: string, fallback: string) => content[key] || fallback;
 
-    const openPreview = (title: string, category: string, image: string) => {
-        setPreviewModal({
-            open: true,
-            title,
-            category,
-            image,
-        });
-    };
 
-    const closePreview = () => {
-        setPreviewModal({ ...previewModal, open: false });
-    };
+
 
     const handleCreateInvitation = () => {
         if (user) {
@@ -242,9 +226,9 @@ export default function Home({ initialContent }: HomeProps) {
                                     <a href="#tema" className="px-8 py-4 bg-pink-600 text-white rounded-full font-bold shadow-xl shadow-pink-500/20 hover:bg-pink-800 transition transform hover:-translate-y-1 text-center">
                                         {t('hero_btn_primary', 'Lihat Tema')}
                                     </a>
-                                    <button onClick={() => openPreview('Floral Rustic Elegance', 'Floral, Modern', 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=800&auto=format&fit=crop')} className="px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-full font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2 group">
+                                    <a href="#tema" className="px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-full font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2 group">
                                         <i className="fa-regular fa-circle-play text-xl group-hover:text-pink-600 transition"></i> {t('hero_btn_secondary', 'Lihat Demo')}
-                                    </button>
+                                    </a>
                                 </div>
                                 <div className="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-500 text-sm">
                                     <div className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> {t('hero_feature_1', 'Proses Cepat')}</div>
@@ -306,7 +290,9 @@ export default function Home({ initialContent }: HomeProps) {
                                 <div className="relative overflow-hidden aspect-[4/5]">
                                     <img src="https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Theme" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                        <button onClick={() => openPreview('Floral Rustic Elegance', 'Floral, Modern', 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=800&auto=format&fit=crop')} className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2"><i className="fa-solid fa-eye"></i> Preview</button>
+                                        <a href="/demo/rustic-wood" target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
+                                            <i className="fa-solid fa-eye"></i> Live Demo
+                                        </a>
                                     </div>
                                 </div>
                                 <div className="p-6">
@@ -318,7 +304,9 @@ export default function Home({ initialContent }: HomeProps) {
                                 <div className="relative overflow-hidden aspect-[4/5]">
                                     <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Theme" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                        <button onClick={() => openPreview('Clean White Minimalist', 'Minimalis', 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800&auto=format&fit=crop')} className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2"><i className="fa-solid fa-eye"></i> Preview</button>
+                                        <a href="/demo/classic-serif" target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
+                                            <i className="fa-solid fa-eye"></i> Live Demo
+                                        </a>
                                     </div>
                                 </div>
                                 <div className="p-6">
@@ -330,7 +318,9 @@ export default function Home({ initialContent }: HomeProps) {
                                 <div className="relative overflow-hidden aspect-[4/5]">
                                     <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Theme" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                        <button onClick={() => openPreview('Golden Luxury Night', 'Elegan, Mewah', 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop')} className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2"><i className="fa-solid fa-eye"></i> Preview</button>
+                                        <a href="/demo/dark-luxury" target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
+                                            <i className="fa-solid fa-eye"></i> Live Demo
+                                        </a>
                                     </div>
                                 </div>
                                 <div className="p-6">
@@ -338,6 +328,7 @@ export default function Home({ initialContent }: HomeProps) {
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </section>
 
@@ -484,33 +475,8 @@ export default function Home({ initialContent }: HomeProps) {
                     </div>
                 </footer>
 
-                {/* Preview Modal */}
-                {previewModal.open && (
-                    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm"
-                        onClick={closePreview}>
-                        <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative" onClick={(e) => e.stopPropagation()}>
-                            <button onClick={closePreview} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 backdrop-blur text-gray-800 hover:bg-gray-100 flex items-center justify-center transition shadow-md">
-                                <i className="fa-solid fa-xmark text-xl"></i>
-                            </button>
-                            <div className="w-full md:w-1/2 bg-gray-100 relative h-64 md:h-auto">
-                                <img src={previewModal.image} alt={previewModal.title} className="w-full h-full object-cover" />
-                            </div>
-                            <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                                <div className="mb-6">
-                                    <span className="inline-block py-1 px-3 rounded-full bg-pink-100 text-pink-600 text-xs font-bold tracking-wider uppercase mb-3">{previewModal.category}</span>
-                                    <h3 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 leading-tight">{previewModal.title}</h3>
-                                </div>
-                                <div className="flex flex-col gap-3">
-                                    {user ? (
-                                        <button onClick={handleCreateInvitation} className="w-full py-4 px-6 bg-pink-600 text-white font-bold rounded-xl hover:bg-pink-800 transition">Gunakan Tema Ini</button>
-                                    ) : (
-                                        <button onClick={handleLoginRedirect} className="w-full py-4 px-6 bg-pink-600 text-white font-bold rounded-xl hover:bg-pink-800 transition">Login untuk Gunakan</button>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
+
+
 
                 {/* Welcome Modal */}
                 {showWelcome && user && (
