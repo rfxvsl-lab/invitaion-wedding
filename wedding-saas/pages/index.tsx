@@ -446,6 +446,7 @@ export default function Home() {
                             <p>{t('footer_copy', '© 2024 UndanganKita. All rights reserved.')}</p>
                             <p dangerouslySetInnerHTML={{ __html: t('footer_bottom_right', 'Made with <span class="text-red-500">❤</span> in Indonesia.') }}></p>
                         </div>
+                    </div>
                 </footer>
 
                 {/* Preview Modal */}
