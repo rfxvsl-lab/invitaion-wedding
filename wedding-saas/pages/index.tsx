@@ -285,48 +285,32 @@ export default function Home({ initialContent }: HomeProps) {
                         </div>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {/* Item 1 */}
-                            <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 bg-white">
-                                <div className="relative overflow-hidden aspect-[4/5]">
-                                    <img src="https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Theme" />
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                        <a href="/demo/rustic-wood" target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
-                                            <i className="fa-solid fa-eye"></i> Live Demo
-                                        </a>
+                            {[1, 2, 3].map((num) => {
+                                const idKey = `theme_${num}_id`;
+                                const titleKey = `theme_${num}_title`;
+                                const descKey = `theme_${num}_desc`;
+                                const imgKey = `theme_${num}_img`;
+
+                                const id = content[idKey] || (num === 1 ? 'rustic-wood' : num === 2 ? 'classic-serif' : 'dark-luxury');
+                                const title = content[titleKey] || (num === 1 ? 'Floral Rustic Elegance' : num === 2 ? 'Clean White Minimalist' : 'Golden Luxury Night');
+                                const img = content[imgKey] || (num === 1 ? 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=800&auto=format&fit=crop' : num === 2 ? 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop');
+
+                                return (
+                                    <div key={num} className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 bg-white">
+                                        <div className="relative overflow-hidden aspect-[4/5]">
+                                            <img src={img} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt={title} />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
+                                                <a href={`/demo/${id}`} target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
+                                                    <i className="fa-solid fa-eye"></i> Live Demo
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div className="p-6">
+                                            <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition">{title}</h3>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition">Floral Rustic Elegance</h3>
-                                </div>
-                            </div>
-                            {/* Item 2 */}
-                            <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 bg-white">
-                                <div className="relative overflow-hidden aspect-[4/5]">
-                                    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Theme" />
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                        <a href="/demo/classic-serif" target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
-                                            <i className="fa-solid fa-eye"></i> Live Demo
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition">Clean White Minimalist</h3>
-                                </div>
-                            </div>
-                            {/* Item 3 */}
-                            <div className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 bg-white">
-                                <div className="relative overflow-hidden aspect-[4/5]">
-                                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Theme" />
-                                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                        <a href="/demo/dark-luxury" target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
-                                            <i className="fa-solid fa-eye"></i> Live Demo
-                                        </a>
-                                    </div>
-                                </div>
-                                <div className="p-6">
-                                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition">Golden Luxury Night</h3>
-                                </div>
-                            </div>
+                                );
+                            })}
                         </div>
 
                     </div>

@@ -4,6 +4,21 @@ import { useAuth } from '@/components/AuthProvider';
 import { supabase } from '@/lib/supabase';
 import Head from 'next/head';
 import { Save, Check, AlertCircle, Loader2, Plus, ArrowLeft } from 'lucide-react';
+import AdminImageUploader from '@/components/AdminImageUploader';
+
+// List of available templates
+const AVAILABLE_TEMPLATES = [
+    { id: 'classic-serif', name: 'Classic Serif' },
+    { id: 'rustic-wood', name: 'Rustic Wood' },
+    { id: 'dark-luxury', name: 'Dark Luxury' },
+    { id: 'botanical-line', name: 'Botanical Line' },
+    { id: 'modern-arch', name: 'Modern Arch' },
+    { id: 'maroon-vintage', name: 'Maroon Vintage' },
+    { id: 'elegant-vanilla', name: 'Elegant Vanilla' },
+    { id: 'adat-bone', name: 'Adat Bone' },
+    { id: 'gamer-quest', name: 'Gamer Quest' },
+    { id: 'premium-peppy', name: 'Premium Peppy' },
+];
 
 // Simple Toast Component
 const Toast = ({ message, type, onClose }: { message: string, type: 'success' | 'error' | 'loading', onClose: () => void }) => (
@@ -45,7 +60,7 @@ export default function Admin() {
     };
 
     const fetchContent = async () => {
-        const { data, error } = await supabase.from('site_content').select('*').order('section', { ascending: true });
+        const { data, error } = await supabase.from('site_content').select('*').order('section', { ascending: true }).order('key', { ascending: true });
         if (data) {
             setContent(data);
             setOriginalContent(JSON.parse(JSON.stringify(data)));
@@ -131,6 +146,7 @@ export default function Admin() {
                                     >
                                         <option value="hero">Hero</option>
                                         <option value="features">Features</option>
+                                        <option value="themes">Themes Showcase (New)</option>
                                         <option value="pricing">Pricing</option>
                                         <option value="faq">FAQ</option>
                                         <option value="footer">Footer</option>
@@ -181,6 +197,9 @@ export default function Admin() {
                                     {items.map((item) => {
                                         const changed = hasChanges(item.id);
                                         const isSaving = savingId === item.id;
+                                        const isImageKey = item.key.endsWith('_img');
+                                        const isIdKey = item.key.endsWith('_id') && section === 'themes';
+
                                         return (
                                             <div key={item.id} className={`p-4 rounded-xl border border-transparent transition-all ${changed ? 'bg-amber-50 border-amber-200' : 'hover:bg-slate-50'}`}>
                                                 <div className="flex flex-col gap-3">
@@ -197,12 +216,38 @@ export default function Admin() {
                                                             </button>
                                                         )}
                                                     </div>
-                                                    <textarea
-                                                        className={`w-full bg-transparent border-0 p-0 text-sm font-medium text-slate-700 focus:ring-0 resize-none ${changed ? 'text-slate-900' : ''}`}
-                                                        value={item.value}
-                                                        onChange={(e) => handleLocalChange(item.id, e.target.value)}
-                                                        rows={item.value.length > 80 ? 3 : 1}
-                                                    />
+
+                                                    {/* RENDER INPUT BASED ON TYPE */}
+                                                    {/* 1. IMAGE UPLOAD */}
+                                                    {isImageKey ? (
+                                                        <AdminImageUploader
+                                                            currentUrl={item.value}
+                                                            onUploadComplete={(url) => {
+                                                                handleLocalChange(item.id, url);
+                                                                // Auto-save logic could go here, but let's stick to manual save for safety or trigger save immediate
+                                                                // Let's trigger local change, then user must click save (safer)
+                                                            }}
+                                                        />
+                                                    ) : isIdKey ? (
+                                                        /* 2. THEME DROPDOWN */
+                                                        <select
+                                                            className={`w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition ${changed ? 'text-slate-900 font-bold' : ''}`}
+                                                            value={item.value}
+                                                            onChange={(e) => handleLocalChange(item.id, e.target.value)}
+                                                        >
+                                                            {AVAILABLE_TEMPLATES.map(t => (
+                                                                <option key={t.id} value={t.id}>{t.name} ({t.id})</option>
+                                                            ))}
+                                                        </select>
+                                                    ) : (
+                                                        /* 3. DEFAULT TEXTAREA */
+                                                        <textarea
+                                                            className={`w-full bg-transparent border-0 p-0 text-sm font-medium text-slate-700 focus:ring-0 resize-none ${changed ? 'text-slate-900' : ''}`}
+                                                            value={item.value}
+                                                            onChange={(e) => handleLocalChange(item.id, e.target.value)}
+                                                            rows={item.value.length > 80 ? 3 : 1}
+                                                        />
+                                                    )}
                                                 </div>
                                             </div>
                                         );
@@ -222,3 +267,4 @@ export default function Admin() {
         </div>
     );
 }
+
