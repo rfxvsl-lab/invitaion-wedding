@@ -12,13 +12,13 @@ interface EditorSidebarProps {
 // Moved Input component outside to prevent re-mounting on every render
 const Input = ({ label, value, onChange, placeholder }: { label: string, value: any, onChange: (val: string) => void, placeholder?: string }) => (
     <div className="mb-5 group">
-        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5 group-focus-within:text-indigo-500 transition-colors">{label}</label>
+        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5 group-focus-within:text-pink-500 transition-colors">{label}</label>
         <div className="relative">
             <input
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all shadow-sm group-hover:bg-white"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-pink-500/10 focus:border-pink-500 outline-none transition-all shadow-sm group-hover:bg-white"
             />
             <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-transparent group-hover:ring-slate-300 pointer-events-none transition-colors" />
         </div>
@@ -27,7 +27,7 @@ const Input = ({ label, value, onChange, placeholder }: { label: string, value: 
 
 const SectionHeader = ({ icon: Icon, title }: { icon: any, title: string }) => (
     <div className="flex items-center gap-2 mb-6 pb-2 border-b border-slate-100">
-        <div className="p-1.5 bg-indigo-50 rounded-lg text-indigo-600">
+        <div className="p-1.5 bg-pink-50 rounded-lg text-pink-600">
             <Icon size={14} strokeWidth={2.5} />
         </div>
         <h3 className="text-xs font-black text-slate-700 uppercase tracking-wider">{title}</h3>
@@ -45,10 +45,10 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
         <aside className="w-full h-[50vh] lg:h-screen flex flex-col bg-white border-b lg:border-b-0 lg:border-r border-gray-200 z-30">
             {/* Logo area for desktop */}
             <div className="hidden lg:flex items-center gap-3 px-6 py-5 border-b border-gray-100 bg-white">
-                <div className="w-8 h-8 bg-indigo-600 rounded-lg shadow-lg shadow-indigo-200 flex items-center justify-center">
+                <div className="w-8 h-8 bg-pink-600 rounded-lg shadow-lg shadow-pink-200 flex items-center justify-center">
                     <Settings className="text-white animate-spin-slow" size={20} strokeWidth={2.5} />
                 </div>
-                <span className="font-bold text-slate-800 tracking-tight">RFX Builder<span className="text-indigo-600">.</span></span>
+                <span className="font-bold text-slate-800 tracking-tight">UndanganKita<span className="text-pink-600">.</span></span>
             </div>
 
             {/* Navigation Tabs */}
@@ -60,10 +60,10 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                             key={tab}
                             onClick={() => setActiveTab(tab as any)}
                             className={`flex-1 min-w-[70px] py-4 text-[10px] font-bold uppercase tracking-widest transition-all relative group
-                                ${isActive ? 'text-indigo-600' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'}`}
+                                ${isActive ? 'text-pink-600' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'}`}
                         >
                             {tab}
-                            {isActive && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full shadow-[0_-2px_6px_rgba(79,70,229,0.3)]"></span>}
+                            {isActive && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-pink-600 rounded-t-full shadow-[0_-2px_6px_rgba(236,72,153,0.3)]"></span>}
                         </button>
                     )
                 })}
@@ -106,7 +106,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
 
                         <div className="p-4 bg-slate-50 rounded-xl mb-6 ring-1 ring-slate-100">
                             <div className="flex items-center gap-2 mb-4">
-                                <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
+                                <div className="w-1.5 h-1.5 rounded-full bg-pink-500"></div>
                                 <p className="text-xs font-bold text-slate-700">AKAD NIKAH</p>
                             </div>
                             <div className="space-y-1">
@@ -119,7 +119,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             onChange={(e) => onUpdate('content.events.akad.enabled', e.target.checked)}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-600"></div>
                                     </label>
                                 </div>
 
@@ -150,7 +150,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             onChange={(e) => onUpdate('content.events.resepsi.enabled', e.target.checked)}
                                             className="sr-only peer"
                                         />
-                                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-600"></div>
                                     </label>
                                 </div>
 
@@ -219,10 +219,10 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         onClick={() => onUpdate('metadata.theme_id', theme)}
                                         className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200
                                             ${data.metadata.theme_id === theme
-                                                ? 'border-indigo-500 bg-indigo-50 text-indigo-700 shadow-sm'
+                                                ? 'border-pink-500 bg-pink-50 text-pink-700 shadow-sm'
                                                 : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
                                     >
-                                        <div className={`w-3 h-3 rounded-full mb-2 ${data.metadata.theme_id === theme ? 'bg-indigo-500' : 'bg-slate-200'}`}></div>
+                                        <div className={`w-3 h-3 rounded-full mb-2 ${data.metadata.theme_id === theme ? 'bg-pink-500' : 'bg-slate-200'}`}></div>
                                         {theme.replace('-', ' ')}
                                     </button>
                                 ))}
@@ -252,9 +252,9 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                             {data.engagement.gifts.map((gift, idx) => (
                                 <div key={idx} className="relative p-4 bg-slate-50 rounded-xl border border-slate-100 mb-3 group hover:border-slate-300 transition-colors">
                                     <button onClick={() => onUpdate('engagement.gifts', data.engagement.gifts.filter((_, i) => i !== idx))} className="absolute top-3 right-3 text-slate-400 hover:text-red-500 p-1 bg-white rounded-md shadow-sm opacity-0 group-hover:opacity-100 transition-all"><Trash2 size={14} /></button>
-                                    <input className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs font-medium mb-2 focus:ring-2 focus:ring-indigo-500/20 outline-none" value={gift.bank} onChange={(e) => { const n = [...data.engagement.gifts]; n[idx].bank = e.target.value; onUpdate('engagement.gifts', n) }} placeholder="Nama Bank" />
-                                    <input className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs font-medium mb-2 focus:ring-2 focus:ring-indigo-500/20 outline-none" value={gift.acc_number} onChange={(e) => { const n = [...data.engagement.gifts]; n[idx].acc_number = e.target.value; onUpdate('engagement.gifts', n) }} placeholder="No. Rekening" />
-                                    <input className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500/20 outline-none" value={gift.holder} onChange={(e) => { const n = [...data.engagement.gifts]; n[idx].holder = e.target.value; onUpdate('engagement.gifts', n) }} placeholder="Atas Nama" />
+                                    <input className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs font-medium mb-2 focus:ring-2 focus:ring-pink-500/20 outline-none" value={gift.bank} onChange={(e) => { const n = [...data.engagement.gifts]; n[idx].bank = e.target.value; onUpdate('engagement.gifts', n) }} placeholder="Nama Bank" />
+                                    <input className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs font-medium mb-2 focus:ring-2 focus:ring-pink-500/20 outline-none" value={gift.acc_number} onChange={(e) => { const n = [...data.engagement.gifts]; n[idx].acc_number = e.target.value; onUpdate('engagement.gifts', n) }} placeholder="No. Rekening" />
+                                    <input className="w-full bg-white border border-slate-200 rounded-lg p-2.5 text-xs font-medium focus:ring-2 focus:ring-pink-500/20 outline-none" value={gift.holder} onChange={(e) => { const n = [...data.engagement.gifts]; n[idx].holder = e.target.value; onUpdate('engagement.gifts', n) }} placeholder="Atas Nama" />
                                 </div>
                             ))}
                             <button onClick={() => onUpdate('engagement.gifts', [...data.engagement.gifts, { bank: '', acc_number: '', holder: '' }])} className="w-full py-3 border-2 border-dashed border-slate-200 text-slate-500 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-700 transition-all"><Plus size={16} /> Tambah Rekening</button>
@@ -270,8 +270,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                             <SectionHeader icon={MessageSquare} title="Konfigurasi RSVP" />
-                            <div className="flex items-center justify-between mb-4 p-3 bg-indigo-50 rounded-xl">
-                                <span className="text-xs font-bold text-indigo-900">Aktifkan Fitur RSVP</span>
+                            <div className="flex items-center justify-between mb-4 p-3 bg-pink-50 rounded-xl">
+                                <span className="text-xs font-bold text-pink-900">Aktifkan Fitur RSVP</span>
                                 <label className="relative inline-flex items-center cursor-pointer">
                                     <input
                                         type="checkbox"
@@ -279,7 +279,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         onChange={(e) => onUpdate('engagement.rsvp', e.target.checked)}
                                         className="sr-only peer"
                                     />
-                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600"></div>
+                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-pink-600"></div>
                                 </label>
                             </div>
                             {data.engagement.rsvp && (
@@ -292,7 +292,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             onChange={(e) => onUpdate('engagement.rsvp_settings.message_template', e.target.value)}
                                             placeholder="Halo, saya [Nama]..."
                                             rows={3}
-                                            className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:bg-white focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all resize-none shadow-sm"
+                                            className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:bg-white focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition-all resize-none shadow-sm"
                                         />
                                         <p className="text-[10px] text-slate-400 mt-2 font-medium">Gunakan text [Nama] dan [Jumlah] sebagai placeholder.</p>
                                     </div>
@@ -306,13 +306,13 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                         <SectionHeader icon={Settings} title="Pengaturan Umum" />
 
-                        <div className="mb-8 bg-gradient-to-br from-indigo-50 to-white p-5 rounded-2xl border border-indigo-100 shadow-sm">
+                        <div className="mb-8 bg-gradient-to-br from-pink-50 to-white p-5 rounded-2xl border border-pink-100 shadow-sm">
                             <div className="flex items-center gap-2 mb-3">
-                                <Globe size={14} className="text-indigo-500" />
-                                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">LINK UNDANGAN (SLUG)</p>
+                                <Globe size={14} className="text-pink-500" />
+                                <p className="text-[10px] font-black text-pink-400 uppercase tracking-widest">LINK UNDANGAN (SLUG)</p>
                             </div>
                             <Input label="" value={getValue('metadata.slug')} onChange={(v) => onUpdate('metadata.slug', v.toLowerCase().replace(/[^a-z0-9-]/g, '-'))} placeholder="contoh: romeo-juliet" />
-                            <p className="text-[10px] text-indigo-400/70 mt-1 font-medium italic">Hanya huruf kecil, angka, dan strip (-).</p>
+                            <p className="text-[10px] text-pink-400/70 mt-1 font-medium italic">Hanya huruf kecil, angka, dan strip (-).</p>
                         </div>
 
                         <div className="mb-6">
