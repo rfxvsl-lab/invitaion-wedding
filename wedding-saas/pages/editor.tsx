@@ -15,6 +15,7 @@ import PremiumPeppy from '../templates/PremiumPeppy';
 import GamerQuest from '../templates/GamerQuest';
 import MaroonVintage from '../templates/MaroonVintage';
 import AdatBone from '../templates/AdatBone';
+import ElegantVanilla from '../templates/ElegantVanilla';
 
 // Initial Data
 const INITIAL_DATA: InvitationData = {
@@ -159,6 +160,7 @@ export default function EditorPage() {
             case 'gamer-quest': return <GamerQuest data={data} />;
             case 'maroon-vintage': return <MaroonVintage data={data} />;
             case 'adat-bone': return <AdatBone data={data} />;
+            case 'elegant-vanilla': return <ElegantVanilla data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };
