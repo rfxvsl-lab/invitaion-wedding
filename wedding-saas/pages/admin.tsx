@@ -23,7 +23,7 @@ export default function Admin() {
     }, [user, loading, router]);
 
     const fetchContent = async () => {
-        const { data, error } = await supabase.from('site_content').select('*').order('created_at', { ascending: false });
+        const { data, error } = await supabase.from('site_content').select('*').order('section', { ascending: true });
         if (data) setContent(data);
     };
 
@@ -89,27 +89,36 @@ export default function Admin() {
                     </form>
                 </div>
 
-                {/* List Content */}
-                <div className="bg-white p-6 rounded-xl shadow-sm">
-                    <h2 className="text-xl font-bold mb-4">Manage Site Content</h2>
-                    {message && <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 rounded">{message}</div>}
-
-                    <div className="space-y-4">
-                        {content.map((item) => (
-                            <div key={item.id} className="border-b pb-4">
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">{item.key}</label>
-                                <div className="flex gap-4">
-                                    <textarea
-                                        className="w-full border p-2 rounded"
-                                        defaultValue={item.value}
-                                        onBlur={(e) => handleUpdate(item.id, e.target.value)}
-                                    />
-                                </div>
-                                <p className="text-xs text-gray-400 mt-1">Click outside to save.</p>
+                {/* List Content Grouped by Section */}
+                <div className="space-y-8">
+                    {Object.entries(content.reduce((acc, item) => {
+                        (acc[item.section] = acc[item.section] || []).push(item);
+                        return acc;
+                    }, {} as Record<string, any[]>)).map(([section, items]) => (
+                        <div key={section} className="bg-white p-6 rounded-xl shadow-sm">
+                            <h2 className="text-xl font-bold mb-4 capitalize border-b pb-2">{section} Section</h2>
+                            <div className="space-y-4">
+                                {items.map((item) => (
+                                    <div key={item.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center border-b border-gray-50 pb-4 last:border-0 hover:bg-gray-50 p-2 rounded transition">
+                                        <div className="md:col-span-1">
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">{item.key}</label>
+                                            <p className="text-xs text-gray-400 font-mono truncate">{item.id}</p>
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <textarea
+                                                className="w-full border border-gray-200 p-2 rounded focus:ring-2 focus:ring-pink-500 focus:border-transparent transition text-sm"
+                                                defaultValue={item.value}
+                                                rows={item.value.length > 50 ? 3 : 1}
+                                                onBlur={(e) => handleUpdate(item.id, e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                        {content.length === 0 && <p className="text-gray-500">No content found.</p>}
-                    </div>
+                        </div>
+                    ))}
+
+                    {content.length === 0 && <div className="text-center p-10 bg-white rounded-xl text-gray-500">No content found. Please run the seed SQL.</div>}
                 </div>
             </div>
         </div>
