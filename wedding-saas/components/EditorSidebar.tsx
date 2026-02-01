@@ -227,6 +227,24 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                     </button>
                                 ))}
                             </div>
+
+                            {/* MAROON VINTAGE SPECIAL SETTINGS */}
+                            {data.metadata.theme_id === 'maroon-vintage' && (
+                                <div className="mb-4 p-3 bg-rose-50 border border-rose-100 rounded-xl animate-in fade-in slide-in-from-top-2">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                                        <p className="text-[10px] font-bold text-rose-700 uppercase tracking-wider">Maroon Vintage Config</p>
+                                    </div>
+                                    <Input
+                                        label="Background Image URL (Optional)"
+                                        value={getValue('metadata.custom_bg_url') || ''}
+                                        onChange={(v) => onUpdate('metadata.custom_bg_url', v)}
+                                        placeholder="https://..."
+                                    />
+                                    <p className="text-[10px] text-rose-400 mt-1">Biarkan kosong untuk menggunakan background default.</p>
+                                </div>
+                            )}
+
                             <Input label="Musik Latar (MP3 URL)" value={getValue('metadata.music_url')} onChange={(v) => onUpdate('metadata.music_url', v)} placeholder="https://..." />
                         </div>
 

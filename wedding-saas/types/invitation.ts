@@ -27,6 +27,7 @@ export interface InvitationData {
         slug: string;
         theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest' | 'maroon-vintage';
         music_url: string;
+        custom_bg_url?: string; // Optional custom background
         is_active: boolean;
     };
     content: {
