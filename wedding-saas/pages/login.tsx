@@ -47,7 +47,12 @@ export default function Login() {
         setLoading(true);
         setMessage('');
         try {
-            const { error } = await supabase.auth.signInWithOtp({ email });
+            const { error } = await supabase.auth.signInWithOtp({
+                email,
+                options: {
+                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://weddinginvitation-18.vercel.app',
+                }
+            });
             if (error) throw error;
             setMessage('Link login telah dikirim ke email Anda!');
         } catch (error: any) {
@@ -66,6 +71,9 @@ export default function Login() {
             const { error } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://weddinginvitation-18.vercel.app',
+                }
             });
 
             if (error) throw error;
