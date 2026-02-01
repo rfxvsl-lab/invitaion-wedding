@@ -91,10 +91,10 @@ export default function Admin() {
 
                 {/* List Content Grouped by Section */}
                 <div className="space-y-8">
-                    {Object.entries(content.reduce((acc, item) => {
+                    {(Object.entries(content.reduce((acc, item) => {
                         (acc[item.section] = acc[item.section] || []).push(item);
                         return acc;
-                    }, {} as Record<string, any[]>)).map(([section, items]) => (
+                    }, {} as Record<string, any[]>)) as [string, any[]][]).map(([section, items]) => (
                         <div key={section} className="bg-white p-6 rounded-xl shadow-sm">
                             <h2 className="text-xl font-bold mb-4 capitalize border-b pb-2">{section} Section</h2>
                             <div className="space-y-4">
