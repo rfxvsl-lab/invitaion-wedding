@@ -183,7 +183,6 @@ export default function EditorPage() {
 
                         {/* Brand Logo */}
                         <div className="flex items-center gap-2">
-                            <i className="fa-solid fa-envelope-open-text text-2xl text-pink-600"></i>
                             <span className="font-serif text-xl font-bold text-gray-900 tracking-tight hidden sm:inline">Undangan<span className="text-pink-600">Kita</span></span>
                         </div>
 

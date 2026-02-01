@@ -43,10 +43,15 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
 
     return (
         <aside className="w-full h-[50vh] lg:h-screen flex flex-col bg-white border-b lg:border-b-0 lg:border-r border-gray-200 z-30">
-            {/* Logo area for desktop */}
             <div className="hidden lg:flex items-center gap-3 px-6 py-5 border-b border-gray-100 bg-white">
-                <div className="w-8 h-8 bg-pink-600 rounded-lg shadow-lg shadow-pink-200 flex items-center justify-center">
-                    <Settings className="text-white animate-spin-slow" size={20} strokeWidth={2.5} />
+                <div className="w-8 h-8 bg-pink-600 rounded-lg shadow-lg shadow-pink-200 flex items-center justify-center overflow-visible">
+                    {/* Animated Envelope Icon */}
+                    <div className="css-envelope">
+                        <div className="env-body"></div>
+                        <div className="env-left"></div>
+                        <div className="env-right"></div>
+                        <div className="env-flap"></div>
+                    </div>
                 </div>
                 <span className="font-bold text-slate-800 tracking-tight">UndanganKita<span className="text-pink-600">.</span></span>
             </div>
