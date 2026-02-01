@@ -3,13 +3,18 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/components/AuthProvider';
 import { supabase } from '@/lib/supabase';
+import { GetServerSideProps } from 'next';
 
 interface SiteContent {
     key: string;
     value: string;
 }
 
-export default function Home() {
+interface HomeProps {
+    initialContent: Record<string, string>;
+}
+
+export default function Home({ initialContent }: HomeProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [faqActive, setFaqActive] = useState<number | null>(1);
@@ -21,29 +26,13 @@ export default function Home() {
     });
     const [showWelcome, setShowWelcome] = useState(false);
 
-    // Dynamic Content State
-    const [content, setContent] = useState<Record<string, string>>({});
-    const [loadingContent, setLoadingContent] = useState(true);
+    // Use initialContent from Server
+    const content = initialContent || {};
 
     const { user, loading, signOut } = useAuth();
     const router = useRouter();
 
-    // Fetch Content
     useEffect(() => {
-        const fetchContent = async () => {
-            const { data, error } = await supabase.from('site_content').select('key, value');
-            if (data) {
-                const contentMap: Record<string, string> = {};
-                data.forEach((item: SiteContent) => {
-                    contentMap[item.key] = item.value;
-                });
-                setContent(contentMap);
-            }
-            setLoadingContent(false);
-        };
-
-        fetchContent();
-
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
         };
@@ -51,29 +40,22 @@ export default function Home() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Welcome Modal & Onboarding Check Logic
+    // Welcome Modal & Onboarding Check Logic - Client Side Only
     useEffect(() => {
         if (user && user.email) {
-            // Check Profile
             const checkProfile = async () => {
                 const { data, error } = await supabase.from('profiles').select('id').eq('id', user.id).single();
 
-                // If profiles table exists but row is missing -> Onboarding
-                // (Assuming user ran the migration script)
-                // Note: We need to be careful if the TABLE query fails (error 404 relation not found), we shouldn't loop redirect.
-                // But for now, assume happy path: script run.
                 if (!data && !error) {
-                    // Wait if it returns null but no error (meaning query succesful, but no row found)
                     router.push('/onboarding');
                     return;
                 }
 
-                if (error && error.code === 'PGRST116') { // PGRST116 is "JSON object requested, multiple (or no) results returned" -> No row found
+                if (error && error.code === 'PGRST116') {
                     router.push('/onboarding');
                     return;
                 }
 
-                // If profile exists, check welcome modal
                 const key = `welcome_shown_${user.email}`;
                 if (!localStorage.getItem(key)) {
                     setShowWelcome(true);
@@ -111,10 +93,8 @@ export default function Home() {
         router.push('/login');
     }
 
-    // Fallback loading UI to prevent layout shift or empty text
-    if (loadingContent) {
-        return <div className="min-h-screen flex items-center justify-center bg-white"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div></div>;
-    }
+    // Fallback loading UI removed as we use SSR
+
 
     return (
         <>
@@ -554,3 +534,28 @@ export default function Home() {
         </>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    try {
+        const { data, error } = await supabase.from('site_content').select('key, value');
+
+        const initialContent: Record<string, string> = {};
+        if (data) {
+            data.forEach((item: any) => {
+                initialContent[item.key] = item.value;
+            });
+        }
+
+        return {
+            props: {
+                initialContent,
+            },
+        };
+    } catch (err) {
+        return {
+            props: {
+                initialContent: {},
+            },
+        };
+    }
+};

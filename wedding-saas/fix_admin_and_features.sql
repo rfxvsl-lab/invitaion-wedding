@@ -2,6 +2,7 @@
 -- Drop existing policies first to be safe
 drop policy if exists "Allow admin update access on site_content" on site_content;
 drop policy if exists "Allow admin insert access on site_content" on site_content;
+drop policy if exists "Allow public read access on site_content" on site_content;
 
 -- Re-create with CORRECT email (without dot)
 create policy "Allow admin update access on site_content"
@@ -12,6 +13,11 @@ create policy "Allow admin update access on site_content"
 create policy "Allow admin insert access on site_content"
   on site_content for insert
   with check (auth.jwt() ->> 'email' = 'mhmmadridho64@gmail.com');
+
+-- CRITICAL: Public Read Access (Missing in your snippet)
+create policy "Allow public read access on site_content"
+  on site_content for select
+  using ( true );
 
 
 -- UPDATE PROFILES TABLE (Subscription Tier)
