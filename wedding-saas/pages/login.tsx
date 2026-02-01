@@ -85,11 +85,48 @@ export default function Login() {
         }
     };
 
+    const handleGoogleLogin = async () => {
+        setLoading(true);
+        setMessage('');
+        try {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: typeof window !== 'undefined' ? `${window.location.origin}` : 'https://weddinginvitation-18.vercel.app',
+                }
+            });
+            if (error) throw error;
+        } catch (error: any) {
+            setMessage(error.message);
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
             <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    {/* Google Login Button */}
+                    <button
+                        type="button"
+                        onClick={handleGoogleLogin}
+                        disabled={loading}
+                        className="w-full flex items-center justify-center gap-3 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 font-bold py-3 px-4 rounded-xl transition shadow-sm mb-6"
+                    >
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
+                        Masuk dengan Google
+                    </button>
+
+                    <div className="relative my-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-4 bg-white text-gray-400 font-medium">ATAU GUNAKAN EMAIL</span>
+                        </div>
+                    </div>
+
+                    <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">
                         {isSignUp ? 'Daftar Akun Baru' : 'Masuk ke Akun Anda'}
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600">
