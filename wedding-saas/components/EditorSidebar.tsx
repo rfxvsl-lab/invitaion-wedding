@@ -1,8 +1,9 @@
 // Path: /components/EditorSidebar.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2, Settings, Quote, MessageSquare, Globe } from 'lucide-react';
 import ImageUploader from './ImageUploader';
 import { InvitationData } from '../types/invitation';
+import { supabase } from '@/lib/supabase';
 
 interface EditorSidebarProps {
     data: InvitationData;
@@ -36,13 +37,63 @@ const SectionHeader = ({ icon: Icon, title }: { icon: any, title: string }) => (
 
 const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
     const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design' | 'settings'>('content');
+    const [plan, setPlan] = useState<'free' | 'basic' | 'premium'>('free');
+    const [uploadingMusic, setUploadingMusic] = useState(false);
+
+    useEffect(() => {
+        // Fetch User Plan
+        const fetchPlan = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data } = await supabase.from('profiles').select('subscription_plan').eq('id', user.id).single();
+                if (data) setPlan(data.subscription_plan || 'free');
+            }
+        };
+        fetchPlan();
+    }, []);
 
     const getValue = (path: string) => {
         return path.split('.').reduce((o: any, i) => (o ? o[i] : ''), data);
     };
 
+    const handleMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validation - NO Video allowed for direct upload (as per request to avoid backend complexity)
+        if (file.type.startsWith('video/')) {
+            alert("Mohon maaf, fitur konversi otomatis MP4 ke MP3 belum tersedia. Silakan upload file .MP3 untuk performa terbaik.");
+            return;
+        }
+        if (!file.type.startsWith('audio/')) {
+            alert("Mohon upload file audio (MP3).");
+            return;
+        }
+
+        // Upload Logic
+        setUploadingMusic(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            // Make sure 'music' bucket exists (user should have run SQL)
+            const { error: uploadError } = await supabase.storage.from('music').upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage.from('music').getPublicUrl(filePath);
+            onUpdate('metadata.music_url', publicUrl);
+        } catch (error: any) {
+            alert('Gagal upload musik: ' + error.message);
+        } finally {
+            setUploadingMusic(false);
+        }
+    };
+
     return (
         <aside className="w-full h-[50vh] lg:h-screen flex flex-col bg-white border-b lg:border-b-0 lg:border-r border-gray-200 z-30">
+            {/* Logo area for desktop */}
             <div className="hidden lg:flex items-center gap-3 px-6 py-5 border-b border-gray-100 bg-white">
                 <div className="w-8 h-8 bg-pink-600 rounded-lg shadow-lg shadow-pink-200 flex items-center justify-center overflow-visible">
                     {/* Animated Envelope Icon */}
@@ -217,6 +268,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                     <>
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                             <SectionHeader icon={Palette} title="Tema & Musik" />
+
+                            {/* Theme Selection Grid */}
                             <div className="grid grid-cols-2 gap-3 mb-6">
                                 {['modern-arch', 'classic-serif', 'botanical-line', 'rustic-wood', 'dark-luxury', 'premium-peppy', 'gamer-quest', 'maroon-vintage', 'adat-bone', 'elegant-vanilla'].map(theme => (
                                     <button
@@ -249,7 +302,45 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                 </div>
                             )}
 
-                            <Input label="Musik Latar (MP3 URL)" value={getValue('metadata.music_url')} onChange={(v) => onUpdate('metadata.music_url', v)} placeholder="https://..." />
+                            {/* MUSIC SECTION */}
+                            <div className="mb-4">
+                                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Musik Latar</label>
+
+                                <div className="flex flex-col gap-3">
+                                    {/* URL Input (For everyone) */}
+                                    <input
+                                        type="text"
+                                        placeholder="https://..."
+                                        className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition"
+                                        value={getValue('metadata.music_url')}
+                                        onChange={(e) => onUpdate('metadata.music_url', e.target.value)}
+                                    />
+
+                                    {/* Upload Button (Premium Only) */}
+                                    <div className="relative">
+                                        {plan === 'free' && (
+                                            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl border border-slate-100">
+                                                <div className="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-lg flex items-center gap-1">
+                                                    🔒 Basic Plan Only
+                                                </div>
+                                            </div>
+                                        )}
+                                        <label className={`flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed rounded-xl text-xs font-bold transition-all cursor-pointer ${uploadingMusic ? 'bg-slate-100 border-slate-300 text-slate-400' : 'border-slate-200 text-slate-500 hover:border-pink-400 hover:text-pink-600 hover:bg-pink-50'}`}>
+                                            {uploadingMusic ? <Settings className="animate-spin" size={16} /> : <Gift size={16} />}
+                                            {uploadingMusic ? 'Mengupload...' : 'Upload MP3 (Pribadi)'}
+                                            <input
+                                                type="file"
+                                                accept="audio/*,video/mp4"
+                                                className="hidden"
+                                                onChange={handleMusicUpload}
+                                                disabled={plan === 'free' || uploadingMusic}
+                                            />
+                                        </label>
+                                    </div>
+                                    <p className="text-[10px] text-slate-400 italic">User Free hanya bisa menggunakan URL. Upgrade ke Basic untuk upload lagu sendiri.</p>
+                                    <p className="text-[10px] text-slate-400 italic">Jika memiliki video MP4, mohon convert ke MP3 terlebih dahulu.</p>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
