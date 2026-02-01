@@ -24,7 +24,7 @@ export default function Home() {
     const [content, setContent] = useState<Record<string, string>>({});
     const [loadingContent, setLoadingContent] = useState(true);
 
-    const { user, loading } = useAuth();
+    const { user, loading, signOut } = useAuth();
     const router = useRouter();
 
     // Fetch Content
@@ -125,6 +125,9 @@ export default function Home() {
                                         <span className="text-sm text-gray-600">Hi, {user.email?.split('@')[0]}</span>
                                         <button onClick={handleCreateInvitation} className="bg-pink-600 hover:bg-pink-800 text-white px-5 py-2.5 rounded-full font-semibold transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-0.5">
                                             Dashboard
+                                        </button>
+                                        <button onClick={() => signOut()} className="text-gray-500 hover:text-red-600 font-medium text-sm">
+                                            <i className="fa-solid fa-right-from-bracket"></i>
                                         </button>
                                     </div>
                                 ) : (

@@ -175,10 +175,19 @@ export default function EditorPage() {
             <main className="flex-1 flex flex-col relative bg-[#F1F5F9]">
                 {/* Header Navbar */}
                 <div className="sticky top-0 lg:static h-16 bg-white/80 backdrop-blur-md border-b border-gray-200/50 flex items-center justify-between px-4 lg:px-8 shadow-sm z-20">
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-                            <Settings className="animate-spin-slow" size={18} />
+                    <div className="flex items-center gap-6">
+                        {/* Back Home */}
+                        <button onClick={() => router.push('/')} className="text-slate-500 hover:text-slate-800 transition">
+                            <i className="fa-solid fa-arrow-left text-lg"></i>
+                        </button>
+
+                        {/* Brand Logo */}
+                        <div className="flex items-center gap-2">
+                            <i className="fa-solid fa-envelope-open-text text-2xl text-pink-600"></i>
+                            <span className="font-serif text-xl font-bold text-gray-900 tracking-tight hidden sm:inline">Undangan<span className="text-pink-600">Kita</span></span>
                         </div>
+
+                        {/* Domain Preview (Clean) */}
                         <div className="hidden sm:flex items-center gap-2 text-slate-500 text-xs font-medium bg-slate-100/50 px-3 py-1.5 rounded-full border border-slate-200">
                             <Globe size={12} /> <span className="truncate max-w-[150px] lg:max-w-none">weddinginvitation-18.vercel.app/{data.metadata.slug}</span>
                         </div>
