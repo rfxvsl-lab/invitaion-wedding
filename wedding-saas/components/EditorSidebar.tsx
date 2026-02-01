@@ -235,11 +235,10 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         <div className="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
                                         <p className="text-[10px] font-bold text-rose-700 uppercase tracking-wider">Maroon Vintage Config</p>
                                     </div>
-                                    <Input
-                                        label="Background Image URL (Optional)"
-                                        value={getValue('metadata.custom_bg_url') || ''}
-                                        onChange={(v) => onUpdate('metadata.custom_bg_url', v)}
-                                        placeholder="https://..."
+                                    <ImageUploader
+                                        label="Background Image (Upload)"
+                                        currentUrl={data.metadata.custom_bg_url || ''}
+                                        onUpdate={(url) => onUpdate('metadata.custom_bg_url', url)}
                                     />
                                     <p className="text-[10px] text-rose-400 mt-1">Biarkan kosong untuk menggunakan background default.</p>
                                 </div>
