@@ -59,14 +59,13 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
     };
 
     const handleThemeChange = (themeId: string, tier: 'free' | 'basic' | 'premium' | 'exclusive') => {
-        // Block non-free themes for free users
-        if (plan === 'free' && tier !== 'free') {
-            alert('🔒 Template ini memerlukan upgrade ke ' + (tier === 'exclusive' ? 'Premium/Exclusive' : tier.toUpperCase()) + ' plan!');
-            return;
-        }
-
-        // Token system for free users
-        if (plan === 'free' && tier === 'free') {
+        // FREE TIER: Block non-free themes + Token system
+        if (plan === 'free') {
+            if (tier !== 'free') {
+                alert('🔒 Template ini memerlukan upgrade ke ' + (tier === 'exclusive' ? 'Premium/Exclusive' : tier.toUpperCase()) + ' plan!');
+                return;
+            }
+            // Token system for free tier
             if (tokens <= 0) {
                 alert('❌ Token Anda habis! Upgrade ke Basic plan untuk unlimited edits.');
                 return;
@@ -75,10 +74,22 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                 setTokens(tokens - 1);
                 onUpdate('metadata.theme_id', themeId);
             }
-        } else {
-            // Basic/Premium users can switch freely
-            onUpdate('metadata.theme_id', themeId);
+            return;
         }
+
+        // BASIC TIER: Allow Free + Basic templates only
+        if (plan === 'basic') {
+            if (tier === 'premium' || tier === 'exclusive') {
+                alert('🔒 Template ini memerlukan upgrade ke ' + tier.toUpperCase() + ' plan!');
+                return;
+            }
+            // No token system for basic users
+            onUpdate('metadata.theme_id', themeId);
+            return;
+        }
+
+        // PREMIUM TIER: Allow all templates
+        onUpdate('metadata.theme_id', themeId);
     };
 
     const handleMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -351,14 +362,14 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             <button
                                                 key={template.id}
                                                 onClick={() => handleThemeChange(template.id, template.tier)}
-                                                disabled={plan === 'free'}
+                                                disabled={plan === 'free' || plan === 'basic'}
                                                 className={`relative p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 overflow-hidden
                                                 ${data.metadata.theme_id === template.id
                                                         ? 'border-violet-500 bg-violet-50 text-violet-700 shadow-sm'
                                                         : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
                                             >
-                                                {/* Lock Overlay for Free Users */}
-                                                {plan === 'free' && (
+                                                {/* Lock Overlay for Free/Basic Users */}
+                                                {(plan === 'free' || plan === 'basic') && (
                                                     <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center z-10 rounded-xl">
                                                         <div className="text-center">
                                                             <div className="text-2xl mb-1">🔒</div>
@@ -388,14 +399,14 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             <button
                                                 key={template.id}
                                                 onClick={() => handleThemeChange(template.id, template.tier)}
-                                                disabled={plan === 'free'}
+                                                disabled={plan === 'free' || plan === 'basic'}
                                                 className={`relative p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 overflow-hidden
                                                 ${data.metadata.theme_id === template.id
                                                         ? 'border-amber-500 bg-amber-50 text-amber-700 shadow-sm'
                                                         : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
                                             >
-                                                {/* Lock Overlay for Free Users */}
-                                                {plan === 'free' && (
+                                                {/* Lock Overlay for Free/Basic Users */}
+                                                {(plan === 'free' || plan === 'basic') && (
                                                     <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center z-10 rounded-xl">
                                                         <div className="text-center">
                                                             <div className="text-2xl mb-1">🔒</div>
@@ -445,7 +456,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         onChange={(e) => onUpdate('metadata.music_url', e.target.value)}
                                     />
 
-                                    {/* Upload Button (Premium Only) */}
+                                    {/* Upload Button (Basic/Premium) */}
                                     <div className="relative">
                                         {plan === 'free' && (
                                             <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl border border-slate-100">
@@ -466,8 +477,11 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             />
                                         </label>
                                     </div>
-                                    <p className="text-[10px] text-slate-400 italic">User Free hanya bisa menggunakan URL. Upgrade ke Basic untuk upload lagu sendiri.</p>
-                                    <p className="text-[10px] text-slate-400 italic">Jika memiliki video MP4, mohon convert ke MP3 terlebih dahulu.</p>
+                                    {plan === 'free' ? (
+                                        <p className="text-[10px] text-amber-600 font-bold">⚠️ Free: URL only. Upgrade ke Basic untuk upload file.</p>
+                                    ) : (
+                                        <p className="text-[10px] text-slate-400 italic">✅ Anda bisa upload MP3 langsung (Max 10MB).</p>
+                                    )}
                                 </div>
                             </div>
                         </div>

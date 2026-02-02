@@ -1,8 +1,9 @@
 // Path: /pages/editor.tsx
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Loader2, CheckCircle, Save, Globe, Eye, Settings } from 'lucide-react';
+import { Loader2, CheckCircle, Save, Globe, Eye, Settings, User, Image as ImageIcon, Trash2, Copy, Check } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
 import EditorSidebar from '../components/EditorSidebar';
+import GuestModal from '../components/GuestModal';
 import { supabase } from '../lib/supabase';
 import { useRouter } from 'next/router';
 
@@ -83,6 +84,12 @@ export default function EditorPage() {
     const [showSlugWarning, setShowSlugWarning] = useState(false);
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Tier-based features
+    const [plan, setPlan] = useState<'free' | 'basic' | 'premium'>('free');
+    const [guestNames, setGuestNames] = useState<string[]>([]);
+    const [showGuestModal, setShowGuestModal] = useState(false);
+    const GUEST_LIMITS = { free: 0, basic: 100, premium: Infinity };
+
     // Initial Fetch (Simplified for Demo: fetching hardcoded slug)
     // In production, you might want to fetch based on query param or user session
     // Load Data from URL Slug if present
@@ -105,6 +112,18 @@ export default function EditorPage() {
             fetchData();
         }
     }, [router.isReady, router.query]);
+
+    useEffect(() => {
+        // Fetch plan from Supabase
+        const fetchPlan = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                const { data: profileData } = await supabase.from('profiles').select('subscription_plan').eq('id', user.id).single();
+                if (profileData) setPlan(profileData.subscription_plan || 'free');
+            }
+        };
+        fetchPlan();
+    }, []);
 
     const handleUpdate = useCallback((path: string, value: any) => {
         setData((prev) => {
@@ -200,6 +219,32 @@ export default function EditorPage() {
                                     <CheckCircle size={12} className={saveStatus === 'saved' ? 'text-emerald-500' : 'text-amber-500'} />}
                             <span className="tracking-wider">{saveStatus === 'saving' ? 'Saving...' : saveStatus === 'saved' ? 'Saved' : saveStatus === 'error' ? 'Failed' : 'Unsaved'}</span>
                         </span>
+
+                        {/* Guest Link Generator (Basic/Premium Only) */}
+                        {plan !== 'free' && (
+                            <button
+                                onClick={() => setShowGuestModal(true)}
+                                className="bg-violet-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:shadow-lg hover:shadow-violet-500/20 transition-all"
+                            >
+                                <User size={14} />
+                                <span className="hidden sm:inline">Tamu ({guestNames.length}/{plan === 'basic' ? 100 : '∞'})</span>
+                                <span className="sm:hidden">({guestNames.length})</span>
+                            </button>
+                        )}
+
+                        {/* PNG Story Export (Basic/Premium Only) */}
+                        {plan !== 'free' && (
+                            <a
+                                href={`/instagram/${data.metadata.slug}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="bg-pink-600 text-white px-3 sm:px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:shadow-lg hover:shadow-pink-500/20 transition-all"
+                            >
+                                <ImageIcon size={14} />
+                                <span className="hidden sm:inline">PNG</span>
+                            </a>
+                        )}
+
                         <button
                             onClick={() => { saveToSupabase(); setShowPublishModal(true); }}
                             className="group relative overflow-hidden bg-slate-900 text-white px-5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:shadow-xl hover:shadow-pink-500/20 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
@@ -287,7 +332,22 @@ export default function EditorPage() {
                             </div>
                         </div>
                     </div>
-                )}
+                )
+
+                }
+
+                {/* GUEST MODAL */}
+                <GuestModal
+                    isOpen={showGuestModal}
+                    onClose={() => setShowGuestModal(false)}
+                    guestCount={guestNames.length}
+                    maxGuests={GUEST_LIMITS[plan]}
+                    baseUrl={`https://weddinginvitation-18.vercel.app/${data.metadata.slug}`}
+                    onAddGuest={(name) => setGuestNames([...guestNames, name])}
+                    onRemoveGuest={(idx) => setGuestNames(guestNames.filter((_, i) => i !== idx))}
+                    guests={guestNames}
+                />
+
 
                 {/* MAIN PREVIEW AREA */}
                 <div className="flex-1 flex items-center justify-center p-4 lg:p-10 shrink-0 min-h-[600px] lg:min-h-0 bg-[#F1F5F9] w-full">
