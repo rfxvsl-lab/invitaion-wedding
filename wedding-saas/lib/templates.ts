@@ -24,5 +24,11 @@ export const TEMPLATES: TemplateConfig[] = [
     { id: 'royal-glass', name: 'Royal Glass', tier: 'exclusive' },
     { id: 'netflix-luxury', name: 'Netflix Luxury', tier: 'exclusive' },
     { id: 'grand-ballroom', name: 'Grand Ballroom', tier: 'exclusive' },
+    {
+        id: 'royal-arabian',
+        name: 'Royal Arabian (Exclusive)',
+        thumbnail: 'https://images.unsplash.com/photo-1542259148-5c40149d6389?w=600&q=80', // Arabian Night / Mosque placeholder
+        tier: 'exclusive'
+    }
 ];
 

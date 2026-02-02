@@ -282,6 +282,74 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         </div>
                     </div>
                 </div>
+            ) : themeId === 'royal-arabian' ? (
+                /* ROYAL ARABIAN (EXCLUSIVE) */
+                <div className="w-full h-full relative flex flex-col items-center justify-center overflow-hidden"
+                    style={{
+                        background: 'linear-gradient(to bottom, #020508, #051410, #0a1f18)',
+                        color: '#F5E6CA',
+                        fontFamily: "'Amiri', serif"
+                    }}>
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Amiri:wght@400;700&display=swap');
+                        .font-arabic-title { font-family: 'Cinzel', serif; }
+                        .font-arabic-body { font-family: 'Amiri', serif; }
+                        
+                        /* Background Animations */
+                        @keyframes twinkle {
+                            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+                            50% { opacity: 1; transform: scale(1.2); }
+                        }
+                        .animate-twinkle { animation: twinkle 4s ease-in-out infinite; }
+                        
+                        @keyframes sway {
+                            0%, 100% { transform: rotate(-3deg); }
+                            50% { transform: rotate(3deg); }
+                        }
+                        .animate-sway { animation: sway 6s ease-in-out infinite; transform-origin: top; }
+                    `}</style>
+
+                    {/* Background Pattern */}
+                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(https://www.transparenttextures.com/patterns/black-scales.png)` }}></div>
+
+                    {/* Stars */}
+                    {Array.from({ length: 20 }).map((_, i) => (
+                        <div key={i} className="absolute bg-white rounded-full animate-twinkle"
+                            style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 60}%`, width: `${Math.random() * 3}px`, height: `${Math.random() * 3}px`, animationDelay: `${Math.random() * 5}s` }}>
+                        </div>
+                    ))}
+
+                    {/* Content */}
+                    <div className="z-10 text-center p-8 border-y-2 border-[#D4AF37] relative w-[80%] max-w-2xl bg-[#0f261f]/30 backdrop-blur-sm shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+                        <h3 className="font-arabic-title text-2xl tracking-[0.3em] text-[#D4AF37] mb-8 uppercase">The Wedding Of</h3>
+
+                        {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
+                            <>
+                                <h1 className="font-arabic-title text-7xl mb-4 text-[#F5E6CA] drop-shadow-md">{data.content.couples.pria.name.split(' ')[0]}</h1>
+                                <span className="text-4xl text-[#D4AF37] font-serif">&</span>
+                                <h1 className="font-arabic-title text-7xl mt-4 mb-8 text-[#F5E6CA] drop-shadow-md">{data.content.couples.wanita.name.split(' ')[0]}</h1>
+                            </>
+                        ) : (
+                            <h1 className="font-arabic-title text-8xl mb-6 text-[#F5E6CA]">{data.content.hero.nicknames}</h1>
+                        )}
+
+                        <div className="w-24 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-8"></div>
+                        <p className="font-arabic-body text-3xl text-[#D4AF37]">{dateFormatted}</p>
+
+                        {/* Wish */}
+                        {wish && (
+                            <div className="mt-12 pt-8 border-t border-[#D4AF37]/30">
+                                <p className="font-arabic-body text-2xl italic leading-relaxed text-[#F5E6CA]">"{wish}"</p>
+                                <p className="font-arabic-title text-xl mt-6 text-[#D4AF37] uppercase tracking-widest">- {guestName} -</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Decorative Moon */}
+                    <div className="absolute top-20 right-20 w-32 h-32 opacity-80 drop-shadow-[0_0_30px_#FFD700]">
+                        <svg viewBox="0 0 100 100" fill="#FCF6BA"><path d="M50 10 Q 90 50 50 90 Q 70 50 50 10" /></svg>
+                    </div>
+                </div>
             ) : themeId === 'grand-ballroom' ? (
                 /* SPECIAL DESIGN FOR GRAND BALLROOM (EXCLUSIVE) */
                 <div className="w-full h-full relative text-[#EAC581] font-sans flex flex-col items-center overflow-hidden" style={{ background: 'linear-gradient(to bottom, #1a0505 0%, #2b0f0f 100%)' }}>

@@ -4,6 +4,7 @@ import { Loader2, CheckCircle, Save, Globe, Eye, Settings } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
 import EditorSidebar from '../components/EditorSidebar';
 import { supabase } from '../lib/supabase';
+import { useRouter } from 'next/router';
 
 // Templates
 import ModernArch from '../templates/ModernArch';
@@ -18,6 +19,7 @@ import ElegantVanilla from '../templates/ElegantVanilla';
 import RoyalGlass from '../templates/RoyalGlass';
 import NetflixLuxury from '../templates/NetflixLuxury';
 import GrandBallroom from '../templates/GrandBallroom';
+import RoyalArabian from '../templates/RoyalArabian';
 
 // Initial Data
 const INITIAL_DATA: InvitationData = {
@@ -66,8 +68,6 @@ const INITIAL_DATA: InvitationData = {
         gifts: []
     }
 };
-
-import { useRouter } from 'next/router';
 
 export default function EditorPage() {
     const router = useRouter();
@@ -165,6 +165,7 @@ export default function EditorPage() {
             case 'royal-glass': return <RoyalGlass data={data} />;
             case 'netflix-luxury': return <NetflixLuxury data={data} />;
             case 'grand-ballroom': return <GrandBallroom data={data} />;
+            case 'royal-arabian': return <RoyalArabian data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };

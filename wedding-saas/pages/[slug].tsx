@@ -18,6 +18,7 @@ import ElegantVanilla from '../templates/ElegantVanilla';
 import RoyalGlass from '../templates/RoyalGlass';
 import NetflixLuxury from '../templates/NetflixLuxury';
 import GrandBallroom from '../templates/GrandBallroom';
+import RoyalArabian from '../templates/RoyalArabian';
 
 interface InvitationPageProps {
     data: InvitationData | null;
@@ -49,6 +50,7 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
             case 'royal-glass': return <RoyalGlass data={data} />;
             case 'netflix-luxury': return <NetflixLuxury data={data} />;
             case 'grand-ballroom': return <GrandBallroom data={data} />;
+            case 'royal-arabian': return <RoyalArabian data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };
