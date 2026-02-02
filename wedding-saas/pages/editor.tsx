@@ -6,6 +6,7 @@ import EditorSidebar from '../components/EditorSidebar';
 import GuestModal from '../components/GuestModal';
 import { supabase } from '../lib/supabase';
 import { useRouter } from 'next/router';
+import { getEffectivePlan, isAdmin } from '../lib/admin';
 
 // Templates
 import ModernArch from '../templates/ModernArch';
@@ -116,12 +117,32 @@ export default function EditorPage() {
     }, [router.isReady, router.query]);
 
     useEffect(() => {
-        // Fetch plan from Supabase
+        // Fetch plan from Supabase with admin override
         const fetchPlan = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
-                const { data: profileData } = await supabase.from('profiles').select('subscription_plan').eq('id', user.id).single();
-                if (profileData) setPlan(profileData.subscription_plan || 'free');
+                const { data: profileData } = await supabase
+                    .from('profiles')
+                    .select('subscription_plan, tokens')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profileData) {
+                    // Apply admin god mode override
+                    const effectivePlan = getEffectivePlan(
+                        profileData.subscription_plan || 'free',
+                        user.email
+                    ) as 'free' | 'basic' | 'premium' | 'exclusive';
+
+                    setPlan(effectivePlan);
+
+                    // Admin users get unlimited tokens (bypass token system)
+                    if (isAdmin(user.email)) {
+                        setTokens(Infinity); // Unlimited for admin
+                    } else {
+                        setTokens(profileData.tokens ?? 5);
+                    }
+                }
             }
         };
         fetchPlan();
@@ -247,7 +268,7 @@ export default function EditorPage() {
                         {/* Token Counter (Free Only) */}
                         {plan === 'free' && (
                             <span className="text-[10px] font-bold uppercase bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full border border-amber-300">
-                                🪙 {tokens} Token
+                                🪙 {tokens === Infinity ? '∞' : tokens} Token
                             </span>
                         )}
 
