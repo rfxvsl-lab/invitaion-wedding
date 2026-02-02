@@ -126,9 +126,10 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                             recorder.stop();
                         }
                     }, 1000);
-                } catch (err) {
+                } catch (err: any) {
                     console.error("Video recording error", err);
-                    alert("Gagal merekam video. Browser mungkin tidak mendukung Canvas Recording.");
+                    // Show specific error to help debugging (especially SecurityError)
+                    alert(`Gagal merekam video: ${err.message || err}. \nJika error "SecurityError", gambar mungkin dilindungi CORS.`);
                     setProcessingVideo(false);
                 }
             };

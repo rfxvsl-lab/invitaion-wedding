@@ -25,9 +25,11 @@ export const useRoyalGlassRender = ({ canvasRef, data, guestName, wish, isActive
 
         // Assets
         const textureImg = new Image();
+        textureImg.crossOrigin = "anonymous"; // Prevent Tainted Canvas
         textureImg.src = "https://www.transparenttextures.com/patterns/cream-paper.png";
 
         const heroImg = new Image();
+        heroImg.crossOrigin = "anonymous"; // Prevent Tainted Canvas
         heroImg.src = data.content.hero.main_image || "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
         // Ensure image is loaded (simplified for this hook, in production might need preloader)
 
