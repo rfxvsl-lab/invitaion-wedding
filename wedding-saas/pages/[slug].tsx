@@ -37,6 +37,39 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
         );
     }
 
+    // Check if invitation is expired
+    if (data.metadata.expires_at) {
+        const expiresAt = new Date(data.metadata.expires_at);
+        const now = new Date();
+
+        if (now > expiresAt) {
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 p-4">
+                    <div className="max-w-md bg-white rounded-2xl shadow-2xl p-8 text-center border-4 border-red-200">
+                        <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-4xl">⏰</span>
+                        </div>
+                        <h1 className="text-2xl font-bold text-red-600 mb-3">Undangan Sudah Kadaluarsa</h1>
+                        <p className="text-slate-600 mb-6 leading-relaxed">
+                            Undangan ini sudah tidak aktif sejak <strong>{expiresAt.toLocaleDateString('id-ID')}</strong>.
+                        </p>
+                        <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-4 mb-6">
+                            <p className="text-sm text-amber-800 font-semibold">
+                                💡 Upgrade ke <span className="text-amber-900 font-bold">Premium</span> atau <span className="text-amber-900 font-bold">Exclusive</span> untuk durasi lebih lama!
+                            </p>
+                        </div>
+                        <a
+                            href="/"
+                            className="inline-block bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg transition"
+                        >
+                            Kembali ke Beranda
+                        </a>
+                    </div>
+                </div>
+            );
+        }
+    }
+
     const renderTemplate = () => {
         switch (data.metadata.theme_id) {
             case 'classic-serif': return <ClassicSerif data={data} />;

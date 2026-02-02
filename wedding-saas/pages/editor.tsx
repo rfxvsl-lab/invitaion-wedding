@@ -85,10 +85,12 @@ export default function EditorPage() {
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Tier-based features
-    const [plan, setPlan] = useState<'free' | 'basic' | 'premium'>('free');
+    const [plan, setPlan] = useState<'free' | 'basic' | 'premium' | 'exclusive'>('free');
     const [guestNames, setGuestNames] = useState<string[]>([]);
     const [showGuestModal, setShowGuestModal] = useState(false);
-    const GUEST_LIMITS = { free: 0, basic: 100, premium: Infinity };
+    const [tokens, setTokens] = useState<number>(5); // Free tier: 5 tokens (3 for edits, 2 for publish)
+    const GUEST_LIMITS = { free: 0, basic: 100, premium: 300, exclusive: Infinity };
+    const DURATION_DAYS = { free: 14, basic: 30, premium: 90, exclusive: Infinity };
 
     // Initial Fetch (Simplified for Demo: fetching hardcoded slug)
     // In production, you might want to fetch based on query param or user session
@@ -146,22 +148,51 @@ export default function EditorPage() {
             return;
         }
 
+        // FREE TIER: Check tokens for publish (2 tokens required)
+        if (plan === 'free' && tokens < 2) {
+            alert('❌ Butuh 2 token untuk publish! Upgrade ke Basic plan.');
+            return;
+        }
+
         setSaveStatus('saving');
         try {
+            // Calculate expiration based on tier
+            const now = new Date();
+            const publishedAt = now.toISOString();
+            const expiresAt = plan === 'exclusive'
+                ? null
+                : new Date(now.getTime() + DURATION_DAYS[plan] * 24 * 60 * 60 * 1000).toISOString();
+
+            // Update metadata with timestamps
+            const updatedData = {
+                ...data,
+                metadata: {
+                    ...data.metadata,
+                    published_at: publishedAt,
+                    expires_at: expiresAt
+                }
+            };
+
             const { error } = await supabase.from('invitations').upsert({
                 slug: data.metadata.slug,
-                data: data,
+                data: updatedData,
                 updated_at: new Date().toISOString()
             }, { onConflict: 'slug' });
 
             if (error) throw error;
+
+            // Deduct 2 tokens for Free tier publish
+            if (plan === 'free') {
+                setTokens(tokens - 2);
+            }
+
             setSaveStatus('saved');
         } catch (err: any) {
             console.error(err);
             setSaveStatus('error');
             alert(`Gagal menyimpan: ${err.message || 'Unknown error'}. Pastikan Anda sudah menjalankan query SQL di Supabase.`);
         }
-    }, [data]);
+    }, [data, plan, tokens]);
 
     useEffect(() => {
         if (saveStatus === 'unsaved') {
@@ -213,6 +244,28 @@ export default function EditorPage() {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
+                        {/* Token Counter (Free Only) */}
+                        {plan === 'free' && (
+                            <span className="text-[10px] font-bold uppercase bg-amber-100 text-amber-700 px-3 py-1.5 rounded-full border border-amber-300">
+                                🪙 {tokens} Token
+                            </span>
+                        )}
+
+                        {/* Expiration Badge (All except Exclusive) */}
+                        {plan !== 'exclusive' && data.metadata.expires_at && (
+                            (() => {
+                                const expiresAt = new Date(data.metadata.expires_at);
+                                const now = new Date();
+                                const daysLeft = Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                                const isExpiringSoon = daysLeft <= 7;
+                                return (
+                                    <span className={`text-[10px] font-bold uppercase px-3 py-1.5 rounded-full border ${isExpiringSoon ? 'bg-red-100 text-red-700 border-red-300' : 'bg-blue-100 text-blue-700 border-blue-300'}`}>
+                                        {daysLeft > 0 ? `⏰ ${daysLeft}d left` : '❌ Expired'}
+                                    </span>
+                                );
+                            })()
+                        )}
+
                         <span className="hidden sm:flex text-[10px] font-bold uppercase text-slate-400 items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-100 shadow-sm">
                             {saveStatus === 'saving' ? <Loader2 size={12} className="animate-spin text-pink-500" /> :
                                 saveStatus === 'error' ? <span className="text-red-500">Error!</span> :

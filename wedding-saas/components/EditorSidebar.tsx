@@ -38,8 +38,9 @@ const SectionHeader = ({ icon: Icon, title }: { icon: any, title: string }) => (
 
 const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
     const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design' | 'settings'>('content');
-    const [plan, setPlan] = useState<'free' | 'basic' | 'premium'>('free');
+    const [plan, setPlan] = useState<'free' | 'basic' | 'premium' | 'exclusive'>('free');
     const [uploadingMusic, setUploadingMusic] = useState(false);
+    const [uploadingVideo, setUploadingVideo] = useState(false);
     const [tokens, setTokens] = useState<number>(5); // Free tier token system
 
     useEffect(() => {
@@ -88,7 +89,18 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
             return;
         }
 
-        // PREMIUM TIER: Allow all templates
+        // PREMIUM TIER: Allow all except Exclusive
+        if (plan === 'premium') {
+            if (tier === 'exclusive') {
+                alert('🔒 Template Exclusive hanya untuk Exclusive plan!');
+                return;
+            }
+            // No token, unlimited edits
+            onUpdate('metadata.theme_id', themeId);
+            return;
+        }
+
+        // EXCLUSIVE/OTHER: Allow all templates
         onUpdate('metadata.theme_id', themeId);
     };
 
@@ -124,6 +136,41 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
             alert('Gagal upload musik: ' + error.message);
         } finally {
             setUploadingMusic(false);
+        }
+    };
+
+    const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Limit file size to 50MB for video
+        if (file.size > 50 * 1024 * 1024) {
+            alert('Ukuran video maksimal 50MB!');
+            return;
+        }
+
+        if (!file.type.startsWith('video/')) {
+            alert('Mohon upload file video (MP4, MOV, etc).');
+            return;
+        }
+
+        setUploadingVideo(true);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            // Upload to 'videos' bucket
+            const { error: uploadError } = await supabase.storage.from('videos').upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: { publicUrl } } = supabase.storage.from('videos').getPublicUrl(filePath);
+            onUpdate('content.gallery.video_url', publicUrl);
+        } catch (error: any) {
+            alert('Gagal upload video: ' + error.message);
+        } finally {
+            setUploadingVideo(false);
         }
     };
 
@@ -264,6 +311,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                     <>
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                             <SectionHeader icon={Layout} title="Video Prewedding" />
+
+                            {/* URL Input (For everyone) */}
                             <Input
                                 label="Youtube / Vimeo URL"
                                 value={getValue('content.gallery.video_url')}
@@ -278,6 +327,34 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                 }}
                                 placeholder="https://youtube.com/..."
                             />
+
+                            {/* File Upload (Premium/Exclusive Only) */}
+                            <div className="mt-4 relative">
+                                {(plan === 'free' || plan === 'basic') && (
+                                    <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl border border-slate-100">
+                                        <div className="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-lg flex items-center gap-1">
+                                            🔒 Premium Plan Only
+                                        </div>
+                                    </div>
+                                )}
+                                <label className={`flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed rounded-xl text-xs font-bold transition-all cursor-pointer ${uploadingVideo ? 'bg-slate-100 border-slate-300 text-slate-400' : 'border-slate-200 text-slate-500 hover:border-purple-400 hover:text-purple-600 hover:bg-purple-50'}`}>
+                                    {uploadingVideo ? <Settings className="animate-spin" size={16} /> : <Layout size={16} />}
+                                    {uploadingVideo ? 'Mengupload...' : 'Upload Video (MP4/MOV)'}
+                                    <input
+                                        type="file"
+                                        accept="video/*"
+                                        className="hidden"
+                                        onChange={handleVideoUpload}
+                                        disabled={plan === 'free' || plan === 'basic' || uploadingVideo}
+                                    />
+                                </label>
+                            </div>
+
+                            {plan === 'free' || plan === 'basic' ? (
+                                <p className="text-[10px] text-amber-600 font-bold mt-2">⚠️ Free/Basic: URL only. Upgrade ke Premium untuk upload file.</p>
+                            ) : (
+                                <p className="text-[10px] text-slate-400 italic mt-2">✅ Anda bisa upload video langsung (Max 50MB).</p>
+                            )}
                         </div>
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
@@ -288,7 +365,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                 </div>
                             )}
                             <div className="grid grid-cols-2 gap-4">
-                                {[0, 1, 2, 3, 4, 5].slice(0, plan === 'free' ? 4 : 6).map((idx) => (
+                                {[0, 1, 2, 3, 4, 5, 6, 7].slice(0, plan === 'free' ? 4 : plan === 'basic' ? 6 : 8).map((idx) => (
                                     <ImageUploader
                                         key={idx}
                                         label={`Foto ${idx + 1}`}
@@ -399,14 +476,14 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                             <button
                                                 key={template.id}
                                                 onClick={() => handleThemeChange(template.id, template.tier)}
-                                                disabled={plan === 'free' || plan === 'basic'}
+                                                disabled={plan !== 'exclusive'}
                                                 className={`relative p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 overflow-hidden
                                                 ${data.metadata.theme_id === template.id
                                                         ? 'border-amber-500 bg-amber-50 text-amber-700 shadow-sm'
                                                         : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
                                             >
-                                                {/* Lock Overlay for Free/Basic Users */}
-                                                {(plan === 'free' || plan === 'basic') && (
+                                                {/* Lock Overlay for Non-Exclusive Users */}
+                                                {plan !== 'exclusive' && (
                                                     <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center z-10 rounded-xl">
                                                         <div className="text-center">
                                                             <div className="text-2xl mb-1">🔒</div>

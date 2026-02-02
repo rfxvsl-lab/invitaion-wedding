@@ -29,6 +29,8 @@ export interface InvitationData {
         music_url: string;
         custom_bg_url?: string; // Optional custom background
         is_active: boolean;
+        published_at?: string; // ISO timestamp when published
+        expires_at?: string; // ISO timestamp when expires (null for exclusive = forever)
     };
     content: {
         hero: {
