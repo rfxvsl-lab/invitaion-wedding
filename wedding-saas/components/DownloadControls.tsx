@@ -25,33 +25,23 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
     const [processingVideo, setProcessingVideo] = useState(false);
     const [progress, setProgress] = useState(0);
 
-    // Canvas Renderer Hook (Active only when processing video)
+    // Canvas Renderer Hook 
+    // We keep isActive true if processingVideo is true to run the animation loops
     useRoyalGlassRender({
         canvasRef,
         data,
         guestName,
         wish,
-        isActive: processingVideo
+        isActive: true // Always run animation loop so it's ready? Or maybe only when "preparing"
+        // Actually, to save resources, let's keep it controlled. 
+        // But if we want instant recording, we need it ready.
+        // Let's rely on the setProcessingVideo trigger to start animations.
+        // Updated: we pass `processingVideo` but we ensure the canvas is mounted.
     });
 
     // Get Tier
     const tier = TEMPLATES.find(t => t.id === data.metadata.theme_id)?.tier || 'free';
     const isExclusive = tier === 'exclusive';
-
-    /* Full download removed
-    const handleDownload = async (type: 'full') => {
-        if (!targetRef.current) return;
-        setIsDownloading(true);
-        try {
-            const dataUrl = await toPng(targetRef.current, { cacheBust: true, });
-            download(dataUrl, `invitation-${slug}-${type}.png`);
-        } catch (error) {
-            console.error('Download failed', error);
-        } finally {
-            setIsDownloading(false);
-        }
-    };
-    */
 
     const handleStoryDownload = async () => {
         if (!storyRef.current) return;
@@ -71,56 +61,63 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
         }
     };
 
-    const handleVideoDownload = async () => {
-        if (!isExclusive || !canvasRef.current) return;
+    // TRIGGER RECORDING EFFECT
+    React.useEffect(() => {
+        if (processingVideo && canvasRef.current) {
+            const startRecording = async () => {
+                try {
+                    // Slight delay to ensure animation frame has started drawing
+                    await new Promise(r => setTimeout(r, 100));
 
-        try {
-            setProcessingVideo(true);
-            setProgress(0);
+                    const canvas = canvasRef.current;
+                    if (!canvas) return;
 
-            // Give canvas a moment to start rendering
-            await new Promise(r => setTimeout(r, 500));
+                    const stream = canvas.captureStream(30); // 30 FPS
+                    const mimeType = 'video/webm; codecs=vp9';
+                    const recorder = new MediaRecorder(stream, {
+                        mimeType,
+                        videoBitsPerSecond: 5000000 // 5 Mbps
+                    });
 
-            const canvas = canvasRef.current;
+                    const chunks: Blob[] = [];
+                    recorder.ondataavailable = (e) => {
+                        if (e.data.size > 0) chunks.push(e.data);
+                    };
 
-            // USE MEDIA RECORDER ON CANVAS STREAM (Efficient, Realtime)
-            const stream = canvas.captureStream(30); // 30 FPS
-            const mimeType = 'video/webm; codecs=vp9';
-            const recorder = new MediaRecorder(stream, {
-                mimeType,
-                videoBitsPerSecond: 5000000 // 5 Mbps
-            });
+                    recorder.onstop = () => {
+                        const blob = new Blob(chunks, { type: 'video/webm' });
+                        download(blob, `story-video-${slug}.webm`);
+                        setProcessingVideo(false);
+                    };
 
-            const chunks: Blob[] = [];
-            recorder.ondataavailable = (e) => {
-                if (e.data.size > 0) chunks.push(e.data);
-            };
+                    recorder.start();
 
-            recorder.onstop = () => {
-                const blob = new Blob(chunks, { type: 'video/webm' });
-                download(blob, `story-video-${slug}.webm`);
-                setProcessingVideo(false);
-            };
-
-            recorder.start();
-
-            // Record for 10 seconds
-            let seconds = 0;
-            const duration = 10;
-            const interval = setInterval(() => {
-                seconds++;
-                setProgress(Math.round((seconds / duration) * 100));
-                if (seconds >= duration) {
-                    clearInterval(interval);
-                    recorder.stop();
+                    // Record for 10 seconds
+                    let seconds = 0;
+                    const duration = 10;
+                    const interval = setInterval(() => {
+                        seconds++;
+                        setProgress(Math.round((seconds / duration) * 100));
+                        if (seconds >= duration) {
+                            clearInterval(interval);
+                            recorder.stop();
+                        }
+                    }, 1000);
+                } catch (err) {
+                    console.error("Video recording error", err);
+                    alert("Gagal merekam video. Browser mungkin tidak mendukung Canvas Recording.");
+                    setProcessingVideo(false);
                 }
-            }, 1000);
+            };
 
-        } catch (err) {
-            console.error("Video generation failed", err);
-            alert("Gagal membuat video. " + err);
-            setProcessingVideo(false);
+            startRecording();
         }
+    }, [processingVideo, slug]);
+
+    const handleVideoDownload = () => {
+        if (!isExclusive) return;
+        setProcessingVideo(true);
+        // The Effect will pick this up
     };
 
     return (
@@ -214,19 +211,23 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                 <InstagramStoryTemplate ref={storyRef} data={data} guestName={guestName} wish={wish} />
             </div>
 
-            {/* HIDDEN CANVAS FOR VIDEO GENERATION */}
-            {processingVideo && (
-                <div className="fixed top-0 left-0 w-screen h-screen z-[100] bg-black flex flex-col items-center justify-center">
-                    <div className="relative">
-                        {/* We show the canvas scaled down so user sees what's happening */}
-                        <canvas
-                            ref={canvasRef}
-                            width={1080}
-                            height={1920}
-                            className="bg-white shadow-2xl scale-[0.35] origin-center"
-                        />
+            {/* ALWAYS MOUNTED CANVAS (Hidden when not processing) */}
+            {/* We mount it always but hide it with CSS so ref is available immediately. 
+                However, to save performance, we might want to check if logic is sound.
+                Actually, keeping it mounted is fine, just ensure useRoyalGlassRender pauses loop if !isActive.
+            */}
+            <div className={`fixed top-0 left-0 w-screen h-screen z-[100] bg-black flex flex-col items-center justify-center transition-opacity duration-300 ${processingVideo ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+                <div className="relative">
+                    {/* Canvas needs to be present for Ref */}
+                    <canvas
+                        ref={canvasRef}
+                        width={1080}
+                        height={1920}
+                        className="bg-white shadow-2xl scale-[0.35] origin-center"
+                    />
 
-                        {/* Overlay Loader */}
+                    {/* Overlay Loader */}
+                    {processingVideo && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
                             <div className="bg-black/70 backdrop-blur-md p-6 rounded-2xl flex flex-col items-center text-white">
                                 <Loader2 className="animate-spin mb-3 text-amber-500" size={48} />
@@ -238,9 +239,9 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                                 <p className="text-xs mt-2">{progress}%</p>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
-            )}
+            </div>
         </>
     );
 };
