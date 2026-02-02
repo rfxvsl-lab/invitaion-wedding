@@ -73,7 +73,28 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                     if (!canvas) return;
 
                     const stream = canvas.captureStream(30); // 30 FPS
-                    const mimeType = 'video/webm; codecs=vp9';
+
+                    // Detect supported MIME Type
+                    const mimeTypes = [
+                        'video/webm; codecs=vp9',
+                        'video/webm; codecs=vp8',
+                        'video/webm; codecs=h264',
+                        'video/webm',
+                        'video/mp4'
+                    ];
+
+                    let mimeType = '';
+                    for (const type of mimeTypes) {
+                        if (MediaRecorder.isTypeSupported(type)) {
+                            mimeType = type;
+                            break;
+                        }
+                    }
+
+                    if (!mimeType) {
+                        throw new Error("Browser tidak mendukung format video yang tersedia.");
+                    }
+
                     const recorder = new MediaRecorder(stream, {
                         mimeType,
                         videoBitsPerSecond: 5000000 // 5 Mbps
@@ -85,8 +106,10 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                     };
 
                     recorder.onstop = () => {
-                        const blob = new Blob(chunks, { type: 'video/webm' });
-                        download(blob, `story-video-${slug}.webm`);
+                        // Extension depends on mimeType
+                        const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+                        const blob = new Blob(chunks, { type: mimeType });
+                        download(blob, `story-video-${slug}.${ext}`);
                         setProcessingVideo(false);
                     };
 
