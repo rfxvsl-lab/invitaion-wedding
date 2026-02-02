@@ -128,15 +128,21 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                             <div className="absolute inset-0 border border-[#B8860B]/30 rounded-t-full transform -rotate-2 z-0"></div>
 
                             <div className="glass-strong absolute inset-4 rounded-t-full overflow-hidden flex flex-col items-center justify-center p-8 z-10">
-                                {wish ? (
-                                    <>
+                                {/* Always show Image as base */}
+                                <div className="absolute inset-0 z-0">
+                                    <img src={bgImage} className="w-full h-full object-cover opacity-90" alt="Couple" />
+                                    {/* Overlay gradient if wish is present so text is readable */}
+                                    {wish && <div className="absolute inset-0 bg-white/70 backdrop-blur-sm"></div>}
+                                </div>
+
+                                {/* Wish content on top */}
+                                {wish && (
+                                    <div className="relative z-10">
                                         <HugeFloral className="w-40 h-40 -top-10 -left-10 opacity-20" />
-                                        <p className="font-royal text-4xl italic leading-relaxed text-gray-700 text-center mb-8">"{wish}"</p>
-                                        <div className="w-24 h-[1px] bg-[#B8860B]/50 mb-4"></div>
+                                        <p className="font-royal text-4xl italic leading-relaxed text-gray-800 text-center mb-8 drop-shadow-sm">"{wish}"</p>
+                                        <div className="w-24 h-[1px] bg-[#B8860B]/50 mb-4 mx-auto"></div>
                                         <p className="font-modern text-xl font-bold text-[#B8860B] tracking-widest uppercase">{guestName}</p>
-                                    </>
-                                ) : (
-                                    <img src={bgImage} className="w-full h-full object-cover" />
+                                    </div>
                                 )}
                             </div>
                         </div>
