@@ -323,6 +323,12 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                     <div className="z-10 text-center p-8 border-y-2 border-[#D4AF37] relative w-[80%] max-w-2xl bg-[#0f261f]/30 backdrop-blur-sm shadow-[0_0_50px_rgba(0,0,0,0.5)]">
                         <h3 className="font-arabic-title text-2xl tracking-[0.3em] text-[#D4AF37] mb-8 uppercase">The Wedding Of</h3>
 
+                        {/* Hero Image */}
+                        <div className="relative w-48 h-64 mx-auto mb-8 rounded-t-full p-1 border border-[#D4AF37]/50 overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0f261f] to-transparent z-10 opacity-30"></div>
+                            <img src={bgImage} className="w-full h-full object-cover rounded-t-full" alt="Couple" />
+                        </div>
+
                         {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
                             <>
                                 <h1 className="font-arabic-title text-7xl mb-4 text-[#F5E6CA] drop-shadow-md">{data.content.couples.pria.name.split(' ')[0]}</h1>

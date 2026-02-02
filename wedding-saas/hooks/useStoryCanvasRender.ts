@@ -298,14 +298,58 @@ export const useStoryCanvasRender = ({ canvasRef, data, guestName, wish, isActiv
                 ctx.font = '30px "Cinzel"';
                 ctx.fillText('THE WEDDING OF', centerX, cardY + 100);
 
+                ctx.fillStyle = '#D4AF37';
+                ctx.font = '30px "Cinzel"';
+                ctx.fillText('THE WEDDING OF', centerX, cardY + 100);
+
+                // HERO IMAGE (ADDED)
+                if (heroImg.complete && heroImg.naturalWidth > 0) {
+                    const imgW = 300;
+                    const imgH = 400;
+                    const imgX = centerX - imgW / 2;
+                    const imgY = cardY + 140;
+
+                    ctx.save();
+                    // Arch Mask
+                    ctx.beginPath();
+                    ctx.moveTo(imgX, imgY + imgH);
+                    ctx.lineTo(imgX + imgW, imgY + imgH);
+                    ctx.lineTo(imgX + imgW, imgY + 50);
+                    ctx.quadraticCurveTo(centerX, imgY - 50, imgX, imgY + 50);
+                    ctx.closePath();
+                    ctx.clip();
+
+                    ctx.drawImage(heroImg, imgX, imgY, imgW, imgH);
+
+                    // Gradient Overlay
+                    const gradImg = ctx.createLinearGradient(0, imgY + imgH - 100, 0, imgY + imgH);
+                    gradImg.addColorStop(0, 'transparent');
+                    gradImg.addColorStop(1, 'rgba(15, 38, 31, 0.9)');
+                    ctx.fillStyle = gradImg;
+                    ctx.fillRect(imgX, imgY, imgW, imgH);
+
+                    ctx.restore();
+
+                    // Frame Border
+                    ctx.beginPath();
+                    ctx.moveTo(imgX, imgY + imgH);
+                    ctx.lineTo(imgX + imgW, imgY + imgH);
+                    ctx.lineTo(imgX + imgW, imgY + 50);
+                    ctx.quadraticCurveTo(centerX, imgY - 50, imgX, imgY + 50);
+                    ctx.closePath();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#D4AF37';
+                    ctx.stroke();
+                }
+
                 ctx.fillStyle = '#F5E6CA';
-                ctx.font = '100px "Cinzel"';
+                ctx.font = '80px "Cinzel"'; // Reduce font size slightly
 
                 const groom = data.content.couples.pria.name.split(' ')[0];
                 const bride = data.content.couples.wanita.name.split(' ')[0];
-                ctx.fillText(groom, centerX, cardY + 250);
-                ctx.fillText('&', centerX, cardY + 340);
-                ctx.fillText(bride, centerX, cardY + 450);
+                ctx.fillText(groom, centerX, cardY + 600); // Shift down
+                ctx.fillText('&', centerX, cardY + 680);
+                ctx.fillText(bride, centerX, cardY + 760);
                 ctx.restore();
 
                 // Lanters

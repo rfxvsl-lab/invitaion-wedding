@@ -154,7 +154,10 @@ const MosqueSVG = ({ className, style }: { className?: string, style?: React.CSS
 
         {/* Main Dome */}
         <path d="M110 100 Q 150 40 190 100" fill="url(#mosqueGrad)" stroke="#D4AF37" strokeWidth="1" />
-        <path d="M150 40 L150 25 M145 30 L155 30" stroke="#D4AF37" strokeWidth="2" /> {/* Crescent */}
+
+        {/* Spire with Crescent Moon (Fixing Cross Symbol) */}
+        <line x1="150" y1="40" x2="150" y2="28" stroke="#D4AF37" strokeWidth="2" />
+        <path d="M150 20 C 147 20 145 23 145 26 C 145 29 148 31 150 31 C 148 31 147 29 147 26 C 147 23 149 21 150 20 Z" fill="#D4AF37" />
 
         {/* Minaret Left */}
         <rect x="60" y="60" width="20" height="140" fill="url(#mosqueGrad)" />
