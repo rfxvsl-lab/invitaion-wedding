@@ -52,19 +52,20 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
             if (user) {
                 const { data: profile } = await supabase
                     .from('profiles')
-                    .select('subscription_tier, tokens')
+                    .select('subscription_plan, tokens')
                     .eq('id', user.id)
                     .single();
 
                 if (profile) {
                     // Apply admin god mode override
                     const effectivePlan = getEffectivePlan(
-                        profile.subscription_tier || 'free',
+                        profile.subscription_plan || 'free',
                         user.email
                     ) as 'free' | 'basic' | 'premium' | 'exclusive';
 
                     setPlan(effectivePlan);
-                    setTokens(profile.tokens || 5);
+                    // Tokens column might not exist, use default if undefined
+                    setTokens(profile.tokens ?? 5);
                 }
             }
         };
