@@ -209,285 +209,266 @@ export const useStoryCanvasRender = ({ canvasRef, data, guestName, wish, isActiv
                 // GRAND BALLROOM RENDERER (VIDEO)
                 // ==========================================
 
-                // --- TIME MANAGEMENT ---
-                const curtainDuration = 2000; // 2s curtain open speed
-                // Start parallax immediately, but content fades in
+                // --- SETUP & TIMING ---
+                const curtainDuration = 2500;
 
-                // --- 1. PARALLAX BACKGROUND LAYER ---
-                // Base Dark Background
+                // --- 1. BACKGROUND LAYER (Dark Atmosphere) ---
                 const gradBg = ctx.createLinearGradient(0, 0, 0, canvas.height);
                 gradBg.addColorStop(0, '#0f0505');
                 gradBg.addColorStop(1, '#000000');
                 ctx.fillStyle = gradBg;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Parallax Silhouettes (Simulated)
-                // We move them slowly based on time
-                const parallaxOffset = (elapsed * 0.05) % canvas.width;
+                // Radial Glow
+                const radBg = ctx.createRadialGradient(centerX, canvas.height * 0.3, 0, centerX, canvas.height * 0.3, 800);
+                radBg.addColorStop(0, '#3e0b0b');
+                radBg.addColorStop(1, 'transparent');
+                ctx.fillStyle = radBg;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+                // --- 2. PARALLAX SILHOUETTES (Background) ---
+                // Silhouettes behind the card
+                const parallaxOffset = (elapsed * 0.05) % canvas.width;
                 ctx.save();
                 ctx.globalAlpha = 0.3;
 
-                // Draw multiple silhouettes with parallax
+                // Use shapes for silhouettes
                 const people = [
                     { x: 100, s: 150 }, { x: 400, s: 120 }, { x: 800, s: 180 }, { x: 1200, s: 140 }
                 ];
-
                 people.forEach(p => {
                     let currentX = p.x - parallaxOffset;
-                    if (currentX < -200) currentX += canvas.width + 400; // Wrap around
+                    if (currentX < -200) currentX += canvas.width + 400;
 
-                    // Shadow for "blur" effect
                     ctx.shadowColor = 'black';
                     ctx.shadowBlur = 20;
                     ctx.fillStyle = '#000';
-
                     ctx.beginPath();
-                    // Draw a simple body shape
                     ctx.ellipse(currentX, canvas.height - 200, p.s / 2, p.s, 0, 0, Math.PI * 2);
-                    // Draw head
                     ctx.arc(currentX, canvas.height - 200 - p.s, p.s / 2.5, 0, Math.PI * 2);
                     ctx.fill();
                 });
                 ctx.restore();
 
-
-                // --- 2. MAIN CARD CONTENT (Appears behind curtain) ---
+                // --- 3. MAIN CARD (Light Glass - Web Template Match) ---
                 ctx.save();
-
-                // Spotlights behind the card
-                const swing = Math.sin(elapsed / 2000) * 0.1;
                 ctx.translate(centerX, 0);
 
-                // Card Animation Entrance (Stage Up)
-                // In template: rotateX(20deg) scale(0.8) translateY(100px) -> normal
-                // We approximate this 3D entrance in 2D canvas via scaling and rising Y
+                // 3D Entrance Animation
+                let cardProgress = Math.min(1, Math.max(0, (elapsed - 500) / 1500));
 
-                let cardProgress = Math.min(1, Math.max(0, (elapsed - 500) / 1500)); // Start after 0.5s, take 1.5s
-                // Cubic ease out
+                // Easing
                 cardProgress = 1 - Math.pow(1 - cardProgress, 3);
 
                 const startScale = 0.8;
                 const endScale = 1;
                 const currentScale = startScale + (endScale - startScale) * cardProgress;
 
-                const startYOffset = 200;
-                const endYOffset = 0;
-                const currentYOffset = startYOffset + (endYOffset - startYOffset) * cardProgress;
-
-                // If curtain is not open enough, we might hide content, but let's show it peeking
+                const startY = 200;
+                const endY = 0;
+                const currentY = startY + (endY - startY) * cardProgress;
 
                 const cardW = 900 * currentScale;
                 const cardH = 1500 * currentScale;
-                const cardX = -cardW / 2; // Since we translated to centerX
-                const cardY = ((canvas.height - cardH) / 2) + currentYOffset;
+                const cardX = -cardW / 2;
+                const cardY = ((canvas.height - cardH) / 2) + currentY;
 
-                // Only draw if opacity > 0
                 if (elapsed > 200) {
-                    // Draw Spotlights (Rotating)
-                    ctx.save();
-                    ctx.rotate(swing);
-                    const spotGrad = ctx.createRadialGradient(0, -200, 0, 0, 500, 1500);
-                    spotGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
-                    spotGrad.addColorStop(1, 'transparent');
-                    ctx.fillStyle = spotGrad;
-                    ctx.beginPath();
-                    ctx.moveTo(-50, -200);
-                    ctx.lineTo(50, -200);
-                    ctx.lineTo(400, 2000);
-                    ctx.lineTo(-400, 2000);
-                    ctx.fill();
-                    ctx.restore();
 
-
-                    // Glass Background
-                    ctx.fillStyle = 'rgba(25, 25, 25, 0.9)'; // Dark backing
-                    ctx.strokeStyle = '#D4AF37';
-                    ctx.lineWidth = 2 * currentScale;
+                    // Card Body (Light Glass)
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'; // Light, matching web
+                    ctx.strokeStyle = 'rgba(212, 175, 55, 0.4)'; // Gold border
+                    ctx.lineWidth = 1;
 
                     // Shadow
                     ctx.shadowColor = 'rgba(0,0,0,0.5)';
-                    ctx.shadowBlur = 40 * currentScale;
-                    ctx.shadowOffsetX = 0;
-                    ctx.shadowOffsetY = 20 * currentScale;
+                    ctx.shadowBlur = 50 * currentScale;
+                    ctx.shadowOffsetY = 30;
 
-                    // Draw Card Rect
+                    // Draw Card
                     ctx.fillRect(cardX, cardY, cardW, cardH);
                     ctx.shadowColor = 'transparent'; // Clear shadow for stroke
                     ctx.strokeRect(cardX, cardY, cardW, cardH);
 
-                    // Texture Pattern (Diamond) inside Card
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.rect(cardX, cardY, cardW, cardH);
-                    ctx.clip();
-                    // Draw faint diamonds
-                    /*                    ctx.strokeStyle = 'rgba(212, 175, 55, 0.05)';
-                                        ctx.lineWidth = 1;
-                                        const diagSpacing = 40 * currentScale;
-                                        // ... complex diagonal loop skipped for perf, using simple grid
-                    */
-                    ctx.restore();
-
+                    // Inner Border (Double border effect)
+                    ctx.strokeStyle = 'rgba(212, 175, 55, 0.2)';
+                    ctx.strokeRect(cardX + 20, cardY + 20, cardW - 40, cardH - 40);
 
                     // -- CONTENT INSIDE CARD --
 
-                    // 1. Chandelier (Inside the card at top)
-                    // Sway animation
-                    ctx.save();
-                    const chandelierSway = Math.sin(elapsed / 2000) * 0.02;
-                    ctx.translate(0, cardY); // Top center of card
-                    ctx.rotate(chandelierSway);
-
-                    const chandScale = currentScale * 1.0;
-                    ctx.scale(chandScale, chandScale);
-
-                    // Draw Chandelier Logic
-                    ctx.strokeStyle = '#D4AF37';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    // Stem
-                    ctx.moveTo(0, 0); ctx.lineTo(0, 80);
-                    // Arms
-                    ctx.moveTo(0, 80); ctx.bezierCurveTo(-60, 120, -120, 120, -140, 90);
-                    ctx.moveTo(0, 80); ctx.bezierCurveTo(60, 120, 120, 120, 140, 90);
-                    ctx.stroke();
-                    // Candles/Lights
-                    ctx.fillStyle = '#fff';
-                    ctx.shadowColor = '#fff';
-                    ctx.shadowBlur = 10;
-                    [-140, 140, 0].forEach(pX => {
-                        ctx.beginPath(); ctx.arc(pX, (pX === 0 ? 100 : 90), 4, 0, Math.PI * 2); ctx.fill();
-                    });
-
-                    ctx.restore();
-
-
-                    // 2. Text & Image
-                    // Names
+                    // Header
                     ctx.textAlign = 'center';
+                    ctx.fillStyle = '#8B6508'; // Dark Gold
+                    ctx.font = `bold ${24 * currentScale}px "Cinzel"`;
+                    ctx.fillText('THE WEDDING CELEBRATION', 0, cardY + 200 * currentScale);
 
-                    // "The Wedding Celebration"
-                    ctx.fillStyle = '#8B6508';
-                    ctx.font = `bold ${30 * currentScale}px "Cinzel"`;
-                    ctx.fillText('THE WEDDING CELEBRATION', 0, cardY + 250 * currentScale);
+                    // Names (Gold Luxury Gradient simulated by Color)
+                    const nameGrad = ctx.createLinearGradient(-300, 0, 300, 0);
+                    nameGrad.addColorStop(0, '#bf953f');
+                    nameGrad.addColorStop(0.2, '#fcf6ba'); // bright
+                    nameGrad.addColorStop(0.5, '#b38728'); // dark gold
+                    nameGrad.addColorStop(0.8, '#fbf5b7'); // bright
+                    nameGrad.addColorStop(1, '#aa771c');
+
+                    ctx.fillStyle = nameGrad;
 
                     // Groom
-                    ctx.shadowColor = 'rgba(212, 175, 55, 0.3)';
-                    ctx.shadowBlur = 10;
-                    ctx.fillStyle = '#FFFFFF'; // or Gold gradient simulation
+                    ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                    ctx.shadowBlur = 5;
                     ctx.font = `${100 * currentScale}px "Playfair Display"`;
-                    ctx.fillText(data.content.couples.pria.name.split(' ')[0], 0, cardY + 450 * currentScale);
+                    ctx.fillText(data.content.couples.pria.name.split(' ')[0], 0, cardY + 400 * currentScale);
 
                     // Ampersand
-                    ctx.fillStyle = '#D4AF37';
-                    ctx.font = `${60 * currentScale}px "Cinzel"`;
-                    ctx.fillText('&', 0, cardY + 540 * currentScale);
+                    ctx.fillStyle = '#333';
+                    ctx.font = `${50 * currentScale}px "Cinzel"`;
+                    ctx.fillText('&', 0, cardY + 480 * currentScale);
 
                     // Bride
-                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillStyle = nameGrad;
                     ctx.font = `${100 * currentScale}px "Playfair Display"`;
-                    ctx.fillText(data.content.couples.wanita.name.split(' ')[0], 0, cardY + 650 * currentScale);
+                    ctx.fillText(data.content.couples.wanita.name.split(' ')[0], 0, cardY + 600 * currentScale);
 
-                    ctx.shadowBlur = 0; // Reset
+                    ctx.shadowBlur = 0;
 
-                    // Photo Area (Rotated Frame simulated)
+                    // Separator Lines
+                    ctx.beginPath();
+                    ctx.moveTo(-50, cardY + 520 * currentScale);
+                    ctx.globalAlpha = 0.5;
+                    ctx.strokeStyle = '#D4AF37';
+                    ctx.lineWidth = 1;
+                    ctx.lineTo(50, cardY + 520 * currentScale);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1.0;
+
+                    // Photo Frame
                     const frameSize = 500 * currentScale;
-                    const frameCenterY = cardY + 1000 * currentScale; // Lower down
+                    const frameCenterY = cardY + 950 * currentScale;
 
                     ctx.save();
                     ctx.translate(0, frameCenterY);
-                    ctx.rotate(-0.03); // Tilt
+                    ctx.rotate(-0.02); // Slight tilt
 
-                    // White border bg
-                    ctx.fillStyle = '#f8f8f8';
-                    ctx.shadowColor = 'rgba(0,0,0,0.2)';
-                    ctx.shadowBlur = 20;
-                    ctx.fillRect(-frameSize / 2 - 20, -frameSize * 0.7 - 20, frameSize + 40, frameSize * 1.4 + 40);
+                    // Frame BG (White photo border)
+                    ctx.fillStyle = '#fff';
+                    ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                    ctx.shadowBlur = 10;
+                    ctx.fillRect(-frameSize / 2 - 15, -frameSize * 0.7 - 15, frameSize + 30, frameSize * 1.4 + 30);
 
                     // Image
                     if (heroImg.complete && heroImg.naturalWidth > 0) {
                         ctx.drawImage(heroImg, -frameSize / 2, -frameSize * 0.7, frameSize, frameSize * 1.4);
                     } else {
-                        ctx.fillStyle = '#ccc';
+                        ctx.fillStyle = '#eee';
                         ctx.fillRect(-frameSize / 2, -frameSize * 0.7, frameSize, frameSize * 1.4);
                     }
-
                     ctx.restore();
 
                     // Date Footer
                     const dateObj = new Date(data.content.hero.date);
                     const dateStr = `${dateObj.getDate()} . ${dateObj.getMonth() + 1} . ${dateObj.getFullYear()}`;
-                    ctx.fillStyle = '#D4AF37';
+                    ctx.fillStyle = '#8B6508';
                     ctx.font = `${30 * currentScale}px "Cinzel"`;
                     ctx.fillText(dateStr, 0, cardY + cardH - 100 * currentScale);
-                }
 
+
+                    // Chandelier inside card (top)
+                    ctx.save();
+                    const sway = Math.sin(elapsed / 1500) * 0.02;
+                    ctx.translate(0, cardY);
+                    ctx.rotate(sway);
+                    ctx.scale(currentScale, currentScale);
+
+                    ctx.strokeStyle = '#D4AF37';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0); ctx.lineTo(0, 60);
+                    ctx.moveTo(0, 60); ctx.bezierCurveTo(-40, 90, -80, 90, -100, 70);
+                    ctx.moveTo(0, 60); ctx.bezierCurveTo(40, 90, 80, 90, 100, 70);
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#fff';
+                    ctx.shadowColor = '#fff';
+                    ctx.shadowBlur = 10;
+                    [-100, 100, 0].forEach(tx => {
+                        ctx.beginPath(); ctx.arc(tx, (tx === 0 ? 80 : 70), 4, 0, Math.PI * 2); ctx.fill();
+                    });
+                    ctx.restore();
+                }
                 ctx.restore();
 
+                // --- 4. FOREGROUND BLUR SHAPES (Bokeh) ---
+                // Shapes drifting in front of the card to create depth
+                ctx.save();
+                // We use a fixed seed-like behavior based on time
+                const bokehCount = 6;
+                const bokehTime = elapsed / 2000;
 
-                // --- 3. CURTAINS (Foreground) ---
-                // Open Progress from 0 to 1
+                for (let i = 0; i < bokehCount; i++) {
+                    const size = 100 + (i * 50);
+                    // Sin movement
+                    const bx = (Math.sin(bokehTime + i * 1.5) * (canvas.width * 0.4)) + canvas.width / 2;
+                    const by = (Math.cos(bokehTime * 0.7 + i) * (canvas.height * 0.4)) + canvas.height / 2;
+
+                    const bokehGrad = ctx.createRadialGradient(bx, by, 0, bx, by, size);
+                    // Gold/White bokeh
+                    bokehGrad.addColorStop(0, 'rgba(255, 230, 150, 0.08)');
+                    bokehGrad.addColorStop(1, 'rgba(255, 230, 150, 0)');
+
+                    ctx.fillStyle = bokehGrad;
+                    ctx.beginPath();
+                    ctx.arc(bx, by, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+
+                // --- 5. CURTAINS (Top Layer) ---
                 let openProgress = Math.min(1, elapsed / curtainDuration);
-                // Cubic ease in-out for smooth movement
                 openProgress = openProgress < .5 ? 4 * openProgress * openProgress * openProgress : (openProgress - 1) * (2 * openProgress - 2) * (2 * openProgress - 2) + 1;
 
-                // Max open width (curtains basically disappear offscreen or stay on edges)
-                // Let's say they move 60% of width to sides
-                const moveDist = (canvas.width / 2) * openProgress;
+                const curtainW = canvas.width / 2;
+                const moveDist = curtainW * openProgress;
 
                 // Left Curtain
                 ctx.save();
-                ctx.translate(-moveDist, 0); // Move Left
-
-                // Draw Left Curtain Rect (Covering left half)
-                // Gradient for folds
-                const gradL = ctx.createLinearGradient(0, 0, canvas.width / 2, 0);
+                ctx.translate(-moveDist, 0);
+                const gradL = ctx.createLinearGradient(0, 0, curtainW, 0);
                 gradL.addColorStop(0, '#4a0404');
                 gradL.addColorStop(0.3, '#720e1e');
-                gradL.addColorStop(0.5, '#8b1a2b'); // Light fold
+                gradL.addColorStop(0.5, '#8b1a2b');
                 gradL.addColorStop(0.8, '#5e0b16');
                 gradL.addColorStop(1, '#4a0404');
                 ctx.fillStyle = gradL;
-
-                // Draw scaled curtain (squeezing effect?)
-                // Simple translate is safer for canvas than non-uniform scaling which distorts gradient oddly
-                ctx.fillRect(0, 0, canvas.width / 2, canvas.height);
+                ctx.fillRect(0, 0, curtainW, canvas.height);
                 ctx.restore();
 
                 // Right Curtain
                 ctx.save();
-                ctx.translate(moveDist, 0); // Move Right
-
-                const gradR = ctx.createLinearGradient(canvas.width / 2, 0, canvas.width, 0);
+                ctx.translate(moveDist, 0);
+                const gradR = ctx.createLinearGradient(curtainW, 0, canvas.width, 0);
                 gradR.addColorStop(0, '#4a0404');
                 gradR.addColorStop(0.3, '#5e0b16');
                 gradR.addColorStop(0.5, '#8b1a2b');
                 gradR.addColorStop(0.7, '#720e1e');
                 gradR.addColorStop(1, '#4a0404');
                 ctx.fillStyle = gradR;
-
-                ctx.fillRect(canvas.width / 2, 0, canvas.width / 2, canvas.height);
+                ctx.fillRect(curtainW, 0, curtainW, canvas.height);
                 ctx.restore();
 
-
-                // Center Open Badge (Fades out)
+                // OPEN Badge
                 if (openProgress < 0.8) {
                     ctx.save();
-                    const opacity = 1 - (openProgress * 1.5); // Fade out fast
+                    const opacity = 1 - (openProgress * 1.5);
                     if (opacity > 0) {
                         ctx.globalAlpha = opacity;
                         ctx.translate(centerX, canvas.height / 2);
-                        // Gold Circle
                         ctx.beginPath();
                         ctx.arc(0, 0, 80, 0, Math.PI * 2);
-                        ctx.fillStyle = '#4a0404'; // Dark red
+                        ctx.fillStyle = '#4a0404';
                         ctx.fill();
                         ctx.strokeStyle = '#FFD700';
                         ctx.lineWidth = 4;
                         ctx.stroke();
 
-                        // Text 'OPEN'
                         ctx.fillStyle = '#FFD700';
                         ctx.font = '24px "Cinzel"';
                         ctx.textAlign = 'center';
