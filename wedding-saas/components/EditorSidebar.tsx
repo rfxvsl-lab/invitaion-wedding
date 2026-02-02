@@ -5,7 +5,7 @@ import ImageUploader from './ImageUploader';
 import { InvitationData } from '../types/invitation';
 import { supabase } from '@/lib/supabase';
 import { TEMPLATES } from '../lib/templates';
-import { getEffectivePlan } from '../lib/admin';
+import { getEffectivePlan, isAdmin } from '../lib/admin';
 import DIYEditor from './DIYEditor';
 
 interface EditorSidebarProps {
@@ -64,8 +64,14 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                     ) as 'free' | 'basic' | 'premium' | 'exclusive';
 
                     setPlan(effectivePlan);
-                    // Tokens column might not exist, use default if undefined
-                    setTokens(profile.tokens ?? 5);
+
+                    // Admin users get unlimited tokens (bypass token system)
+                    if (isAdmin(user.email)) {
+                        setTokens(Infinity); // Unlimited for admin
+                    } else {
+                        // Regular users: use tokens from DB or default to 5
+                        setTokens(profile.tokens ?? 5);
+                    }
                 }
             }
         };
@@ -410,7 +416,9 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-xs font-black text-amber-700 uppercase tracking-wider mb-1">🪙 Token Tersisa</p>
-                                            <p className="text-3xl font-bold text-amber-600">{tokens} / 5</p>
+                                            <p className="text-3xl font-bold text-amber-600">
+                                                {tokens === Infinity ? '∞' : `${tokens} / 5`}
+                                            </p>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-[10px] text-amber-600 italic">1 Token = 1x Ganti Tema Free</p>
