@@ -40,6 +40,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
     const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design' | 'settings'>('content');
     const [plan, setPlan] = useState<'free' | 'basic' | 'premium'>('free');
     const [uploadingMusic, setUploadingMusic] = useState(false);
+    const [tokens, setTokens] = useState<number>(5); // Free tier token system
 
     useEffect(() => {
         // Fetch User Plan
@@ -55,6 +56,29 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
 
     const getValue = (path: string) => {
         return path.split('.').reduce((o: any, i) => (o ? o[i] : ''), data);
+    };
+
+    const handleThemeChange = (themeId: string, tier: 'free' | 'basic' | 'premium' | 'exclusive') => {
+        // Block non-free themes for free users
+        if (plan === 'free' && tier !== 'free') {
+            alert('🔒 Template ini memerlukan upgrade ke ' + (tier === 'exclusive' ? 'Premium/Exclusive' : tier.toUpperCase()) + ' plan!');
+            return;
+        }
+
+        // Token system for free users
+        if (plan === 'free' && tier === 'free') {
+            if (tokens <= 0) {
+                alert('❌ Token Anda habis! Upgrade ke Basic plan untuk unlimited edits.');
+                return;
+            }
+            if (confirm(`🪙 Gunakan 1 token untuk ganti tema?\n\nSisa token: ${tokens - 1}/5`)) {
+                setTokens(tokens - 1);
+                onUpdate('metadata.theme_id', themeId);
+            }
+        } else {
+            // Basic/Premium users can switch freely
+            onUpdate('metadata.theme_id', themeId);
+        }
     };
 
     const handleMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -247,8 +271,13 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
 
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                             <SectionHeader icon={Palette} title="Galeri Foto" />
+                            {plan === 'free' && (
+                                <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+                                    <p className="text-xs text-amber-700 font-bold">⚠️ Free Plan: Maksimal 4 foto. Upgrade ke Basic untuk 6 foto.</p>
+                                </div>
+                            )}
                             <div className="grid grid-cols-2 gap-4">
-                                {[0, 1, 2, 3, 4, 5].map((idx) => (
+                                {[0, 1, 2, 3, 4, 5].slice(0, plan === 'free' ? 4 : 6).map((idx) => (
                                     <ImageUploader
                                         key={idx}
                                         label={`Foto ${idx + 1}`}
@@ -270,7 +299,22 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                             <SectionHeader icon={Palette} title="Tema & Musik" />
 
-                            {/* Theme Selection Grid */}
+                            {/* Token Balance Display (Free Users Only) */}
+                            {plan === 'free' && (
+                                <div className="mb-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl shadow-sm">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-xs font-black text-amber-700 uppercase tracking-wider mb-1">🪙 Token Tersisa</p>
+                                            <p className="text-3xl font-bold text-amber-600">{tokens} / 5</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[10px] text-amber-600 italic">1 Token = 1x Ganti Tema Free</p>
+                                            <p className="text-[10px] text-slate-500 mt-1">Upgrade untuk unlimited</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Theme Selection Grid */}
                             <div className="space-y-6 mb-6">
                                 {/* FREE & BASIC TIER */}
@@ -283,7 +327,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         {TEMPLATES.filter(t => t.tier === 'free' || t.tier === 'basic').map(template => (
                                             <button
                                                 key={template.id}
-                                                onClick={() => onUpdate('metadata.theme_id', template.id)}
+                                                onClick={() => handleThemeChange(template.id, template.tier)}
                                                 className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200
                                                 ${data.metadata.theme_id === template.id
                                                         ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm'
@@ -306,12 +350,23 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         {TEMPLATES.filter(t => t.tier === 'premium').map(template => (
                                             <button
                                                 key={template.id}
-                                                onClick={() => onUpdate('metadata.theme_id', template.id)}
-                                                className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 relative overflow-hidden
+                                                onClick={() => handleThemeChange(template.id, template.tier)}
+                                                disabled={plan === 'free'}
+                                                className={`relative p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 overflow-hidden
                                                 ${data.metadata.theme_id === template.id
                                                         ? 'border-violet-500 bg-violet-50 text-violet-700 shadow-sm'
                                                         : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
                                             >
+                                                {/* Lock Overlay for Free Users */}
+                                                {plan === 'free' && (
+                                                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center z-10 rounded-xl">
+                                                        <div className="text-center">
+                                                            <div className="text-2xl mb-1">🔒</div>
+                                                            <p className="text-[9px] text-white font-bold uppercase">Premium Plan</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+
                                                 {/* Premium Badge */}
                                                 <div className="absolute top-0 right-0 bg-violet-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl-lg">PRO</div>
 
@@ -332,12 +387,23 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         {TEMPLATES.filter(t => t.tier === 'exclusive').map(template => (
                                             <button
                                                 key={template.id}
-                                                onClick={() => onUpdate('metadata.theme_id', template.id)}
-                                                className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 relative overflow-hidden
+                                                onClick={() => handleThemeChange(template.id, template.tier)}
+                                                disabled={plan === 'free'}
+                                                className={`relative p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 overflow-hidden
                                                 ${data.metadata.theme_id === template.id
-                                                        ? 'border-amber-500 bg-amber-50 text-amber-700 shadow-sm' // Amber for Exclusive
+                                                        ? 'border-amber-500 bg-amber-50 text-amber-700 shadow-sm'
                                                         : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
                                             >
+                                                {/* Lock Overlay for Free Users */}
+                                                {plan === 'free' && (
+                                                    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center z-10 rounded-xl">
+                                                        <div className="text-center">
+                                                            <div className="text-2xl mb-1">🔒</div>
+                                                            <p className="text-[9px] text-white font-bold uppercase">Exclusive Plan</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+
                                                 {/* Exclusive Badge */}
                                                 <div className="absolute top-0 right-0 bg-amber-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl-lg">VIP</div>
 
