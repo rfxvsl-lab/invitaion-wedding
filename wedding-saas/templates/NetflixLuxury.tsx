@@ -105,7 +105,13 @@ const GlobalStyles = () => (
  * --- COMPONENTS ---
  */
 
-const NetflixEnvelope = ({ onOpen, brideName, groomName }) => {
+interface EnvelopeProps {
+    onOpen: () => void;
+    brideName: string;
+    groomName: string;
+}
+
+const NetflixEnvelope = ({ onOpen, brideName, groomName }: EnvelopeProps) => {
     const [opening, setOpening] = useState(false);
 
     const handleOpen = () => {
