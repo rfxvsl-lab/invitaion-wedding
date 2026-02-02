@@ -13,9 +13,9 @@ import RusticWood from '../templates/RusticWood';
 import DarkLuxury from '../templates/DarkLuxury';
 import PremiumPeppy from '../templates/PremiumPeppy';
 import GamerQuest from '../templates/GamerQuest';
-import MaroonVintage from '../templates/MaroonVintage';
-import AdatBone from '../templates/AdatBone';
+
 import ElegantVanilla from '../templates/ElegantVanilla';
+import RoyalGlass from '../templates/RoyalGlass';
 
 interface InvitationPageProps {
     data: InvitationData | null;
@@ -42,9 +42,9 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
             case 'dark-luxury': return <DarkLuxury data={data} />;
             case 'premium-peppy': return <PremiumPeppy data={data} />;
             case 'gamer-quest': return <GamerQuest data={data} />;
-            case 'maroon-vintage': return <MaroonVintage data={data} />;
-            case 'adat-bone': return <AdatBone data={data} />;
+
             case 'elegant-vanilla': return <ElegantVanilla data={data} />;
+            case 'royal-glass': return <RoyalGlass data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };

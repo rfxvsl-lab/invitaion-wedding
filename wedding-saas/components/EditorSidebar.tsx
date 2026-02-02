@@ -4,6 +4,7 @@ import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2, Settings, Q
 import ImageUploader from './ImageUploader';
 import { InvitationData } from '../types/invitation';
 import { supabase } from '@/lib/supabase';
+import { TEMPLATES } from '../lib/templates';
 
 interface EditorSidebarProps {
     data: InvitationData;
@@ -270,20 +271,82 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                             <SectionHeader icon={Palette} title="Tema & Musik" />
 
                             {/* Theme Selection Grid */}
-                            <div className="grid grid-cols-2 gap-3 mb-6">
-                                {['modern-arch', 'classic-serif', 'botanical-line', 'rustic-wood', 'dark-luxury', 'premium-peppy', 'gamer-quest', 'maroon-vintage', 'adat-bone', 'elegant-vanilla'].map(theme => (
-                                    <button
-                                        key={theme}
-                                        onClick={() => onUpdate('metadata.theme_id', theme)}
-                                        className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200
-                                            ${data.metadata.theme_id === theme
-                                                ? 'border-pink-500 bg-pink-50 text-pink-700 shadow-sm'
-                                                : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
-                                    >
-                                        <div className={`w-3 h-3 rounded-full mb-2 ${data.metadata.theme_id === theme ? 'bg-pink-500' : 'bg-slate-200'}`}></div>
-                                        {theme.replace('-', ' ')}
-                                    </button>
-                                ))}
+                            {/* Theme Selection Grid */}
+                            <div className="space-y-6 mb-6">
+                                {/* FREE & BASIC TIER */}
+                                <div>
+                                    <div className="flex items-center gap-2 mb-3 px-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+                                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Free & Basic</h4>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {TEMPLATES.filter(t => t.tier === 'free' || t.tier === 'basic').map(template => (
+                                            <button
+                                                key={template.id}
+                                                onClick={() => onUpdate('metadata.theme_id', template.id)}
+                                                className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200
+                                                ${data.metadata.theme_id === template.id
+                                                        ? 'border-emerald-500 bg-emerald-50 text-emerald-700 shadow-sm'
+                                                        : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
+                                            >
+                                                <div className={`w-3 h-3 rounded-full mb-2 ${data.metadata.theme_id === template.id ? 'bg-emerald-500' : 'bg-slate-200'}`}></div>
+                                                {template.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* PREMIUM TIER */}
+                                <div>
+                                    <div className="flex items-center gap-2 mb-3 px-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-violet-500"></div>
+                                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Premium</h4>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {TEMPLATES.filter(t => t.tier === 'premium').map(template => (
+                                            <button
+                                                key={template.id}
+                                                onClick={() => onUpdate('metadata.theme_id', template.id)}
+                                                className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 relative overflow-hidden
+                                                ${data.metadata.theme_id === template.id
+                                                        ? 'border-violet-500 bg-violet-50 text-violet-700 shadow-sm'
+                                                        : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
+                                            >
+                                                {/* Premium Badge */}
+                                                <div className="absolute top-0 right-0 bg-violet-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl-lg">PRO</div>
+
+                                                <div className={`w-3 h-3 rounded-full mb-2 ${data.metadata.theme_id === template.id ? 'bg-violet-500' : 'bg-slate-200'}`}></div>
+                                                {template.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* EXCLUSIVE TIER */}
+                                <div>
+                                    <div className="flex items-center gap-2 mb-3 px-1">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
+                                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Exclusive</h4>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {TEMPLATES.filter(t => t.tier === 'exclusive').map(template => (
+                                            <button
+                                                key={template.id}
+                                                onClick={() => onUpdate('metadata.theme_id', template.id)}
+                                                className={`p-4 text-xs font-bold rounded-xl border-2 text-left capitalize transition-all duration-200 relative overflow-hidden
+                                                ${data.metadata.theme_id === template.id
+                                                        ? 'border-amber-500 bg-amber-50 text-amber-700 shadow-sm' // Amber for Exclusive
+                                                        : 'border-slate-100 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50'}`}
+                                            >
+                                                {/* Exclusive Badge */}
+                                                <div className="absolute top-0 right-0 bg-amber-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-bl-lg">VIP</div>
+
+                                                <div className={`w-3 h-3 rounded-full mb-2 ${data.metadata.theme_id === template.id ? 'bg-amber-500' : 'bg-slate-200'}`}></div>
+                                                {template.name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* MAROON VINTAGE SPECIAL SETTINGS */}

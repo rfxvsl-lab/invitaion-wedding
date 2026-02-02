@@ -9,11 +9,14 @@ import RusticWood from '../../templates/RusticWood';
 import DarkLuxury from '../../templates/DarkLuxury';
 import BotanicalLine from '../../templates/BotanicalLine';
 import ModernArch from '../../templates/ModernArch';
-import MaroonVintage from '../../templates/MaroonVintage';
+
 import ElegantVanilla from '../../templates/ElegantVanilla';
-import AdatBone from '../../templates/AdatBone';
+
 import GamerQuest from '../../templates/GamerQuest';
+
+
 import PremiumPeppy from '../../templates/PremiumPeppy';
+import RoyalGlass from '../../templates/RoyalGlass';
 
 // Types
 import { InvitationData } from '../../types/invitation';
@@ -111,11 +114,12 @@ const THEMES: Record<string, any> = {
     'dark-luxury': DarkLuxury,
     'botanical-line': BotanicalLine,
     'modern-arch': ModernArch,
-    'maroon-vintage': MaroonVintage,
+
     'elegant-vanilla': ElegantVanilla,
-    'adat-bone': AdatBone,
+
     'gamer-quest': GamerQuest,
     'premium-peppy': PremiumPeppy,
+    'royal-glass': RoyalGlass,
 };
 
 
