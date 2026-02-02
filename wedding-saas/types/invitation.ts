@@ -22,12 +22,37 @@ export interface GiftAccount {
     holder: string;
 }
 
+export interface DIYElement {
+    id: string;
+    type: 'text' | 'image' | 'icon' | 'frame' | 'sticker' | 'shape';
+    assetId?: string; // Reference to asset from diyAssets.ts
+    position: { x: number; y: number }; // Percentage-based (0-100)
+    size: { width: number; height: number }; // Percentage-based
+    rotation: number; // Degrees
+    zIndex: number;
+    locked: boolean;
+    // Type-specific data
+    content?: {
+        text?: string;
+        imageUrl?: string;
+        color?: string;
+        fontSize?: number;
+        fontFamily?: string;
+    };
+}
+
+export interface DIYLayout {
+    enabled: boolean;
+    elements: DIYElement[];
+}
+
 export interface InvitationData {
     metadata: {
         slug: string;
         theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest' | 'maroon-vintage' | 'adat-bone' | 'elegant-vanilla' | 'royal-glass' | 'netflix-luxury' | 'grand-ballroom' | 'royal-arabian';
         music_url: string;
         custom_bg_url?: string; // Optional custom background
+        diy_layout?: DIYLayout; // DIY customization data
         is_active: boolean;
         published_at?: string; // ISO timestamp when published
         expires_at?: string; // ISO timestamp when expires (null for exclusive = forever)

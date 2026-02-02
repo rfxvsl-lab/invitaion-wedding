@@ -6,6 +6,7 @@ import { InvitationData } from '../types/invitation';
 import { supabase } from '@/lib/supabase';
 import { TEMPLATES } from '../lib/templates';
 import { getEffectivePlan } from '../lib/admin';
+import DIYEditor from './DIYEditor';
 
 interface EditorSidebarProps {
     data: InvitationData;
@@ -537,6 +538,15 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                         💡 Upload gambar kustom untuk background undangan. Biarkan kosong untuk default.
                                     </p>
                                 </div>
+                            )}
+
+                            {/* DIY CUSTOMIZATION (Premium/Exclusive Tier) */}
+                            {(plan === 'premium' || plan === 'exclusive') && (
+                                <DIYEditor
+                                    initialLayout={data.metadata.diy_layout}
+                                    plan={plan}
+                                    onLayoutChange={(layout) => onUpdate('metadata.diy_layout', layout)}
+                                />
                             )}
 
                             {/* MUSIC SECTION */}
