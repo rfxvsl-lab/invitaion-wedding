@@ -108,12 +108,17 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                     recorder.onstop = () => {
                         // Extension depends on mimeType
                         const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+                        if (chunks.length === 0) {
+                            alert("Gagal: Rekaman video kosong (0 bytes). Coba gunakan gambar lokal atau browser Chrome.");
+                            setProcessingVideo(false);
+                            return;
+                        }
                         const blob = new Blob(chunks, { type: mimeType });
                         download(blob, `story-video-${slug}.${ext}`);
                         setProcessingVideo(false);
                     };
 
-                    recorder.start();
+                    recorder.start(1000); // Timeslice 1000ms to force chunks
 
                     // Record for 10 seconds
                     let seconds = 0;

@@ -24,12 +24,11 @@ export const useRoyalGlassRender = ({ canvasRef, data, guestName, wish, isActive
         if (!ctx) return;
 
         // Assets
-        const textureImg = new Image();
-        textureImg.crossOrigin = "anonymous"; // Prevent Tainted Canvas
-        textureImg.src = "https://www.transparenttextures.com/patterns/cream-paper.png";
+        // Removed external texture to prevent CORS/Tainting issues
+        // const textureImg = new Image(); ...
 
         const heroImg = new Image();
-        heroImg.crossOrigin = "anonymous"; // Prevent Tainted Canvas
+        heroImg.crossOrigin = "anonymous"; // Essential for Unsplash/External
         heroImg.src = data.content.hero.main_image || "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80";
         // Ensure image is loaded (simplified for this hook, in production might need preloader)
 
@@ -62,18 +61,8 @@ export const useRoyalGlassRender = ({ canvasRef, data, guestName, wish, isActive
             ctx.fillStyle = '#F9F7F2';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // TEXTURE (Tiled)
-            if (textureImg.complete) {
-                const pat = ctx.createPattern(textureImg, 'repeat');
-                if (pat) {
-                    ctx.fillStyle = pat;
-                    ctx.globalAlpha = 0.5;
-                    ctx.globalCompositeOperation = 'multiply';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.globalCompositeOperation = 'source-over';
-                    ctx.globalAlpha = 1.0;
-                }
-            }
+            // TEXTURE (Tiled) - Removed in favor of procedural noise
+            // if (textureImg.complete) { ... }
 
             // ANIMATED BLOBS
             blobs.forEach(blob => {
