@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { toPng, toJpeg, toCanvas } from 'html-to-image';
 import download from 'downloadjs';
 import { Download, Image, Camera, Video, Loader2 } from 'lucide-react';
-import { Muxer, ArrayBufferTarget } from 'webm-muxer';
+import { Muxer, ArrayBufferTarget } from 'mp4-muxer';
 
 import { InstagramStoryTemplate } from './InstagramStoryTemplate';
 import { TEMPLATES } from '../lib/templates';
@@ -66,75 +66,95 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
         if (processingVideo && canvasRef.current) {
             const startRecording = async () => {
                 try {
-                    // Slight delay to ensure animation frame has started drawing
-                    await new Promise(r => setTimeout(r, 100));
+                    // Give canvas a moment to initialize
+                    await new Promise(r => setTimeout(r, 500));
 
                     const canvas = canvasRef.current;
                     if (!canvas) return;
 
-                    const stream = canvas.captureStream(30); // 30 FPS
+                    const width = canvas.width;
+                    const height = canvas.height;
+                    const fps = 30;
+                    const durationInSeconds = 10;
+                    const totalFrames = durationInSeconds * fps;
 
-                    // Detect supported MIME Type
-                    const mimeTypes = [
-                        'video/webm; codecs=vp9',
-                        'video/webm; codecs=vp8',
-                        'video/webm; codecs=h264',
-                        'video/webm',
-                        'video/mp4'
-                    ];
-
-                    let mimeType = '';
-                    for (const type of mimeTypes) {
-                        if (MediaRecorder.isTypeSupported(type)) {
-                            mimeType = type;
-                            break;
-                        }
-                    }
-
-                    if (!mimeType) {
-                        throw new Error("Browser tidak mendukung format video yang tersedia.");
-                    }
-
-                    const recorder = new MediaRecorder(stream, {
-                        mimeType,
-                        videoBitsPerSecond: 5000000 // 5 Mbps
+                    // 1. Setup MP4 Muxer
+                    const muxer = new Muxer({
+                        target: new ArrayBufferTarget(),
+                        video: {
+                            codec: 'avc',
+                            width,
+                            height
+                        },
+                        fastStart: 'in-memory', // Important for social media streaming compatibility
                     });
 
-                    const chunks: Blob[] = [];
-                    recorder.ondataavailable = (e) => {
-                        if (e.data.size > 0) chunks.push(e.data);
-                    };
+                    // 2. Setup VideoEncoder (WebCodecs API)
+                    const videoEncoder = new VideoEncoder({
+                        output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+                        error: (e) => {
+                            console.error(e);
+                            throw e;
+                        }
+                    });
 
-                    recorder.onstop = () => {
-                        // Extension depends on mimeType
-                        const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
-                        if (chunks.length === 0) {
-                            alert("Gagal: Rekaman video kosong (0 bytes). Coba gunakan gambar lokal atau browser Chrome.");
+                    // 3. Configure Encoder (H.264 - Main Profile Level 4.1 for broad compatibility)
+                    videoEncoder.configure({
+                        codec: 'avc1.4d002a',
+                        width,
+                        height,
+                        bitrate: 5_000_000, // 5 Mbps
+                        framerate: fps,
+                    });
+
+                    // 4. Recording Loop
+                    let frameCount = 0;
+                    const startTime = performance.now();
+
+                    const processFrame = async () => {
+                        if (frameCount >= totalFrames) {
+                            // Finish
+                            await videoEncoder.flush();
+                            muxer.finalize();
+
+                            const { buffer } = muxer.target;
+                            const blob = new Blob([buffer], { type: 'video/mp4' });
+                            download(blob, `story-${slug}.mp4`);
+
                             setProcessingVideo(false);
                             return;
                         }
-                        const blob = new Blob(chunks, { type: mimeType });
-                        download(blob, `story-video-${slug}.${ext}`);
-                        setProcessingVideo(false);
+
+                        // Calculate progress
+                        const progressPercent = Math.round((frameCount / totalFrames) * 100);
+                        setProgress(progressPercent);
+
+                        // Create VideoFrame from Canvas
+                        // timestamp unit is microseconds
+                        const timestamp = (frameCount / fps) * 1_000_000;
+
+                        const frame = new VideoFrame(canvas, { timestamp });
+
+                        // Keyframe every 2 seconds (60 frames)
+                        const keyFrame = frameCount % 60 === 0;
+
+                        videoEncoder.encode(frame, { keyFrame });
+                        frame.close();
+
+                        frameCount++;
+
+                        // Schedule next frame capture loosely based on real-time
+                        // But since we are encoding "what is on canvas", and canvas animation is running on its own loop,
+                        // we just need to sample it.
+                        // Ideally we sync, but loose sampling at 30fps is fine for this visual style.
+                        setTimeout(processFrame, 1000 / fps);
                     };
 
-                    recorder.start(1000); // Timeslice 1000ms to force chunks
+                    processFrame();
 
-                    // Record for 10 seconds
-                    let seconds = 0;
-                    const duration = 10;
-                    const interval = setInterval(() => {
-                        seconds++;
-                        setProgress(Math.round((seconds / duration) * 100));
-                        if (seconds >= duration) {
-                            clearInterval(interval);
-                            recorder.stop();
-                        }
-                    }, 1000);
                 } catch (err: any) {
                     console.error("Video recording error", err);
-                    // Show specific error to help debugging (especially SecurityError)
-                    alert(`Gagal merekam video: ${err.message || err}. \nJika error "SecurityError", gambar mungkin dilindungi CORS.`);
+                    alert(`Gagal merekam video MP4: ${err.message || err}. \nPastikan browser Anda update (Chrome/Edge terbaru).`);
                     setProcessingVideo(false);
                 }
             };
