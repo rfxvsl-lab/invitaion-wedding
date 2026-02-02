@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { toPng, toJpeg } from 'html-to-image';
 import download from 'downloadjs';
-import { Download, Image, Camera } from 'lucide-react';
+import { Download, Image, Camera, Video } from 'lucide-react';
 
 import { InstagramStoryTemplate } from './InstagramStoryTemplate';
+import { TEMPLATES } from '../lib/templates';
 import { InvitationData } from '../types/invitation';
 
 interface DownloadProps {
@@ -18,10 +19,24 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
     const [guestName, setGuestName] = useState('');
     const [wish, setWish] = useState('');
     const storyRef = React.useRef<HTMLDivElement>(null);
+    const [recording, setRecording] = useState(false);
 
-    /* Full download removed as requested
+    // Get Tier
+    const tier = TEMPLATES.find(t => t.id === data.metadata.theme_id)?.tier || 'free';
+    const isExclusive = tier === 'exclusive';
+
+    /* Full download removed
     const handleDownload = async (type: 'full') => {
-        ...
+        if (!targetRef.current) return;
+        setIsDownloading(true);
+        try {
+            const dataUrl = await toPng(targetRef.current, { cacheBust: true, });
+            download(dataUrl, `invitation-${slug}-${type}.png`);
+        } catch (error) {
+            console.error('Download failed', error);
+        } finally {
+            setIsDownloading(false);
+        }
     };
     */
 
@@ -43,10 +58,57 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
         }
     };
 
+    const handleVideoDownload = async () => {
+        if (!isExclusive) return;
+
+        try {
+            setRecording(true);
+            alert("Untuk hasil terbaik (100% animasi), silakan pilih Tab ini ('Chrome Tab' -> 'Current Tab') ketika diminta, dan biarkan rekaman berjalan selama 10-15 detik.");
+
+            const stream = await navigator.mediaDevices.getDisplayMedia({
+                video: {
+                    displaySurface: "browser",
+                },
+                audio: false
+            });
+
+            const mimeType = 'video/webm; codecs=vp9';
+            const mediaRecorder = new MediaRecorder(stream, { mimeType });
+            const chunks: Blob[] = [];
+
+            mediaRecorder.ondataavailable = (e) => {
+                if (e.data.size > 0) chunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                download(blob, `story-video-${slug}.webm`);
+
+                stream.getTracks().forEach(track => track.stop()); // Stop sharing
+                setRecording(false);
+            };
+
+            mediaRecorder.start();
+
+            // Auto stop after 15 seconds
+            setTimeout(() => {
+                if (mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+            }, 15000);
+
+        } catch (err) {
+            console.error("Recording failed", err);
+            setRecording(false);
+            alert("Gagal memulai rekaman layar. Pastikan izin diberikan.");
+        }
+    };
+
     return (
         <>
             <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 exclude-from-capture">
-                <div className="bg-white/90 backdrop-blur shadow-lg rounded-full p-2 border border-gray-200 hover:scale-105 transition-transform cursor-pointer group relative">
+                {/* Floating Action Button */}
+                <div className={`bg-white/90 backdrop-blur shadow-lg rounded-full p-2 border border-gray-200 cursor-pointer group relative transition-all duration-300 opacity-40 hover:opacity-100 hover:scale-105 ${isDownloading ? 'opacity-100' : ''}`}>
                     <button
                         onClick={() => setShowModal(true)}
                         disabled={isDownloading}
@@ -101,16 +163,31 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                                 disabled={!guestName || !wish || isDownloading}
                                 className="flex-1 py-2 bg-indigo-600 text-white font-bold text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
-                                {isDownloading ? 'Memproses...' : 'Unduh Story'}
+                                {isDownloading ? 'Memproses...' : 'Unduh Gambar (PNG)'}
                             </button>
+
+                            {/* EXCLUSIVE VIDEO DOWNLOAD */}
+                            {isExclusive && (
+                                <button
+                                    onClick={handleVideoDownload}
+                                    disabled={!guestName || !wish || isDownloading || recording}
+                                    className="flex-1 py-2 bg-amber-500 text-white font-bold text-sm rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                >
+                                    {recording ? 'Merekam (15s)...' : 'Unduh Video (MP4/WebM)'}
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
             )}
 
             {/* HIDDEN STORY TEMPLATE (Off-screen rendering) */}
-            <div className="fixed left-[9999px] top-0">
-                <InstagramStoryTemplate ref={storyRef} data={data} guestName={guestName} wish={wish} />
+            <div className={`fixed top-0 left-0 z-[100] ${recording ? 'w-screen h-screen bg-black flex items-center justify-center' : 'left-[9999px] top-0'}`}>
+                {recording && <p className="absolute top-4 text-white font-bold z-50 animate-pulse">🔴 Merekam... Tunggu 15 detik</p>}
+
+                <div className={recording ? 'scale-50 origin-center' : ''}>
+                    <InstagramStoryTemplate ref={storyRef} data={data} guestName={guestName} wish={wish} />
+                </div>
             </div>
         </>
     );

@@ -7,6 +7,29 @@ interface StoryProps {
     wish: string;
 }
 
+// ASSETS for Royal Glass
+const ROYAL_ASSETS = {
+    texture: "https://www.transparenttextures.com/patterns/cream-paper.png"
+};
+
+// SVG Components for Royal Glass
+const HugeFloral = ({ className, color = "#D4A5A5", style }: any) => (
+    <svg viewBox="0 0 200 200" className={`absolute pointer-events-none opacity-40 ${className}`} style={style}>
+        <path d="M100 0 C 130 50, 180 50, 200 100 C 180 150, 130 180, 100 200 C 70 150, 20 150, 0 100 C 20 50, 70 20, 100 0" fill="none" stroke={color} strokeWidth="1.5" />
+        <path d="M100 0 Q 100 100 0 100" fill="none" stroke={color} strokeWidth="0.5" opacity="0.5" />
+        <path d="M100 0 Q 100 100 200 100" fill="none" stroke={color} strokeWidth="0.5" opacity="0.5" />
+        <path d="M100 200 Q 100 100 0 100" fill="none" stroke={color} strokeWidth="0.5" opacity="0.5" />
+        <path d="M100 200 Q 100 100 200 100" fill="none" stroke={color} strokeWidth="0.5" opacity="0.5" />
+        <circle cx="100" cy="100" r="10" fill={color} fillOpacity="0.2" />
+    </svg>
+);
+
+const Leaf = ({ className, style }: any) => (
+    <svg viewBox="0 0 50 50" className={`absolute pointer-events-none ${className}`} style={style}>
+        <path d="M25 0 Q 50 25 25 50 Q 0 25 25 0" fill="#D4A5A5" fillOpacity="0.4" />
+    </svg>
+);
+
 // Theme Configuration Map
 const THEME_STYLES: Record<string, { fontTitle: string; fontBody: string; colorPrimary: string; colorSecondary: string; bg: string }> = {
     'modern-arch': { fontTitle: 'Cormorant Garamond, serif', fontBody: 'Open Sans, sans-serif', colorPrimary: '#A48874', colorSecondary: '#2D2D2D', bg: '#F8F9FA' },
@@ -30,8 +53,118 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
 
     return (
         <div ref={ref} className="w-[1080px] h-[1920px] relative overflow-hidden flex flex-col text-center" style={{ backgroundColor: theme.bg, fontFamily: theme.fontBody }}>
-            {/* SPECIAL DESIGN FOR PREMIUM-PEPPY */}
-            {themeId === 'premium-peppy' ? (
+            {/* SPECIAL DESIGN FOR ROYAL-GLASS (EXCLUSIVE) */}
+            {themeId === 'royal-glass' ? (
+                <div className="w-full h-full relative overflow-hidden bg-[#F9F7F2] text-[#2C2C2C]">
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400;1,600&family=Pinyon+Script&family=Montserrat:wght@200;300;400;500&display=swap');
+                        .font-cinzel { font-family: 'Cinzel Decorative', cursive; }
+                        .font-royal { font-family: 'Cormorant Garamond', serif; }
+                        .font-script { font-family: 'Pinyon Script', cursive; }
+                        .font-modern { font-family: 'Montserrat', sans-serif; }
+                        
+                        /* Animations need to be inline or global, but for image capture they might not render. 
+                           For Video capture, they will. */
+                        @keyframes falling-leaf {
+                            0% { transform: translate(0, -10vh) rotate(0deg) scale(0.8); opacity: 0; }
+                            10% { opacity: 0.8; }
+                            100% { transform: translate(100px, 110vh) rotate(360deg) scale(1); opacity: 0; }
+                        }
+                        @keyframes morph-float {
+                            0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(0, 0) rotate(0deg); }
+                            33% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; transform: translate(30px, -50px) rotate(10deg); }
+                            66% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; transform: translate(-20px, 20px) rotate(-10deg); }
+                        }
+                        @keyframes sway-slow {
+                            0%, 100% { transform: rotate(-5deg); }
+                            50% { transform: rotate(5deg); }
+                        }
+                        .animate-falling { animation: falling-leaf linear infinite; }
+                        .animate-morph { animation: morph-float 15s ease-in-out infinite alternate; }
+                        .animate-sway { animation: sway-slow 8s ease-in-out infinite; }
+                        
+                        .text-gold-gradient {
+                            background: linear-gradient(135deg, #8B6E4E 0%, #D4AF37 50%, #8B6E4E 100%);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+                        .glass-strong {
+                            background: rgba(255, 255, 255, 0.65);
+                            backdrop-filter: blur(20px);
+                            border: 1px solid rgba(255, 255, 255, 0.5);
+                            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+                        }
+                    `}</style>
+
+                    {/* Background Texture */}
+                    <div className="absolute inset-0 opacity-50 mix-blend-multiply" style={{ backgroundImage: `url(${ROYAL_ASSETS.texture})` }} />
+
+                    {/* Animated Blobs */}
+                    <div className="absolute top-[5%] left-[5%] w-[600px] h-[600px] bg-rose-200/40 mix-blend-multiply filter blur-[80px] animate-morph"></div>
+                    <div className="absolute bottom-[10%] right-[10%] w-[500px] h-[500px] bg-amber-200/40 mix-blend-multiply filter blur-[90px] animate-morph" style={{ animationDelay: '-5s' }}></div>
+
+                    {/* Big Florals */}
+                    <HugeFloral className="w-[800px] h-[800px] -top-20 -left-20 text-[#B8860B]" style={{ transform: 'rotate(15deg)' }} />
+                    <HugeFloral className="w-[900px] h-[900px] -bottom-40 -right-20 text-rose-300" color="#D4A5A5" style={{ transform: 'rotate(-15deg)' }} />
+
+                    {/* Content Container */}
+                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-between py-32 px-12">
+
+                        {/* Header */}
+                        <div className="text-center">
+                            <p className="font-modern text-2xl tracking-[0.5em] text-[#B8860B] mb-8 uppercase animate-pulse">The Wedding Of</p>
+                            <h1 className="font-script text-[10rem] text-gold-gradient drop-shadow-sm leading-tight">
+                                {data.content.hero.nicknames.split('&')[0]}
+                            </h1>
+                            <span className="font-script text-6xl text-gray-400 block my-[-20px]">&</span>
+                            <h1 className="font-script text-[10rem] text-gold-gradient drop-shadow-sm leading-tight">
+                                {data.content.hero.nicknames.split('&')[1] || "Partner"}
+                            </h1>
+                        </div>
+
+                        {/* Middle - Photo or Wish */}
+                        <div className="relative w-full max-w-2xl aspect-[3/4]">
+                            <div className="absolute inset-0 border border-[#B8860B]/30 rounded-t-full transform rotate-2 z-0"></div>
+                            <div className="absolute inset-0 border border-[#B8860B]/30 rounded-t-full transform -rotate-2 z-0"></div>
+
+                            <div className="glass-strong absolute inset-4 rounded-t-full overflow-hidden flex flex-col items-center justify-center p-8 z-10">
+                                {wish ? (
+                                    <>
+                                        <HugeFloral className="w-40 h-40 -top-10 -left-10 opacity-20" />
+                                        <p className="font-royal text-4xl italic leading-relaxed text-gray-700 text-center mb-8">"{wish}"</p>
+                                        <div className="w-24 h-[1px] bg-[#B8860B]/50 mb-4"></div>
+                                        <p className="font-modern text-xl font-bold text-[#B8860B] tracking-widest uppercase">{guestName}</p>
+                                    </>
+                                ) : (
+                                    <img src={bgImage} className="w-full h-full object-cover" />
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="text-center">
+                            <p className="font-royal text-5xl text-gray-700 mb-4">{dateFormatted}</p>
+                            <p className="font-modern text-lg tracking-[0.3em] text-gray-500 uppercase">Save The Date</p>
+                        </div>
+
+                    </div>
+
+                    {/* Falling Leaves (Foreground) */}
+                    <div className="absolute inset-0 pointer-events-none">
+                        {Array.from({ length: 12 }).map((_, i) => (
+                            <Leaf
+                                key={i}
+                                className="w-10 h-10 animate-falling"
+                                style={{
+                                    left: `${Math.random() * 100}%`,
+                                    animationDelay: `-${Math.random() * 10}s`,
+                                    animationDuration: `${10 + Math.random() * 10}s`
+                                }}
+                            />
+                        ))}
+                    </div>
+                </div>
+            ) : themeId === 'premium-peppy' ? (
                 <div className="w-full h-full relative" style={{ backgroundColor: '#FFF8F0' }}>
                     {/* Blob Background */}
                     <div className="absolute top-[-5%] right-[-10%] w-[600px] h-[600px] bg-[#E07A5F] rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
