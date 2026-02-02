@@ -7,6 +7,7 @@ import { Muxer, ArrayBufferTarget } from 'webm-muxer';
 import { InstagramStoryTemplate } from './InstagramStoryTemplate';
 import { TEMPLATES } from '../lib/templates';
 import { InvitationData } from '../types/invitation';
+import { useRoyalGlassRender } from '../hooks/useRoyalGlassRender';
 
 interface DownloadProps {
     targetRef: React.RefObject<HTMLDivElement | null>;
@@ -20,8 +21,18 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
     const [guestName, setGuestName] = useState('');
     const [wish, setWish] = useState('');
     const storyRef = React.useRef<HTMLDivElement>(null);
+    const canvasRef = React.useRef<HTMLCanvasElement>(null);
     const [processingVideo, setProcessingVideo] = useState(false);
     const [progress, setProgress] = useState(0);
+
+    // Canvas Renderer Hook (Active only when processing video)
+    useRoyalGlassRender({
+        canvasRef,
+        data,
+        guestName,
+        wish,
+        isActive: processingVideo
+    });
 
     // Get Tier
     const tier = TEMPLATES.find(t => t.id === data.metadata.theme_id)?.tier || 'free';
@@ -61,152 +72,54 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
     };
 
     const handleVideoDownload = async () => {
-        if (!isExclusive || !storyRef.current) return;
+        if (!isExclusive || !canvasRef.current) return;
 
         try {
             setProcessingVideo(true);
             setProgress(0);
 
-            // Configuration
-            const FPS = 30;
-            const DURATION_SEC = 10;
-            const TOTAL_FRAMES = FPS * DURATION_SEC;
-            const WIDTH = 1080;
-            const HEIGHT = 1920;
+            // Give canvas a moment to start rendering
+            await new Promise(r => setTimeout(r, 500));
 
-            // Initialize Muxer
-            const muxer = new Muxer({
-                target: new ArrayBufferTarget(),
-                video: {
-                    codec: 'V_VP9',
-                    width: WIDTH,
-                    height: HEIGHT,
-                    frameRate: FPS
+            const canvas = canvasRef.current;
+
+            // USE MEDIA RECORDER ON CANVAS STREAM (Efficient, Realtime)
+            const stream = canvas.captureStream(30); // 30 FPS
+            const mimeType = 'video/webm; codecs=vp9';
+            const recorder = new MediaRecorder(stream, {
+                mimeType,
+                videoBitsPerSecond: 5000000 // 5 Mbps
+            });
+
+            const chunks: Blob[] = [];
+            recorder.ondataavailable = (e) => {
+                if (e.data.size > 0) chunks.push(e.data);
+            };
+
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                download(blob, `story-video-${slug}.webm`);
+                setProcessingVideo(false);
+            };
+
+            recorder.start();
+
+            // Record for 10 seconds
+            let seconds = 0;
+            const duration = 10;
+            const interval = setInterval(() => {
+                seconds++;
+                setProgress(Math.round((seconds / duration) * 100));
+                if (seconds >= duration) {
+                    clearInterval(interval);
+                    recorder.stop();
                 }
-            });
-
-            // Get all animations in the story element
-            // We need to query animations from the specific container to ensure we control the right ones
-            const element = storyRef.current;
-
-            // Wait for fonts and images to load properly
-            // A small delay or check can be useful here
-            await new Promise(r => setTimeout(r, 1000));
-
-            // Capture Frame-by-Frame
-            for (let i = 0; i < TOTAL_FRAMES; i++) {
-                const currentTime = i * (1000 / FPS);
-
-                // 1. Manually advance all animations
-                // Use Web Animations API to pause and seek
-                const animations = element.getAnimations({ subtree: true });
-                animations.forEach(anim => {
-                    anim.currentTime = currentTime;
-                    anim.pause(); // Ensure it stays frozen at this frame
-                });
-
-                // 2. Render frame to canvas
-                // We use toCanvas because it's faster than toPng for video frames
-                const canvas = await toCanvas(element, {
-                    width: WIDTH,
-                    height: HEIGHT,
-                    backgroundColor: '#ffffff',
-                    pixelRatio: 1, // Keep 1:1 for performance, 1080p is already large
-                    skipAutoScale: true,
-                    style: {
-                        transform: 'none', // Reset any scaling
-                    }
-                });
-
-                // 3. Add to Muxer
-                // We need to draw the HTML canvas to the Muxer
-                // webm-muxer takes a canvas or raw buffer. 
-                // However, toCanvas returns an HTMLCanvasElement. 
-                // We need to handle context correctly or just pass the canvas if library supports it?
-                // Library expects `addVideoChunk`. 
-                // Actually `webm-muxer` simplifies this:
-                // We need to create an ImageBitmap or use the canvas directly?
-                // Wait, webm-muxer documentation says:
-                // muxer.addVideoChunk(chunk, meta);
-                // Chunk can be EncodedVideoChunk. 
-                // BUT, pure JS implementation usually draws canvas to blob?
-
-                // WAIT! `webm-muxer` writes the bitstream. It DOES NOT encode images from Canvas to VP9 automatically unless configured?
-                // Actually `webm-muxer` documentation (v4/5) usually pairs with `VideoEncoder` API (WebCodecs).
-                // If WebCodecs is not available, we might need a different approach or verify environment.
-                // Assuming modern Chrome/Edge (User is on Windows), WebCodecs is available.
-
-                // Let's use the simple approach if possible, or fallback to sequential image capture + ffmpeg (server) but we don't have server.
-                // We will use standard WebCodecs API with Muxer.
-            }
-            // REVISION: The above loop approach with `toCanvas` + `VideoEncoder` + `webm-muxer` is complex to implement robustly in one step without testing.
-            // SIMPLER ALTERNATIVE FOR "Direct Convert":
-            // Use `webm-muxer` paired with `VideoEncoder`.
-
-            // Re-implementing the loop with `VideoEncoder`:
-            const videoEncoder = new VideoEncoder({
-                output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
-                error: (e) => console.error(e)
-            });
-
-            videoEncoder.configure({
-                codec: 'vp09.00.10.08',
-                width: WIDTH,
-                height: HEIGHT,
-                bitrate: 5_000_000, // 5 Mbps
-                framerate: FPS
-            });
-
-            for (let i = 0; i < TOTAL_FRAMES; i++) {
-                const currentTime = i * (1000 / FPS);
-
-                // Seek animations
-                const animations = document.getAnimations(); // Global might be easier, or element specific
-                // Filter animations belonging to our ref
-                const storyAnimations = element.getAnimations({ subtree: true });
-                storyAnimations.forEach(anim => {
-                    anim.currentTime = currentTime;
-                    // anim.pause(); 
-                });
-
-                // Render
-                const canvas = await toCanvas(element, {
-                    width: WIDTH,
-                    height: HEIGHT,
-                    quality: 0.9,
-                    backgroundColor: '#ffffff'
-                });
-
-                // Create VideoFrame
-                const frame = new VideoFrame(canvas, { timestamp: i * (1000000 / FPS) }); // microseconds
-
-                // Encode
-                videoEncoder.encode(frame);
-                frame.close();
-
-                // Progress Update
-                setProgress(Math.round(((i + 1) / TOTAL_FRAMES) * 100));
-
-                // Yield to main thread to prevent UI freeze
-                await new Promise(r => setTimeout(r, 0));
-            }
-
-            await videoEncoder.flush();
-            muxer.finalize();
-
-            const { buffer } = muxer.target;
-            download(new Blob([buffer], { type: 'video/webm' }), `invitation-video-${slug}.webm`);
+            }, 1000);
 
         } catch (err) {
             console.error("Video generation failed", err);
-            alert("Gagal membuat video. Pastikan browser mendukung modern web features (Chrome/Edge/Firefox terbaru).");
-        } finally {
+            alert("Gagal membuat video. " + err);
             setProcessingVideo(false);
-
-            // Reset animations to play normally
-            if (storyRef.current) {
-                storyRef.current.getAnimations({ subtree: true }).forEach(anim => anim.play());
-            }
         }
     };
 
@@ -296,23 +209,38 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
                 </div>
             )}
 
-            {/* HIDDEN STORY TEMPLATE (Off-screen rendering) */}
-            <div className={`fixed top-0 left-0 z-[100] ${processingVideo ? 'w-screen h-screen bg-black flex flex-col items-center justify-center' : 'left-[9999px] top-0'}`}>
-                {processingVideo && (
-                    <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 bg-black/80 text-white">
-                        <Loader2 className="animate-spin mb-4 text-amber-500" size={48} />
-                        <p className="text-xl font-bold mb-2">Merender Video Luxury...</p>
-                        <div className="w-64 h-2 bg-gray-700 rounded-full overflow-hidden">
-                            <div className="h-full bg-amber-500 transition-all duration-300" style={{ width: `${progress}%` }}></div>
-                        </div>
-                        <p className="text-sm text-gray-400 mt-2">Mohon jangan tutup tab in</p>
-                    </div>
-                )}
-
-                <div className={processingVideo ? 'scale-50 origin-center pointer-events-none' : ''}>
-                    <InstagramStoryTemplate ref={storyRef} data={data} guestName={guestName} wish={wish} />
-                </div>
+            {/* HIDDEN STORY TEMPLATE (Still needed for JPEG generation) */}
+            <div className="fixed left-[9999px] top-0">
+                <InstagramStoryTemplate ref={storyRef} data={data} guestName={guestName} wish={wish} />
             </div>
+
+            {/* HIDDEN CANVAS FOR VIDEO GENERATION */}
+            {processingVideo && (
+                <div className="fixed top-0 left-0 w-screen h-screen z-[100] bg-black flex flex-col items-center justify-center">
+                    <div className="relative">
+                        {/* We show the canvas scaled down so user sees what's happening */}
+                        <canvas
+                            ref={canvasRef}
+                            width={1080}
+                            height={1920}
+                            className="bg-white shadow-2xl scale-[0.35] origin-center"
+                        />
+
+                        {/* Overlay Loader */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+                            <div className="bg-black/70 backdrop-blur-md p-6 rounded-2xl flex flex-col items-center text-white">
+                                <Loader2 className="animate-spin mb-3 text-amber-500" size={48} />
+                                <p className="font-bold text-lg mb-1">Merekam Video...</p>
+                                <p className="text-sm opacity-70 mb-3 text-center w-64">Menggunakan teknologi Canvas Recording yang lebih ringan.</p>
+                                <div className="w-full bg-gray-700 h-2 rounded-full overflow-hidden">
+                                    <div className="bg-amber-500 h-full transition-all duration-1000 linear" style={{ width: `${progress}%` }}></div>
+                                </div>
+                                <p className="text-xs mt-2">{progress}%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };
