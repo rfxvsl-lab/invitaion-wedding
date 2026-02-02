@@ -5,6 +5,7 @@ import {
     ChevronDown, Info, Gift, Check, Search, Bell
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
+import DIYOverlay from '../components/DIYOverlay';
 import RsvpForm from '../components/RsvpForm';
 
 /**
@@ -543,6 +544,10 @@ const NetflixLuxury: React.FC<{ data: InvitationData }> = ({ data }) => {
                     {music ? <Music className="animate-spin-slow" size={16} /> : <Play size={16} />}
                 </button>
             </div>
+
+            {/* DIY Overlay */}
+            <DIYOverlay layout={data.metadata.diy_layout} />
+
         </div>
     );
 };

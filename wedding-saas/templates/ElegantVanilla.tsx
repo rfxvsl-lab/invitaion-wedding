@@ -5,6 +5,7 @@ import {
     Image, MessageSquare, Home, Send
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
+import DIYOverlay from '../components/DIYOverlay';
 import RsvpForm from '../components/RsvpForm';
 
 /**

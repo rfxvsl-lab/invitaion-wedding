@@ -5,6 +5,7 @@ import {
     ChevronDown, BookOpen, Gift, Copy
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
+import DIYOverlay from '../components/DIYOverlay';
 import { mapToTemplateData } from '../utils/templateMapper';
 import RsvpForm from '../components/RsvpForm';
 
@@ -527,6 +528,9 @@ export default function RoyalGlass({ data }: { data: InvitationData }) {
                 </button>
 
             </div>
+
+            {/* DIY Overlay */}
+            <DIYOverlay layout={data.metadata.diy_layout} />
 
         </div>
     );

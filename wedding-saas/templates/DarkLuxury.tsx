@@ -6,6 +6,7 @@ import {
 import { mapToTemplateData } from '../utils/templateMapper';
 import RsvpForm from '../components/RsvpForm';
 import { InvitationData } from '../types/invitation';
+import DIYOverlay from '../components/DIYOverlay';
 
 /**
  * TEMPLATE: DARK LUXURY
@@ -382,6 +383,9 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                     </div>
                 </div>
             )}
+
+            {/* DIY Overlay */}
+            <DIYOverlay layout={data.metadata.diy_layout} />
 
             {/* Tailwind Custom Animation for Shine */}
             <style>{`

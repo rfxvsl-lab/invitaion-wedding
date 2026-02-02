@@ -4,6 +4,7 @@ import {
     Copy, Instagram, Music, Gift, ChevronDown
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
+import DIYOverlay from '../components/DIYOverlay';
 
 /**
  * TEMPLATE: PREMIUM PEPPY
@@ -134,7 +135,11 @@ const PremiumPeppy: React.FC<{ data: InvitationData }> = ({ data }) => {
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-            {metadata.music_url && <audio ref={audioRef} src={metadata.music_url} loop />}
+            {/* DIY Overlay - Render custom elements */}
+            <DIYOverlay layout={data.metadata.diy_layout} />
+
+            {/* Audio Player */}
+            <audio ref={audioRef} src={data.metadata.music_url} loop />
 
             {/* === 1. COVER / LOCK SCREEN === */}
             <div
