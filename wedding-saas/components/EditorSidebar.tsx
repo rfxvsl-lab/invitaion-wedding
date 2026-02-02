@@ -5,6 +5,7 @@ import ImageUploader from './ImageUploader';
 import { InvitationData } from '../types/invitation';
 import { supabase } from '@/lib/supabase';
 import { TEMPLATES } from '../lib/templates';
+import { getEffectivePlan } from '../lib/admin';
 
 interface EditorSidebarProps {
     data: InvitationData;
@@ -44,12 +45,26 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
     const [tokens, setTokens] = useState<number>(5); // Free tier token system
 
     useEffect(() => {
-        // Fetch User Plan
+        // Fetch User Plan with admin override
         const fetchPlan = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
-                const { data } = await supabase.from('profiles').select('subscription_plan').eq('id', user.id).single();
-                if (data) setPlan(data.subscription_plan || 'free');
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('subscription_tier, tokens')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profile) {
+                    // Apply admin god mode override
+                    const effectivePlan = getEffectivePlan(
+                        profile.subscription_tier || 'free',
+                        user.email
+                    ) as 'free' | 'basic' | 'premium' | 'exclusive';
+
+                    setPlan(effectivePlan);
+                    setTokens(profile.tokens || 5);
+                }
             }
         };
         fetchPlan();
