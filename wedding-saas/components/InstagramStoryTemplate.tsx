@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import { InvitationData } from '../types/invitation';
+import { Play } from 'lucide-react';
 
 interface StoryProps {
     data: InvitationData;
@@ -277,6 +278,88 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
 
                             <div className="mt-auto">
                                 <p className="text-2xl opacity-60 font-serif">@rfx.builder</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : themeId === 'netflix-luxury' ? (
+                /* NETFLIX LUXURY SPECIAL DESIGN */
+                <div className="w-full h-full relative bg-[#141414] text-white flex flex-col font-sans text-left">
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Martel+Sans:wght@200;300;400;600;700;800&family=Montserrat:wght@400;500;600&display=swap');
+                        .font-netflix { font-family: 'Bebas Neue', cursive; }
+                        .font-body { font-family: 'Martel Sans', sans-serif; }
+                        @keyframes zoom-in {
+                            0% { transform: scale(1); }
+                            100% { transform: scale(1.1); }
+                        }
+                        .animate-zoom { animation: zoom-in 15s ease-out infinite alternate; }
+                    `}</style>
+
+                    {/* Background Image (Hero) */}
+                    <div className="absolute inset-0 z-0">
+                        <img
+                            src={bgImage}
+                            className="w-full h-full object-cover animate-zoom opacity-70"
+                            alt="Background"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90"></div>
+                    </div>
+
+                    {/* Netflix Header */}
+                    <div className="relative z-10 px-12 pt-24 flex justify-between items-center">
+                        <span className="text-[#E50914] font-netflix text-7xl tracking-widest drop-shadow-md">N</span>
+                        <div className="flex gap-2">
+                            <span className="bg-[#E50914] text-white text-md font-bold px-3 py-1 rounded-sm">SERIES</span>
+                        </div>
+                    </div>
+
+                    {/* Content Body */}
+                    <div className="relative z-10 flex-1 flex flex-col justify-end p-16 pb-48">
+                        {/* Title */}
+                        {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
+                            <h1 className="font-netflix text-[10rem] text-white leading-[0.8] mb-8 drop-shadow-2xl">
+                                {data.content.couples.pria.name.split(' ')[0]} <br />
+                                <span className="text-[#E50914]">&</span> <br />
+                                {data.content.couples.wanita.name.split(' ')[0]}
+                            </h1>
+                        ) : (
+                            <h1 className="font-netflix text-[10rem] text-white leading-[0.8] mb-8 drop-shadow-2xl">
+                                {data.content.hero.nicknames.split('&')[0]} <br />
+                                <span className="text-[#E50914]">&</span> <br />
+                                {data.content.hero.nicknames.split('&')[1] || "Partner"}
+                            </h1>
+                        )}
+
+                        {/* Meta */}
+                        <div className="flex items-center gap-4 text-2xl text-gray-200 font-body mb-8 font-medium">
+                            <span className="text-[#46d369] font-bold">99% Match</span>
+                            <span>•</span>
+                            <span className="uppercase">{dateObj.getFullYear()}</span>
+                            <span>•</span>
+                            <span className="border-2 border-gray-400 px-2 text-lg rounded-md">4K HDR</span>
+                        </div>
+
+                        {/* Wish Card (Unique for Netflix) */}
+                        {wish ? (
+                            <div className="bg-[#1f1f1f]/80 backdrop-blur-md rounded-xl p-8 mb-8 border border-gray-700 max-w-2xl">
+                                <p className="text-white font-body text-2xl italic mb-4">"{wish}"</p>
+                                <p className="text-gray-400 text-lg font-bold uppercase tracking-widest">- {guestName}</p>
+                            </div>
+                        ) : (
+                            <p className="font-body text-2xl text-gray-200 line-clamp-3 mb-10 leading-relaxed drop-shadow-md max-w-2xl">
+                                {data.content.texts.hero_subtitle || "Don't miss the premiere of our new chapter. Save the date for the biggest event of the year."}
+                            </p>
+                        )}
+
+                        {/* Fake Buttons */}
+                        <div className="flex gap-4 cursor-pointer">
+                            <div className="bg-white text-black rounded px-8 py-4 font-bold flex items-center justify-center gap-3 w-max">
+                                <Play size={32} fill="black" />
+                                <span className="text-2xl">See Invitation</span>
+                            </div>
+                            <div className="bg-[rgba(109,109,110,0.7)] text-white rounded px-8 py-4 font-bold flex items-center justify-center gap-3 w-max hover:bg-[rgba(109,109,110,0.4)] transition-colors">
+                                <span className="text-2xl">More Info</span>
                             </div>
                         </div>
                     </div>

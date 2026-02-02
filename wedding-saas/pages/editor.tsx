@@ -16,6 +16,7 @@ import GamerQuest from '../templates/GamerQuest';
 
 import ElegantVanilla from '../templates/ElegantVanilla';
 import RoyalGlass from '../templates/RoyalGlass';
+import NetflixLuxury from '../templates/NetflixLuxury';
 
 // Initial Data
 const INITIAL_DATA: InvitationData = {
@@ -161,6 +162,7 @@ export default function EditorPage() {
 
             case 'elegant-vanilla': return <ElegantVanilla data={data} />;
             case 'royal-glass': return <RoyalGlass data={data} />;
+            case 'netflix-luxury': return <NetflixLuxury data={data} />;
             case 'modern-arch': default: return <ModernArch data={data} />;
         }
     };

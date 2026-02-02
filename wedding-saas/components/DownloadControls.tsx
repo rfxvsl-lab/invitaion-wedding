@@ -7,7 +7,7 @@ import { Muxer, ArrayBufferTarget } from 'mp4-muxer';
 import { InstagramStoryTemplate } from './InstagramStoryTemplate';
 import { TEMPLATES } from '../lib/templates';
 import { InvitationData } from '../types/invitation';
-import { useRoyalGlassRender } from '../hooks/useRoyalGlassRender';
+import { useStoryCanvasRender } from '../hooks/useStoryCanvasRender';
 
 interface DownloadProps {
     targetRef: React.RefObject<HTMLDivElement | null>;
@@ -27,7 +27,7 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
 
     // Canvas Renderer Hook 
     // We keep isActive true if processingVideo is true to run the animation loops
-    useRoyalGlassRender({
+    useStoryCanvasRender({
         canvasRef,
         data,
         guestName,

@@ -22,4 +22,6 @@ export const TEMPLATES: TemplateConfig[] = [
 
     // EXCLUSIVE
     { id: 'royal-glass', name: 'Royal Glass', tier: 'exclusive' },
+    { id: 'netflix-luxury', name: 'Netflix Luxury', tier: 'exclusive' },
 ];
+
