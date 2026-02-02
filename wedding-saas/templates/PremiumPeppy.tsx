@@ -85,7 +85,18 @@ const PremiumPeppy: React.FC<{ data: InvitationData }> = ({ data }) => {
     );
 
     return (
-        <div className="min-h-screen bg-[#FAF9F6] text-[#3D405B] font-sans overflow-x-hidden relative selection:bg-[#DFA67B] selection:text-white">
+        <div
+            className="min-h-screen text-[#3D405B] font-sans overflow-x-hidden relative selection:bg-[#DFA67B] selection:text-white"
+            style={
+                data.metadata.custom_bg_url
+                    ? { backgroundImage: `url(${data.metadata.custom_bg_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
+                    : { backgroundColor: '#FAF9F6' }
+            }
+        >
+            {/* Light overlay for custom background */}
+            {data.metadata.custom_bg_url && (
+                <div className="fixed inset-0 bg-white/80 z-0" />
+            )}
             {/* --- CSS INJECTION FOR ANIMATIONS --- */}
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');

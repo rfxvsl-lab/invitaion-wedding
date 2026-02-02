@@ -503,19 +503,24 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate }) => {
                                 </div>
                             </div>
 
-                            {/* MAROON VINTAGE SPECIAL SETTINGS */}
-                            {data.metadata.theme_id === 'maroon-vintage' && (
-                                <div className="mb-4 p-3 bg-rose-50 border border-rose-100 rounded-xl animate-in fade-in slide-in-from-top-2">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
-                                        <p className="text-[10px] font-bold text-rose-700 uppercase tracking-wider">Maroon Vintage Config</p>
+                            {/* CUSTOM BACKGROUND (Premium/Exclusive Tier) */}
+                            {(plan === 'premium' || plan === 'exclusive') && (
+                                <div className="mb-4 p-4 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl animate-in fade-in">
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+                                        <p className="text-[10px] font-black text-purple-700 uppercase tracking-wider">✨ Background Kustom</p>
+                                        <span className="ml-auto text-[8px] bg-purple-600 text-white px-2 py-0.5 rounded-full font-bold">
+                                            {plan === 'exclusive' ? 'VIP' : 'PRO'}
+                                        </span>
                                     </div>
                                     <ImageUploader
-                                        label="Background Image (Upload)"
+                                        label="Upload Background Image"
                                         currentUrl={data.metadata.custom_bg_url || ''}
                                         onUpdate={(url) => onUpdate('metadata.custom_bg_url', url)}
                                     />
-                                    <p className="text-[10px] text-rose-400 mt-1">Biarkan kosong untuk menggunakan background default.</p>
+                                    <p className="text-[10px] text-purple-600 font-medium mt-2">
+                                        💡 Upload gambar kustom untuk background undangan. Biarkan kosong untuk default.
+                                    </p>
                                 </div>
                             )}
 

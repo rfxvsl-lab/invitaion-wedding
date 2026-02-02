@@ -90,7 +90,18 @@ const ElegantVanilla: React.FC<{ data: InvitationData }> = ({ data }) => {
     const sections = ['bride', 'groom', 'event', 'location', 'rsvp', 'gift', 'thanks'];
 
     return (
-        <div className="fixed inset-0 bg-[#FDF8F5] font-serif overflow-hidden selection:bg-[#E8B4B8] selection:text-white">
+        <div
+            className="min-h-screen font-serif text-gray-800 relative overflow-x-hidden selection:bg-amber-100"
+            style={
+                data.metadata.custom_bg_url
+                    ? { backgroundImage: `url(${data.metadata.custom_bg_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
+                    : { backgroundColor: '#FDFCF9' }
+            }
+        >
+            {/* Soft overlay for custom background */}
+            {data.metadata.custom_bg_url && (
+                <div className="fixed inset-0 bg-gradient-to-b from-white/85 to-amber-50/85 z-0" />
+            )}
             {/* --- STYLES & ANIMATIONS --- */}
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Satisfy&family=Montserrat:wght@300;400;500&display=swap');

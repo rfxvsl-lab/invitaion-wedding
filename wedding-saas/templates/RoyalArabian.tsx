@@ -190,7 +190,7 @@ const LanternSVG = ({ className, delay }: { className: string, delay: string }) 
 /**
  * --- BACKGROUND SYSTEM (ARABIAN NIGHTS) ---
  */
-const ArabianBackground = ({ mousePos }: { mousePos: { x: number, y: number } }) => {
+const ArabianBackground = ({ mousePos, customBgUrl }: { mousePos: { x: number, y: number }, customBgUrl?: string }) => {
     // Generate Stars
     const stars = useMemo(() => Array.from({ length: 30 }).map((_, i) => ({
         id: i,
@@ -200,6 +200,21 @@ const ArabianBackground = ({ mousePos }: { mousePos: { x: number, y: number } })
         delay: Math.random() * 5
     })), []);
 
+    // If custom background is provided, render simple overlay
+    if (customBgUrl) {
+        return (
+            <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+                <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${customBgUrl})` }}
+                />
+                {/* Warm Arabian overlay for readability */}
+                <div className="absolute inset-0 bg-gradient-to-b from-amber-900/80 to-orange-950/85" />
+            </div>
+        );
+    }
+
+    // Default Arabian Night background
     return (
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-gradient-to-b from-[#020508] via-[#051410] to-[#0a1f18]">
             {/* 1. Stars Layer */}
@@ -595,7 +610,7 @@ const RoyalArabian: React.FC<{ data: InvitationData }> = ({ data }) => {
             <audio ref={audioRef} loop src={data.metadata.music_url || ASSETS.bgm} />
 
             {/* --- LAYER 0: ARABIAN NIGHTS BACKGROUND (FULL SCREEN) --- */}
-            <ArabianBackground mousePos={mousePos} />
+            <ArabianBackground mousePos={mousePos} customBgUrl={data.metadata.custom_bg_url} />
 
             {/* --- LAYER 1: ROYAL ENVELOPE --- */}
             {stage === 'envelope' && (

@@ -149,9 +149,20 @@ const GamerQuest: React.FC<{ data: InvitationData }> = ({ data }) => {
 
     return (
         <div
-            className="min-h-screen bg-[#050505] text-[#e0e0e0] font-sans overflow-x-hidden relative selection:bg-[#bc13fe] selection:text-white"
+            className="relative min-h-screen text-white font-sans overflow-x-hidden relative selection:bg-[#bc13fe] selection:text-white"
+            style={
+                data.metadata.custom_bg_url
+                    ? { backgroundImage: `url(${data.metadata.custom_bg_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
+                    : {
+                        background: 'linear-gradient(135deg, #0a0e27 0%, #1a1f3a 25%, #2d1b4e 50%, #1a1f3a 75%, #0a0e27 100%)'
+                    }
+            }
             onMouseMove={handleMouseMove}
         >
+            {/* Overlay for custom background */}
+            {data.metadata.custom_bg_url && (
+                <div className="fixed inset-0 bg-gradient-to-b from-purple-900/80 to-black/90 z-0" />
+            )}
             {/* --- ASSETS & STYLES --- */}
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap');

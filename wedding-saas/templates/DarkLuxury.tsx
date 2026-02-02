@@ -70,7 +70,18 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
     );
 
     return (
-        <div className="min-h-screen bg-[#121212] text-[#E2E8F0] font-sans selection:bg-[#BF953F] selection:text-black overflow-x-hidden">
+        <div
+            className="min-h-screen text-[#E2E8F0] font-sans selection:bg-[#BF953F] selection:text-black overflow-x-hidden"
+            style={
+                data.metadata.custom_bg_url
+                    ? { backgroundImage: `url(${data.metadata.custom_bg_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
+                    : { backgroundColor: '#121212' }
+            }
+        >
+            {/* Dark overlay for readability when using custom background */}
+            {data.metadata.custom_bg_url && (
+                <div className="fixed inset-0 bg-black/70 z-0" />
+            )}
             {/* FONTS */}
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap');

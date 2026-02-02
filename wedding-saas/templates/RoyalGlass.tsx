@@ -439,7 +439,18 @@ export default function RoyalGlass({ data }: { data: InvitationData }) {
     if (!invitation) return <div>Loading...</div>;
 
     return (
-        <div className="relative w-full h-screen overflow-hidden bg-[#F9F7F2] text-[#2C2C2C]">
+        <div
+            className="relative w-full h-screen overflow-hidden text-[#2C2C2C]"
+            style={
+                data.metadata.custom_bg_url
+                    ? { backgroundImage: `url(${data.metadata.custom_bg_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
+                    : { backgroundColor: '#F9F7F2' }
+            }
+        >
+            {/* Soft overlay for custom background */}
+            {data.metadata.custom_bg_url && (
+                <div className="fixed inset-0 bg-gradient-to-b from-white/80 to-amber-50/75 z-0" />
+            )}
             <GlobalStyles />
             <audio ref={audioRef} loop src={invitation.metadata.music_url} />
 

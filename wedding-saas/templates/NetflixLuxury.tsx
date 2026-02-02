@@ -450,7 +450,18 @@ const NetflixLuxury: React.FC<{ data: InvitationData }> = ({ data }) => {
     };
 
     return (
-        <div className="relative w-full h-screen overflow-hidden bg-[#141414] text-white font-sans">
+        <div
+            className="relative w-full h-screen overflow-hidden text-white font-sans"
+            style={
+                data.metadata.custom_bg_url
+                    ? { backgroundImage: `url(${data.metadata.custom_bg_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
+                    : { backgroundColor: '#141414' }
+            }
+        >
+            {/* Dark cinematic overlay for custom background */}
+            {data.metadata.custom_bg_url && (
+                <div className="fixed inset-0 bg-black/85 z-0" />
+            )}
             <GlobalStyles />
             <audio ref={audioRef} loop src={data.metadata.music_url || DEFAULT_ASSETS.bgm} />
 
