@@ -282,6 +282,87 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         </div>
                     </div>
                 </div>
+            ) : themeId === 'grand-ballroom' ? (
+                /* SPECIAL DESIGN FOR GRAND BALLROOM (EXCLUSIVE) */
+                <div className="w-full h-full relative text-[#EAC581] font-sans flex flex-col items-center overflow-hidden" style={{ background: 'linear-gradient(to bottom, #1a0505 0%, #2b0f0f 100%)' }}>
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+                        .font-cinzel { font-family: 'Cinzel', serif; }
+                        .font-playfair { font-family: 'Playfair Display', serif; }
+                        .font-lato { font-family: 'Lato', sans-serif; }
+                        
+                        @keyframes spotlight-move {
+                            0%, 100% { transform: rotate(-5deg) translateX(-20px); opacity: 0.6; }
+                            50% { transform: rotate(5deg) translateX(20px); opacity: 0.8; }
+                        }
+                        .animate-spotlight { animation: spotlight-move 8s ease-in-out infinite alternate; }
+
+                        @keyframes twinkle {
+                            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+                            50% { opacity: 1; transform: scale(1.2); }
+                        }
+                        .animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
+                    `}</style>
+
+                    {/* Background Elements */}
+                    <div className="absolute inset-0 z-0 bg-[#0f0404]" style={{
+                        backgroundImage: `radial-gradient(circle at 50% 30%, #3e0b0b 0%, #1a0505 60%, #000000 100%)`
+                    }}></div>
+
+                    {/* Spotlights */}
+                    <div className="absolute top-0 left-1/4 w-[200px] h-[1000px] bg-gradient-to-b from-white/10 to-transparent blur-3xl transform -rotate-12 animate-spotlight origin-top z-0"></div>
+                    <div className="absolute top-0 right-1/4 w-[200px] h-[1000px] bg-gradient-to-b from-white/10 to-transparent blur-3xl transform rotate-12 animate-spotlight origin-top z-0" style={{ animationDelay: '1s' }}></div>
+
+                    {/* Chandelier (Simplified for Story) */}
+                    <div className="absolute -top-20 md:top-0 left-1/2 -translate-x-1/2 z-10 opacity-80">
+                        {/* Simple visual representation of chandelier light */}
+                        <div className="w-[600px] h-[300px] bg-gradient-to-b from-[#EAC581]/20 to-transparent rounded-b-full blur-2xl"></div>
+                    </div>
+
+                    {/* Photo Content */}
+                    <div className="absolute top-[180px] w-[800px] h-[1000px] z-10">
+                        {/* Frame */}
+                        <div className="absolute inset-0 border-[6px] border-[#EAC581] rounded-t-full shadow-[0_0_50px_rgba(234,197,129,0.3)] bg-black overflow-hidden flex items-center justify-center">
+                            <img src={bgImage} alt="Couple" className="w-full h-full object-cover opacity-80" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        </div>
+                    </div>
+
+                    {/* Text Content */}
+                    <div className="absolute bottom-0 left-0 w-full h-[800px] z-20 flex flex-col items-center justify-end pb-32 px-12 text-center pointer-events-none">
+
+                        <p className="font-lato text-2xl tracking-[0.4em] text-[#EAC581]/70 uppercase mb-8">The Wedding Of</p>
+
+                        {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
+                            <h1 className="font-cinzel text-7xl text-white mb-6 drop-shadow-lg">
+                                {data.content.couples.pria.name.split(' ')[0]} <span className="text-[#EAC581] mx-4">&</span> {data.content.couples.wanita.name.split(' ')[0]}
+                            </h1>
+                        ) : (
+                            <div className="flex flex-col items-center">
+                                <h1 className="font-cinzel text-8xl text-white mb-2 drop-shadow-lg">{data.content.hero.nicknames.split('&')[0]}</h1>
+                                <span className="font-cinzel text-6xl text-[#EAC581] my-2">&</span>
+                                <h1 className="font-cinzel text-8xl text-white mb-8 drop-shadow-lg">{data.content.hero.nicknames.split('&')[1] || "Partner"}</h1>
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-6 my-8">
+                            <div className="h-[1px] w-24 bg-gradient-to-l from-[#EAC581] to-transparent"></div>
+                            <p className="font-playfair text-4xl text-[#EAC581] tracking-wider italic">{dateFormatted}</p>
+                            <div className="h-[1px] w-24 bg-gradient-to-r from-[#EAC581] to-transparent"></div>
+                        </div>
+
+                        {/* Wish Card */}
+                        {wish ? (
+                            <div className="bg-black/60 backdrop-blur-md border border-[#EAC581]/40 p-8 rounded-2xl max-w-2xl mt-8 shadow-xl">
+                                <p className="font-playfair text-3xl italic text-white/90 leading-relaxed">"{wish}"</p>
+                                <p className="font-lato text-xl font-bold text-[#EAC581] mt-6 uppercase tracking-widest">- {guestName} -</p>
+                            </div>
+                        ) : (
+                            <div className="mt-8 opacity-0"></div> // Spacer
+                        )}
+
+                    </div>
+                </div>
             ) : themeId === 'netflix-luxury' ? (
                 /* NETFLIX LUXURY SPECIAL DESIGN */
                 <div className="w-full h-full relative bg-[#141414] text-white flex flex-col font-sans text-left">

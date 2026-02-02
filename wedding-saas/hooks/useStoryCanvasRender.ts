@@ -204,7 +204,168 @@ export const useStoryCanvasRender = ({ canvasRef, data, guestName, wish, isActiv
                 }
                 ctx.fillText(line, 50, descY + dy);
 
-            } else { // DEFAULT: ROYAL GLASS (Original Logic)
+            } else if (themeId === 'grand-ballroom') {
+                // ==========================================
+                // GRAND BALLROOM RENDERER (VIDEO)
+                // ==========================================
+
+                // 1. Background (Dark Red/Black Gradient)
+                const gradBg = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradBg.addColorStop(0, '#1a0505'); // Dark red top
+                gradBg.addColorStop(1, '#000000'); // Black bottom
+                ctx.fillStyle = gradBg;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Radial Center
+                const radBg = ctx.createRadialGradient(centerX, canvas.height * 0.3, 0, centerX, canvas.height * 0.3, 800);
+                radBg.addColorStop(0, '#3e0b0b');
+                radBg.addColorStop(1, 'transparent');
+                ctx.fillStyle = radBg;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // 2. Spotlights (Animated)
+                const timeSec = elapsed / 1000;
+                const swing1 = Math.sin(timeSec) * 0.1; // +/- angle
+                const swing2 = Math.cos(timeSec * 0.8) * 0.1;
+
+                ctx.save();
+                ctx.globalAlpha = 0.4;
+                // Left Light
+                ctx.translate(centerX - 300, -100);
+                ctx.rotate(0.2 + swing1);
+                const gradLight = ctx.createLinearGradient(0, 0, 0, 1200);
+                gradLight.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+                gradLight.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradLight;
+                ctx.beginPath();
+                ctx.moveTo(-50, 0);
+                ctx.lineTo(50, 0);
+                ctx.lineTo(200, 1200);
+                ctx.lineTo(-200, 1200);
+                ctx.fill();
+                ctx.restore();
+
+                // Right Light
+                ctx.save();
+                ctx.globalAlpha = 0.4;
+                ctx.translate(centerX + 300, -100);
+                ctx.rotate(-0.2 + swing2);
+                ctx.fillStyle = gradLight;
+                ctx.beginPath();
+                ctx.moveTo(-50, 0);
+                ctx.lineTo(50, 0);
+                ctx.lineTo(200, 1200);
+                ctx.lineTo(-200, 1200);
+                ctx.fill();
+                ctx.restore();
+
+                // 3. Photo Frame (Gold Arched)
+                const frameY = 300;
+                const frameW = 800;
+                const frameH = 1000;
+                const frameX = centerX - frameW / 2;
+
+                // Gold Border
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(frameX, frameY + 200); // Start below curve
+                ctx.arc(centerX, frameY + frameW / 2, frameW / 2, Math.PI, 0); // Top arch
+                ctx.lineTo(frameX + frameW, frameY + frameH);
+                ctx.lineTo(frameX, frameY + frameH);
+                ctx.closePath();
+                ctx.lineWidth = 10;
+                ctx.strokeStyle = '#EAC581';
+                ctx.shadowColor = '#EAC581';
+                ctx.shadowBlur = 20;
+                ctx.stroke();
+                ctx.clip(); // Clip image inside
+
+                // Draw Image
+                if (heroImg.complete && heroImg.naturalWidth > 0) {
+                    // Zoom effect
+                    const zoom = 1 + (Math.sin(elapsed / 10000) * 0.05);
+                    const imgRatio = heroImg.naturalWidth / heroImg.naturalHeight;
+                    // Cover logic
+                    let dw = frameW * zoom;
+                    let dh = (frameW / imgRatio) * zoom;
+                    if (dh < frameH) {
+                        dh = frameH * zoom;
+                        dw = (frameH * imgRatio) * zoom;
+                    }
+                    ctx.drawImage(heroImg, centerX - dw / 2, frameY + frameH / 2 - dh / 2, dw, dh);
+                }
+
+                ctx.restore();
+
+                // 4. Text Content
+                const groom = data.content.couples.pria.name.split(' ')[0];
+                const bride = data.content.couples.wanita.name.split(' ')[0];
+
+                ctx.textAlign = 'center';
+
+                // "The Wedding Of"
+                ctx.font = '30px "Lato", sans-serif'; // Fallback font
+                ctx.fillStyle = 'rgba(234, 197, 129, 0.7)';
+                ctx.fillText('THE WEDDING OF', centerX, 1450);
+
+                // Names
+                ctx.font = '100px "Cinzel", serif'; // Fallback
+                ctx.fillStyle = '#FFFFFF';
+                ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                ctx.shadowBlur = 10;
+
+                ctx.fillText(groom, centerX, 1580);
+
+                ctx.fillStyle = '#EAC581';
+                ctx.font = '60px "Cinzel", serif';
+                ctx.fillText('&', centerX, 1660);
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '100px "Cinzel", serif';
+                ctx.fillText(bride, centerX, 1780);
+
+                // Date
+                const dateObj = new Date(data.content.hero.date);
+                const dateStr = `${dateObj.getDate()} • ${dateObj.getMonth() + 1} • ${dateObj.getFullYear()}`;
+
+                ctx.font = 'italic 40px "Playfair Display", serif';
+                ctx.fillStyle = '#EAC581';
+                ctx.fillText(dateStr, centerX, 1880);
+
+                // Wish Overlay (if exists)
+                if (wish) {
+                    // Dark Overlay at bottom
+                    ctx.fillStyle = 'rgba(0,0,0,0.8)';
+                    ctx.fillRect(0, 1300, canvas.width, 620);
+
+                    ctx.fillStyle = '#FFFFFF'; // White text
+                    ctx.font = 'italic 50px "Playfair Display"';
+
+                    // Word Wrap for Wish
+                    const words = wish.split(' ');
+                    let line = '';
+                    let dy = 0;
+                    const startY = 1450;
+
+                    for (let i = 0; i < words.length; i++) {
+                        const testLine = line + words[i] + ' ';
+                        if (ctx.measureText(testLine).width > 800) {
+                            ctx.fillText(line, centerX, startY + dy);
+                            line = words[i] + ' ';
+                            dy += 70;
+                        } else {
+                            line = testLine;
+                        }
+                    }
+                    ctx.fillText(line, centerX, startY + dy);
+
+                    // Guest Name
+                    ctx.fillStyle = '#EAC581';
+                    ctx.font = 'bold 30px "Lato"';
+                    ctx.fillText("- " + guestName.toUpperCase() + " -", centerX, startY + dy + 80);
+                }
+
+            } else {
                 // ==========================================
                 // ROYAL GLASS RENDERER
                 // ==========================================
