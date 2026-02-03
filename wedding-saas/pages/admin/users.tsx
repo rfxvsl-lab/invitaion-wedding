@@ -30,7 +30,10 @@ const AdminUsersPage = () => {
     const fetchUsers = async () => {
         setLoading(true);
         // Using 'orders' as a source of truth for clients for now since we haven't set up the Auth Sync to Table trigger.
-        const { data: orders } = await supabase.from('orders').select('customer_name, customer_email, tier_selected, created_at, customer_phone');
+        const { data: orders } = await supabase
+            .from('orders')
+            .select('customer_name, customer_email, tier_selected, created_at, customer_phone, status')
+            .order('created_at', { ascending: false });
 
         // Remove duplicates emails
         const uniqueUsers = Array.from(new Set(orders?.map(o => o.customer_email)))
@@ -41,7 +44,7 @@ const AdminUsersPage = () => {
                     email: email,
                     name: order?.customer_name,
                     phone: order?.customer_phone,
-                    tier: order?.tier_selected,
+                    tier: (order?.status === 'paid') ? order?.tier_selected : 'free',
                     joined_at: order?.created_at
                 };
             });
