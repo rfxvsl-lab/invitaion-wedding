@@ -110,9 +110,10 @@ interface EnvelopeProps {
     onOpen: () => void;
     brideName: string;
     groomName: string;
+    guestName: string;
 }
 
-const NetflixEnvelope = ({ onOpen, brideName, groomName }: EnvelopeProps) => {
+const NetflixEnvelope = ({ onOpen, brideName, groomName, guestName }: EnvelopeProps) => {
     const [opening, setOpening] = useState(false);
 
     const handleOpen = () => {
@@ -134,6 +135,12 @@ const NetflixEnvelope = ({ onOpen, brideName, groomName }: EnvelopeProps) => {
                         {groomName} & {brideName}
                     </h2>
                     <p className="font-body text-[8px] tracking-[0.3em] text-gray-400 uppercase mt-2">A Wedding Series Premiere</p>
+
+                    {/* Guest Name */}
+                    <div className="mt-6">
+                        <p className="font-body text-[9px] text-gray-500 italic mb-1">Kepada Yth,</p>
+                        <p className="font-body text-base text-white">{guestName}</p>
+                    </div>
 
                     <div className="mt-4 flex gap-1 h-4 opacity-50">
                         {[...Array(20)].map((_, i) => <div key={i} className="w-1 bg-gray-500 h-full"></div>)}
@@ -425,7 +432,7 @@ const RSVPPage = ({ data }: { data: InvitationData }) => (
 /**
  * --- MAIN APP ---
  */
-const NetflixLuxury: React.FC<{ data: InvitationData }> = ({ data }) => {
+const NetflixLuxury: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
     const [stage, setStage] = useState<'envelope' | 'hero' | 'content'>('envelope');
     const [activeTab, setActiveTab] = useState('home');
     const [music, setMusic] = useState(false);
@@ -480,6 +487,7 @@ const NetflixLuxury: React.FC<{ data: InvitationData }> = ({ data }) => {
                     onOpen={() => setStage('hero')}
                     brideName={data.content.couples.wanita.name.split(' ')[0]}
                     groomName={data.content.couples.pria.name.split(' ')[0]}
+                    guestName={guestName}
                 />
             )}
 

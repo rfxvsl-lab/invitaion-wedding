@@ -381,7 +381,7 @@ const NavBar = ({ activeTab, setTab, data }: { activeTab: string, setTab: (t: st
 
 // --- PAGES ---
 
-const HomePage = ({ onEnter, data }: { onEnter: () => void, data: InvitationData }) => {
+const HomePage = ({ onEnter, data, guestName }: { onEnter: () => void, data: InvitationData, guestName: string }) => {
     const groomName = data.content.couples.pria.name.split(' ')[0];
     const brideName = data.content.couples.wanita.name.split(' ')[0];
     const dateObj = new Date(data.content.hero.date);
@@ -404,6 +404,12 @@ const HomePage = ({ onEnter, data }: { onEnter: () => void, data: InvitationData
                     <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#D4AF37]"></div>
                     <span className="font-arabic-body text-xl text-gray-300">{dateStr}</span>
                     <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#D4AF37]"></div>
+                </div>
+
+                {/* Guest Name */}
+                <div className="mb-6">
+                    <p className="font-arabic-title text-xs text-[#D4AF37]/70 tracking-widest uppercase mb-2">Kepada Yth,</p>
+                    <p className="font-arabic-title text-2xl text-gold-gradient">{guestName}</p>
                 </div>
 
                 <button onClick={onEnter} className="mt-4 px-8 py-3 bg-gradient-to-r from-[#B8860B] to-[#FFD700] text-[#0f261f] font-bold font-arabic-title tracking-widest rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.4)]">
@@ -569,7 +575,7 @@ const RSVPPage = ({ data }: { data: InvitationData }) => (
 /**
  * --- MAIN APP ---
  */
-const RoyalArabian: React.FC<{ data: InvitationData }> = ({ data }) => {
+const RoyalArabian: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
     const [stage, setStage] = useState<'envelope' | 'hero' | 'content'>('envelope'); // envelope -> hero -> content
     const [activeTab, setActiveTab] = useState('home');
     const [music, setMusic] = useState(false);
@@ -647,7 +653,7 @@ const RoyalArabian: React.FC<{ data: InvitationData }> = ({ data }) => {
                     <div className="flex-1 relative z-10 pt-16 pb-20 md:pb-0">
                         {/* Content */}
                         <div className="w-full h-full overflow-hidden">
-                            {activeTab === 'home' && <HomePage onEnter={() => setActiveTab('event')} data={data} />}
+                            {activeTab === 'home' && <HomePage onEnter={() => setActiveTab('event')} data={data} guestName={guestName} />}
                             {activeTab === 'quote' && <QuotePage data={data} />}
                             {activeTab === 'couple' && <CouplePage data={data} />}
                             {activeTab === 'event' && <EventPage data={data} />}

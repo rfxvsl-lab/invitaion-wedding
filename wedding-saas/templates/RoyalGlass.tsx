@@ -173,7 +173,7 @@ const LivingBackground = ({ mousePos }: any) => {
  * --- COMPONENTS ---
  */
 
-const Envelope = ({ onOpen, invitation }: { onOpen: () => void, invitation: any }) => {
+const Envelope = ({ onOpen, invitation, guestName }: { onOpen: () => void, invitation: any, guestName: string }) => {
     const [opening, setOpening] = useState(false);
 
     const handleOpen = () => {
@@ -194,6 +194,13 @@ const Envelope = ({ onOpen, invitation }: { onOpen: () => void, invitation: any 
                 <div className={`absolute top-2 left-2 right-2 bottom-4 bg-[#F9F7F2] shadow-md flex flex-col items-center justify-center z-10 border border-gray-200 ${opening ? 'paper-rise' : 'opacity-0'}`}>
                     <h2 className="font-script text-4xl text-[#B8860B] mb-2">{invitation.hero.groom_nickname} & {invitation.hero.bride_nickname}</h2>
                     <p className="font-modern text-[10px] tracking-[0.3em] text-gray-400 uppercase">{invitation.texts.hero_title}</p>
+
+                    {/* Guest Name */}
+                    <div className="mt-6">
+                        <p className="font-modern text-[9px] text-gray-400 italic mb-1">Kepada Yth,</p>
+                        <p className="font-script text-lg text-[#8B6E4E]">{guestName}</p>
+                    </div>
+
                     <div className="absolute bottom-6 w-12 h-12 border border-[#B8860B] rounded-full flex items-center justify-center opacity-30">
                         <Heart size={16} fill="#B8860B" />
                     </div>
@@ -398,7 +405,7 @@ const RSVPPage = ({ invitation }: any) => (
 /**
  * --- MAIN APP ---
  */
-export default function RoyalGlass({ data }: { data: InvitationData }) {
+export default function RoyalGlass({ data, guestName = "Tamu Undangan" }: { data: InvitationData; guestName?: string }) {
     const [stage, setStage] = useState('envelope'); // envelope -> hero -> content
     const [activeTab, setActiveTab] = useState('home');
     const [music, setMusic] = useState(false);
@@ -462,6 +469,7 @@ export default function RoyalGlass({ data }: { data: InvitationData }) {
             {stage === 'envelope' && (
                 <Envelope
                     invitation={invitation}
+                    guestName={guestName}
                     onOpen={() => {
                         setStage('hero');
                         setMusic(true);

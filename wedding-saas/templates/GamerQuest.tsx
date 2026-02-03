@@ -12,7 +12,7 @@ import RsvpForm from '../components/RsvpForm';
  * Features: Glitch Intro, Character Select, Mini-Game
  */
 
-const GamerQuest: React.FC<{ data: InvitationData }> = ({ data }) => {
+const GamerQuest: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [showGame, setShowGame] = useState(false);
@@ -222,7 +222,13 @@ const GamerQuest: React.FC<{ data: InvitationData }> = ({ data }) => {
                     <h1 className="font-orbitron text-4xl md:text-5xl mb-2 text-white glitch-wrapper" data-text={content.hero.nicknames}>
                         {content.hero.nicknames}
                     </h1>
-                    <p className="font-rajdhani text-lg text-[#bc13fe] tracking-[0.3em] uppercase mb-8">Level 1: The Beginning</p>
+                    <p className="font-rajdhani text-lg text-[#bc13fe] tracking-[0.3em] uppercase mb-6">Level 1: The Beginning</p>
+
+                    {/* Guest Name */}
+                    <div className="mb-8">
+                        <p className="font-rajdhani text-xs text-[#666] italic tracking-wide mb-1">Kepada Yth,</p>
+                        <p className="font-orbitron text-base text-[#00f3ff]">{guestName}</p>
+                    </div>
 
                     <button
                         onClick={handleOpen}

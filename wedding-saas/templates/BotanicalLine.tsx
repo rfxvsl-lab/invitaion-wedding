@@ -13,7 +13,7 @@ import { InvitationData } from '../types/invitation';
  * Palette: White, Dusty Rose (#BCAAA4), Dark Grey (#555555)
  */
 
-const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
+const BotanicalTemplate = ({ data, guestName = "Tamu Undangan" }: { data: InvitationData; guestName?: string }) => {
     // --- STATE & REFS ---
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -109,9 +109,15 @@ const BotanicalTemplate = ({ data }: { data: InvitationData }) => {
                         <img src={invitation.hero.main_image_url} className="w-full h-full object-cover rounded-full opacity-80" alt="Cover" />
                     </div>
 
-                    <p className="font-sans text-sm mb-10 tracking-widest border-y border-[#BCAAA4]/30 py-2 inline-block px-8">
+                    <p className="font-sans text-sm mb-6 tracking-widest border-y border-[#BCAAA4]/30 py-2 inline-block px-8">
                         {formatDate(invitation.hero.wedding_date_time)}
                     </p>
+
+                    {/* Guest Name */}
+                    <div className="mb-10">
+                        <p className="font-sans text-xs text-[#999] italic tracking-wide mb-1">Kepada Yth,</p>
+                        <p className="font-script text-2xl text-[#BCAAA4]">{guestName}</p>
+                    </div>
 
                     <button
                         onClick={handleOpen}

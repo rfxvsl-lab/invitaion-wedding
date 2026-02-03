@@ -14,7 +14,7 @@ import DIYOverlay from '../components/DIYOverlay';
  * Palette: Black (#121212), Gold (#BF953F), Dark Grey
  */
 
-const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
+const DarkLuxuryTemplate = ({ data, guestName = "Tamu Undangan" }: { data: InvitationData; guestName?: string }) => {
     // --- STATE & REFS ---
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -130,7 +130,13 @@ const DarkLuxuryTemplate = ({ data }: { data: InvitationData }) => {
                         <GoldText>{invitation.hero.bride_nickname}</GoldText>
                     </h1>
 
-                    <div className="w-[1px] h-16 bg-gradient-to-b from-[#BF953F] to-transparent mx-auto my-8"></div>
+                    <div className="w-[1px] h-16 bg-gradient-to-b from-[#BF953F] to-transparent mx-auto my-6"></div>
+
+                    {/* Guest Name */}
+                    <div className="mb-8">
+                        <p className="font-body text-xs text-[#888] italic tracking-wide mb-1">Kepada Yth,</p>
+                        <p className="font-luxury text-xl text-[#BF953F]">{guestName}</p>
+                    </div>
 
                     <button
                         onClick={handleOpen}

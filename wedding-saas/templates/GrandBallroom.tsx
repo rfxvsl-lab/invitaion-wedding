@@ -281,7 +281,7 @@ const NavBar = ({ activeTab, setTab, data }: { activeTab: string, setTab: (t: st
 
 // --- PAGES ---
 
-const HomePage = ({ onEnter, data }: { onEnter: () => void, data: InvitationData }) => {
+const HomePage = ({ onEnter, data, guestName }: { onEnter: () => void, data: InvitationData, guestName: string }) => {
     const groomName = data.content.couples.pria.name.split(' ')[0];
     const brideName = data.content.couples.wanita.name.split(' ')[0];
     const dateObj = new Date(data.content.hero.date);
@@ -305,6 +305,12 @@ const HomePage = ({ onEnter, data }: { onEnter: () => void, data: InvitationData
                 <span className="w-12 h-[1px] bg-[#D4AF37]"></span>
                 <span>{dateStr}</span>
                 <span className="w-12 h-[1px] bg-[#D4AF37]"></span>
+            </div>
+
+            {/* Guest Name */}
+            <div className="mb-8">
+                <p className="font-grand text-xs text-[#888] tracking-widest uppercase mb-2">Kepada Yth,</p>
+                <p className="font-luxury text-2xl text-[#D4AF37]">{guestName}</p>
             </div>
 
             <button onClick={onEnter} className="px-10 py-3 bg-[#1a1a1a] text-[#D4AF37] font-grand text-xs tracking-[0.2em] border border-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all uppercase shadow-lg">
@@ -471,7 +477,7 @@ const QuotePage = ({ data }: { data: InvitationData }) => (
 /**
  * --- MAIN APP ---
  */
-const GrandBallroom: React.FC<{ data: InvitationData }> = ({ data }) => {
+const GrandBallroom: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
     const [stage, setStage] = useState<'curtain' | 'content'>('curtain'); // curtain -> content
     const [activeTab, setActiveTab] = useState('home');
     const [music, setMusic] = useState(false);
@@ -516,7 +522,7 @@ const GrandBallroom: React.FC<{ data: InvitationData }> = ({ data }) => {
 
                     {/* Content Viewport */}
                     <div className="flex-1 overflow-hidden relative bg-[url('https://www.transparenttextures.com/patterns/white-diamond.png')]">
-                        {activeTab === 'home' && <HomePage onEnter={() => setActiveTab('event')} data={data} />}
+                        {activeTab === 'home' && <HomePage onEnter={() => setActiveTab('event')} data={data} guestName={guestName} />}
                         {activeTab === 'quote' && <QuotePage data={data} />}
                         {activeTab === 'couple' && <CouplePage data={data} />}
                         {activeTab === 'event' && <EventPage data={data} />}

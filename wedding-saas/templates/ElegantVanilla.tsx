@@ -17,7 +17,7 @@ import RsvpForm from '../components/RsvpForm';
  * - Floating couple initials sidebar
  */
 
-const ElegantVanilla: React.FC<{ data: InvitationData }> = ({ data }) => {
+const ElegantVanilla: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
     const [view, setView] = useState<'COVER' | 'CONTENT'>('COVER');
     const [currentSection, setCurrentSection] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -291,7 +291,7 @@ const ElegantVanilla: React.FC<{ data: InvitationData }> = ({ data }) => {
                                 Kepada Yth.
                             </p>
                             <p className="text-xl md:text-2xl font-display text-[#8B7355] italic">
-                                Tamu Undangan
+                                {guestName}
                             </p>
                         </div>
 

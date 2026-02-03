@@ -13,7 +13,7 @@ import RsvpForm from '../components/RsvpForm';
  * Compatibility: InvitationDataStandard Interface
  */
 
-const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
+const ClassicSerifTemplate: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
     // --- STATE & REFS ---
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -136,9 +136,15 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData }> = ({ data }) => {
 
                     <div className="w-[1px] h-16 bg-[#D4AF37] mx-auto my-8"></div>
 
-                    <p className="font-playfair italic text-lg mb-10">
+                    <p className="font-playfair italic text-lg mb-6">
                         {formatDate(invitation.hero.wedding_date_time) || invitation.hero.wedding_date_time}
                     </p>
+
+                    {/* Guest Name */}
+                    <div className="mb-10">
+                        <p className="font-lato text-xs text-[#999] italic tracking-wide mb-1">Kepada Yth,</p>
+                        <p className="font-playfair text-lg font-semibold text-[#D4AF37]">{guestName}</p>
+                    </div>
 
                     <button
                         onClick={handleOpen}

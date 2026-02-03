@@ -13,7 +13,7 @@ import { InvitationData } from '../types/invitation';
  * Palette: Wood Brown (#8D6E63), Sage Green (#8FBC8F), Paper Cream (#FFFDF5)
  */
 
-const RusticTemplate = ({ data }: { data: InvitationData }) => {
+const RusticTemplate = ({ data, guestName = "Tamu Undangan" }: { data: InvitationData; guestName?: string }) => {
     // --- STATE & REFS ---
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -130,10 +130,16 @@ const RusticTemplate = ({ data }: { data: InvitationData }) => {
                             </h1>
                         </div>
 
-                        <div className="flex items-center justify-center gap-4 mb-10 font-serif italic text-sm text-[#8D6E63]">
+                        <div className="flex items-center justify-center gap-4 mb-6 font-serif italic text-sm text-[#8D6E63]">
                             <span className="border-y border-[#8FBC8F] py-1 px-4">
                                 {formatDate(invitation.hero.wedding_date_time)}
                             </span>
+                        </div>
+
+                        {/* Guest Name */}
+                        <div className="mb-10">
+                            <p className="font-serif text-xs text-[#999] italic mb-1">Kepada Yth,</p>
+                            <p className="font-hand text-3xl font-bold text-[#8D6E63]">{guestName}</p>
                         </div>
 
                         <WoodButton onClick={handleOpen}>

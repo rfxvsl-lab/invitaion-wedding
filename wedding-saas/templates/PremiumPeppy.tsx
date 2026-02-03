@@ -12,7 +12,7 @@ import DIYOverlay from '../components/DIYOverlay';
  * Tier: Premium
  */
 
-const PremiumPeppy: React.FC<{ data: InvitationData }> = ({ data }) => {
+const PremiumPeppy: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
     // --- STATE ---
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -159,7 +159,7 @@ const PremiumPeppy: React.FC<{ data: InvitationData }> = ({ data }) => {
                     <div className="w-16 h-1 bg-[#DFA67B] mx-auto rounded-full mb-6"></div>
 
                     <p className="font-peppy-sans text-sm mb-2 text-gray-500">Kepada Yth:</p>
-                    <div className="font-peppy-sans font-bold text-lg mb-8 bg-[#FAF9F6] py-2 rounded-lg text-[#3D405B]">Tamu Undangan</div>
+                    <div className="font-peppy-serif font-bold text-lg mb-8 bg-[#FAF9F6] py-2 rounded-lg text-[#3D405B]">{guestName}</div>
 
                     <button
                         onClick={handleOpen}

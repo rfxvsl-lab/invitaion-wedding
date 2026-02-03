@@ -22,10 +22,11 @@ import RoyalArabian from '../templates/RoyalArabian';
 
 interface InvitationPageProps {
     data: InvitationData | null;
+    guestName: string;
     error?: string;
 }
 
-export default function InvitationPage({ data, error }: InvitationPageProps) {
+export default function InvitationPage({ data, guestName, error }: InvitationPageProps) {
     if (error || !data) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500 font-sans">
@@ -72,19 +73,19 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
 
     const renderTemplate = () => {
         switch (data.metadata.theme_id) {
-            case 'classic-serif': return <ClassicSerif data={data} />;
-            case 'botanical-line': return <BotanicalLine data={data} />;
-            case 'rustic-wood': return <RusticWood data={data} />;
-            case 'dark-luxury': return <DarkLuxury data={data} />;
-            case 'premium-peppy': return <PremiumPeppy data={data} />;
-            case 'gamer-quest': return <GamerQuest data={data} />;
+            case 'classic-serif': return <ClassicSerif data={data} guestName={guestName} />;
+            case 'botanical-line': return <BotanicalLine data={data} guestName={guestName} />;
+            case 'rustic-wood': return <RusticWood data={data} guestName={guestName} />;
+            case 'dark-luxury': return <DarkLuxury data={data} guestName={guestName} />;
+            case 'premium-peppy': return <PremiumPeppy data={data} guestName={guestName} />;
+            case 'gamer-quest': return <GamerQuest data={data} guestName={guestName} />;
 
-            case 'elegant-vanilla': return <ElegantVanilla data={data} />;
-            case 'royal-glass': return <RoyalGlass data={data} />;
-            case 'netflix-luxury': return <NetflixLuxury data={data} />;
-            case 'grand-ballroom': return <GrandBallroom data={data} />;
-            case 'royal-arabian': return <RoyalArabian data={data} />;
-            case 'modern-arch': default: return <ModernArch data={data} />;
+            case 'elegant-vanilla': return <ElegantVanilla data={data} guestName={guestName} />;
+            case 'royal-glass': return <RoyalGlass data={data} guestName={guestName} />;
+            case 'netflix-luxury': return <NetflixLuxury data={data} guestName={guestName} />;
+            case 'grand-ballroom': return <GrandBallroom data={data} guestName={guestName} />;
+            case 'royal-arabian': return <RoyalArabian data={data} guestName={guestName} />;
+            case 'modern-arch': default: return <ModernArch data={data} guestName={guestName} />;
         }
     };
 
@@ -106,6 +107,7 @@ export default function InvitationPage({ data, error }: InvitationPageProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const { slug } = context.params as { slug: string };
+    const guestName = (context.query.to as string) || "Tamu Undangan";
 
     const { data: invitation, error } = await supabase
         .from('invitations')
@@ -115,13 +117,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     if (error || !invitation) {
         return {
-            props: { error: 'Undangan tidak ditemukan' }
+            props: {
+                error: 'Undangan tidak ditemukan',
+                guestName: "Tamu Undangan"
+            }
         };
     }
 
     return {
         props: {
-            data: invitation.data
+            data: invitation.data,
+            guestName: decodeURIComponent(guestName)
         }
     };
 };

@@ -14,7 +14,7 @@ import { mapToTemplateData } from '../utils/templateMapper';
 import RsvpForm from '../components/RsvpForm';
 import { InvitationData } from '../types/invitation';
 
-const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
+const ModernArchTemplate = ({ data, guestName = "Tamu Undangan" }: { data: InvitationData; guestName?: string }) => {
     // --- STATE & REFS ---
     const [isOpen, setIsOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -120,9 +120,15 @@ const ModernArchTemplate = ({ data }: { data: InvitationData }) => {
                     <h1 className="font-cormorant text-5xl text-[#2D2D2D] mb-4">
                         {invitation.hero.groom_nickname} <span className="text-[#A48874]">&</span> {invitation.hero.bride_nickname}
                     </h1>
-                    <p className="font-opensans text-sm text-[#666] mb-8">
+                    <p className="font-opensans text-sm text-[#666] mb-6">
                         {formatDate(invitation.hero.wedding_date_time)}
                     </p>
+
+                    {/* Guest Name */}
+                    <div className="mb-8">
+                        <p className="font-opensans text-xs text-[#888] italic mb-1">Kepada Yth,</p>
+                        <p className="font-cormorant text-lg font-semibold text-[#A48874]">{guestName}</p>
+                    </div>
 
                     <button
                         onClick={handleOpen}
