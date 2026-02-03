@@ -76,7 +76,7 @@ const AdminUsersPage = () => {
                             {loading ? (
                                 <tr><td colSpan={4} className="p-12 text-center text-slate-400">Loading data...</td></tr>
                             ) : users.length === 0 ? (
-                                <tr><td colSpan={4} className="p-12 text-center text-slate-500">Belum ada user yang terdaftar dari order.</td></tr>
+                                <tr><td colSpan={4} className="p-12 text-center text-slate-500">Belum ada user yang terdaftar. (Cek RLS Policy jika data ada di DB)</td></tr>
                             ) : (
                                 users.map((user: any, idx) => (
                                     <tr key={idx} className="hover:bg-slate-50 transition">
