@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Home, Users, Palette, ShoppingCart, FileQuestion, Settings, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import AdminLayout from '@/components/AdminLayout';
 
 const AdminSettingsPage = () => {
     const router = useRouter();
@@ -40,97 +41,78 @@ const AdminSettingsPage = () => {
     };
 
     return (
-        <div className="flex h-screen bg-gray-100">
-            {/* Sidebar */}
-            <aside className="w-64 bg-gradient-to-b from-purple-600 to-purple-800 text-white p-6">
-                <h1 className="text-2xl font-bold mb-8">Admin Panel</h1>
-                <nav className="space-y-2">
-                    <a href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition">
-                        <Home size={20} />
-                        Dashboard
-                    </a>
-                    <a href="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition">
-                        <ShoppingCart size={20} />
-                        Orders
-                    </a>
-                    <a href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-white/20 font-semibold">
-                        <Settings size={20} />
-                        Settings
-                    </a>
-                </nav>
-            </aside>
+        <AdminLayout title="Pengaturan - Admin">
+            <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+                <h2 className="text-2xl font-bold mb-6 text-slate-800">Pengaturan Pembayaran (Dinamis)</h2>
 
-            <main className="flex-1 p-8">
-                <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow">
-                    <h2 className="text-2xl font-bold mb-6">Pengaturan Pembayaran (Dinamis)</h2>
+                <div className="space-y-6">
+                    <div>
+                        <label className="block font-bold text-slate-700 mb-2">Instruksi Transfer Bank (BCA/Mandiri/dll)</label>
+                        <textarea
+                            className="w-full border border-slate-200 p-4 rounded-xl h-32 text-slate-700 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition"
+                            value={settings.payment_instructions_bank}
+                            onChange={e => setSettings({ ...settings, payment_instructions_bank: e.target.value })}
+                            placeholder="Contoh: Transfer ke BCA 123456 a.n PT UndanganKita..."
+                        />
+                    </div>
 
-                    <div className="space-y-6">
-                        <div>
-                            <label className="block font-semibold mb-2">Instruksi Transfer Bank (BCA/Mandiri/dll)</label>
-                            <textarea
-                                className="w-full border p-3 rounded h-32"
-                                value={settings.payment_instructions_bank}
-                                onChange={e => setSettings({ ...settings, payment_instructions_bank: e.target.value })}
-                                placeholder="Contoh: Transfer ke BCA 123456 a.n PT UndanganKita..."
-                            />
-                        </div>
+                    <div>
+                        <label className="block font-bold text-slate-700 mb-2">Instruksi E-Wallet (ShopeePay/SeaBank)</label>
+                        <textarea
+                            className="w-full border border-slate-200 p-4 rounded-xl h-32 text-slate-700 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition"
+                            value={settings.payment_instructions_ewallet}
+                            onChange={e => setSettings({ ...settings, payment_instructions_ewallet: e.target.value })}
+                            placeholder="Contoh: No HP 081234567890 a.n Admin..."
+                        />
+                    </div>
 
-                        <div>
-                            <label className="block font-semibold mb-2">Instruksi E-Wallet (ShopeePay/SeaBank)</label>
-                            <textarea
-                                className="w-full border p-3 rounded h-32"
-                                value={settings.payment_instructions_ewallet}
-                                onChange={e => setSettings({ ...settings, payment_instructions_ewallet: e.target.value })}
-                                placeholder="Contoh: No HP 081234567890 a.n Admin..."
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block font-semibold mb-2">Gambar QRIS</label>
-                            <div className="flex gap-4 items-start">
-                                {settings.payment_instructions_qris_url && (
-                                    <img src={settings.payment_instructions_qris_url} alt="QRIS" className="w-32 h-32 object-contain border rounded" />
-                                )}
-                                <div className="flex-1">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        className="w-full border p-2 rounded mb-2"
-                                        onChange={async (e) => {
-                                            if (e.target.files && e.target.files[0]) {
-                                                setLoading(true);
-                                                const { uploadSiteAsset } = await import('../../lib/database');
-                                                const res = await uploadSiteAsset(e.target.files[0]);
-                                                if (res.success && res.url) {
-                                                    setSettings({ ...settings, payment_instructions_qris_url: res.url });
-                                                } else {
-                                                    alert('Upload failed: ' + (res.error || 'Unknown error'));
-                                                }
-                                                setLoading(false);
+                    <div>
+                        <label className="block font-bold text-slate-700 mb-2">Gambar QRIS</label>
+                        <div className="flex gap-4 items-start p-4 bg-slate-50 rounded-xl border border-slate-200">
+                            {settings.payment_instructions_qris_url && (
+                                <img src={settings.payment_instructions_qris_url} alt="QRIS" className="w-32 h-32 object-contain border border-slate-200 rounded-lg bg-white" />
+                            )}
+                            <div className="flex-1">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="w-full border border-slate-200 p-2 rounded-lg mb-2 bg-white"
+                                    onChange={async (e) => {
+                                        if (e.target.files && e.target.files[0]) {
+                                            setLoading(true);
+                                            const { uploadSiteAsset } = await import('../../lib/database');
+                                            const res = await uploadSiteAsset(e.target.files[0]);
+                                            if (res.success && res.url) {
+                                                setSettings({ ...settings, payment_instructions_qris_url: res.url });
+                                            } else {
+                                                alert('Upload failed: ' + (res.error || 'Unknown error'));
                                             }
-                                        }}
-                                    />
-                                    <p className="text-sm text-gray-500">Upload gambar QRIS baru untuk mengganti.</p>
-                                    <button
-                                        onClick={() => setSettings({ ...settings, payment_instructions_qris_url: '/qris_default.jpg' })}
-                                        className="text-xs text-purple-600 hover:underline mt-1"
-                                    >
-                                        Gunakan Default (Uploaded via Chat)
-                                    </button>
-                                </div>
+                                            setLoading(false);
+                                        }
+                                    }}
+                                />
+                                <p className="text-sm text-slate-500">Upload gambar QRIS baru untuk mengganti.</p>
+                                <button
+                                    onClick={() => setSettings({ ...settings, payment_instructions_qris_url: '/qris_default.jpg' })}
+                                    className="text-xs text-pink-600 hover:text-pink-800 font-bold mt-2"
+                                >
+                                    Gunakan Default (Uploaded via Chat)
+                                </button>
                             </div>
                         </div>
+                    </div>
 
+                    <div className="pt-4 border-t border-slate-100">
                         <button
                             onClick={handleSave}
-                            className="bg-purple-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-purple-700 flex items-center gap-2"
+                            className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 flex items-center gap-2 shadow-lg shadow-slate-900/20 transition hover:-translate-y-0.5"
                         >
                             <Save size={20} /> Simpan Pengaturan
                         </button>
                     </div>
                 </div>
-            </main>
-        </div>
+            </div>
+        </AdminLayout>
     );
 };
 
