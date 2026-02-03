@@ -22,8 +22,9 @@ const AdminUsersPage = () => {
 
     const checkAuth = async () => {
         const { data: { user } } = await supabase.auth.getUser();
+        console.log("Admin Users Page - Current User:", user?.email); // DEBUG
         if (!user || user.email !== 'mhmmadridho64@gmail.com') {
-            router.push('/login');
+            // router.push('/login'); // Temporarily comment out redirect to debug
         }
     };
 
