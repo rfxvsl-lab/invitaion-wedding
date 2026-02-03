@@ -38,7 +38,32 @@ const AdminOrdersPage = () => {
         const success = await updateOrderStatus(orderId, 'paid');
 
         if (success) {
-            alert('Pembayaran diterima! Email konfirmasi sudah terkirim (simulasi).');
+            // Send Email Notification
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                try {
+                    await fetch('/api/send-email', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            to: order.customer_email,
+                            subject: 'Pembayaran Diterima - WeddingSaaS',
+                            html: `
+                                <h1>Pembayaran Berhasil!</h1>
+                                <p>Halo ${order.customer_name},</p>
+                                <p>Terima kasih telah melakukan pembayaran untuk paket <strong>${order.tier_selected.toUpperCase()}</strong>.</p>
+                                <p>Akun Anda kini sudah aktif. Silakan login ke dashboard untuk mulai membuat undangan pernikahan impian Anda.</p>
+                                <br/>
+                                <a href="${typeof window !== 'undefined' ? window.location.origin : ''}/login" style="background: purple; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Masuk ke Dashboard</a>
+                            `
+                        })
+                    });
+                    alert('Pembayaran diterima! Email konfirmasi terkirim.');
+                } catch (emailError) {
+                    console.error(emailError);
+                    alert('Pembayaran diterima, tapi GAGAL mengirim email (Cek konfigurasi SMTP).');
+                }
+            }
             fetchOrders();
             setSelectedOrder(null);
         } else {

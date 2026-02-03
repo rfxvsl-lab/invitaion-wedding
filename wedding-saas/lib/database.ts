@@ -29,6 +29,15 @@ export async function getThemesByTier(tier: string): Promise<Theme[]> {
     return data || [];
 }
 
+export async function deleteTheme(id: string): Promise<boolean> {
+    const { error } = await supabase.from('themes').delete().eq('id', id);
+    if (error) {
+        console.error('Error deleting theme:', error);
+        return false;
+    }
+    return true;
+}
+
 // ===== FAQs =====
 export async function getAllFAQs(): Promise<FAQ[]> {
     const { data, error } = await supabase
@@ -41,6 +50,15 @@ export async function getAllFAQs(): Promise<FAQ[]> {
         return [];
     }
     return data || [];
+}
+
+export async function deleteFAQ(id: string): Promise<boolean> {
+    const { error } = await supabase.from('faqs').delete().eq('id', id);
+    if (error) {
+        console.error('Error deleting FAQ:', error);
+        return false;
+    }
+    return true;
 }
 
 // ===== ORDERS =====
