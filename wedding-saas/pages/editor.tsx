@@ -27,11 +27,26 @@ export default function Editor() {
     }, [user, authLoading]);
 
     const fetchInvitation = async () => {
+        // Safety Timeout
+        const timeout = setTimeout(() => {
+            if (loading) {
+                setLoading(false);
+                alert("Loading took too long. Please refresh.");
+            }
+        }, 10000);
+
         try {
+            console.log("Fetching invitation for user:", user?.id);
             // 1. Cek Invitation
             const { data: existing, error } = await supabase.from('invitations').select('*').eq('user_id', user?.id).maybeSingle();
 
+            if (error) {
+                console.error("Supabase Error:", error);
+                throw error;
+            }
+
             if (existing) {
+                console.log("Found existing invitation:", existing);
                 setInvitation(existing);
                 // Merge DB Data with Defaults to prevent Crash
                 const mergedData = mergeWithDefaults(existing.content, existing.metadata);
@@ -39,15 +54,22 @@ export default function Editor() {
                 setLoading(false);
             } else {
                 // 2. Create if not exists (Auto-create)
-                createStarterInvitation();
+                console.log("No invitation found, creating new one...");
+                await createStarterInvitation();
             }
-        } catch (err) {
-            console.error(err);
+        } catch (err: any) {
+            console.error("Fetch Error:", err);
+            alert("Gagal memuat data: " + err.message);
+            setLoading(false);
+        } finally {
+            clearTimeout(timeout);
         }
     };
 
     const createStarterInvitation = async () => {
         const defaultSlug = `undangan-${Math.random().toString(36).substring(7)}`;
+        console.log("Attempting to create invitation with slug:", defaultSlug);
+
         const { data: newInv, error } = await supabase.from('invitations').insert({
             user_id: user?.id,
             slug: defaultSlug,
@@ -55,14 +77,19 @@ export default function Editor() {
             content: {} // will trigger default merge
         }).select().single();
 
+        if (error) {
+            console.error('Error creating invitation:', error);
+            alert("Gagal membuat data awal: " + (error?.message || "Unknown Error"));
+            setLoading(false); // Ensure loading stops
+            return;
+        }
+
         if (newInv) {
+            console.log("Created invitation:", newInv);
             setInvitation(newInv);
             const mergedData = mergeWithDefaults({}, { theme_id: 'modern-arch', tier: 'free' });
             setData(mergedData);
             setLoading(false);
-        } else {
-            console.error('Error creating invitation:', error);
-            alert("Gagal membuat data awal: " + (error?.message || "Unknown Error"));
         }
     };
 
