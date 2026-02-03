@@ -7,6 +7,7 @@ import {
 import { InvitationData } from '../types/invitation';
 import DIYOverlay from '../components/DIYOverlay';
 import RsvpForm from '../components/RsvpForm';
+import { mapToTemplateData } from '../utils/templateMapper';
 
 /**
  * TEMPLATE: ELEGANT VANILLA (VVIP)
@@ -18,6 +19,7 @@ import RsvpForm from '../components/RsvpForm';
  */
 
 const ElegantVanilla: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
+    const invitation = mapToTemplateData(data);
     const [view, setView] = useState<'COVER' | 'CONTENT'>('COVER');
     const [currentSection, setCurrentSection] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -84,8 +86,8 @@ const ElegantVanilla: React.FC<{ data: InvitationData; guestName?: string }> = (
     const monthName = eventDate.toLocaleDateString('id-ID', { month: 'long' }).toUpperCase();
 
     // Names
-    const brideName = content.couples.wanita.name.split(' ')[0];
-    const groomName = content.couples.pria.name.split(' ')[0];
+    const brideName = invitation ? invitation.hero.bride_nickname : content.couples.wanita.name.split(' ')[0];
+    const groomName = invitation ? invitation.hero.groom_nickname : content.couples.pria.name.split(' ')[0];
 
     // Sections for navigation
     const sections = ['bride', 'groom', 'event', 'location', 'rsvp', 'gift', 'thanks'];
@@ -266,6 +268,18 @@ const ElegantVanilla: React.FC<{ data: InvitationData; guestName?: string }> = (
             {view === 'COVER' && (
                 <div className="relative z-20 h-full flex flex-col items-center justify-center text-center p-6 bg-vanilla">
                     <div className="relative z-10 space-y-8">
+                        {/* Hero Image - Added */}
+                        <div className="w-32 h-44 md:w-48 md:h-64 mx-auto mb-6 rounded-t-full border-[3px] border-[#C9A9A6] p-1.5 anim-fade-up">
+                            <div className="w-full h-full rounded-t-full overflow-hidden relative">
+                                <img
+                                    src={data.content.hero.main_image || "https://images.unsplash.com/photo-1595867865415-dc523beba457?w=500&q=80"}
+                                    alt="Hero"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-[#C9A9A6]/10 mix-blend-multiply"></div>
+                            </div>
+                        </div>
+
                         {/* Names - Script Style */}
                         <div className="space-y-2 anim-fade-up">
                             <h1 className="text-5xl md:text-7xl font-script text-gradient-rose">

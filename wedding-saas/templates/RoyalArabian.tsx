@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
 import RsvpForm from '../components/RsvpForm';
+import { mapToTemplateData } from '../utils/templateMapper';
 
 /** * --- KONFIGURASI ASET ---
  */
@@ -293,8 +294,11 @@ const RoyalEnvelope = ({ onOpen, data }: RoyalEnvelopeProps) => {
         setTimeout(onOpen, 2500);
     };
 
-    const groomName = data.content.couples.pria.name.split(' ')[0];
-    const brideName = data.content.couples.wanita.name.split(' ')[0];
+    const invitation = mapToTemplateData(data);
+    if (!invitation) return null;
+
+    const groomName = invitation.hero.groom_nickname;
+    const brideName = invitation.hero.bride_nickname;
 
     return (
         <div className={`fixed inset-0 z-50 flex items-center justify-center bg-[#05100a] transition-opacity duration-1000 ${opening ? 'pointer-events-none opacity-0' : 'opacity-100'}`}>
@@ -382,8 +386,11 @@ const NavBar = ({ activeTab, setTab, data }: { activeTab: string, setTab: (t: st
 // --- PAGES ---
 
 const HomePage = ({ onEnter, data, guestName }: { onEnter: () => void, data: InvitationData, guestName: string }) => {
-    const groomName = data.content.couples.pria.name.split(' ')[0];
-    const brideName = data.content.couples.wanita.name.split(' ')[0];
+    const invitation = mapToTemplateData(data);
+    if (!invitation) return null;
+
+    const groomName = invitation.hero.groom_nickname;
+    const brideName = invitation.hero.bride_nickname;
     const dateObj = new Date(data.content.hero.date);
     const dateStr = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'long' })} ${dateObj.getFullYear()}`;
 
@@ -396,9 +403,21 @@ const HomePage = ({ onEnter, data, guestName }: { onEnter: () => void, data: Inv
             <div className="relative z-10">
                 <h3 className="font-arabic-title text-sm tracking-[0.3em] text-[#D4AF37] mb-6 animate-pulse">THE SACRED UNION OF</h3>
 
-                <h1 className="font-arabic-title text-6xl md:text-8xl text-gold-gradient drop-shadow-lg mb-4 leading-tight">
+                <h1 className="font-arabic-title text-5xl md:text-7xl text-gold-gradient drop-shadow-lg mb-4 leading-tight">
                     {groomName} <br /> <span className="text-3xl text-white/50">&</span> <br /> {brideName}
                 </h1>
+
+                {/* Hero Image - Added */}
+                <div className="relative w-48 h-48 mx-auto mb-6 rounded-full border-2 border-[#D4AF37] p-2">
+                    <div className="w-full h-full rounded-full overflow-hidden border border-[#D4AF37]/50 relative">
+                        <img
+                            src={data.content.hero.main_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=500&q=80"}
+                            alt="Couple"
+                            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0f261f]/50 to-transparent"></div>
+                    </div>
+                </div>
 
                 <div className="flex items-center justify-center gap-4 my-8">
                     <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#D4AF37]"></div>

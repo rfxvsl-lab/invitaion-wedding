@@ -5,6 +5,7 @@ import {
     ChevronDown, Info, Gift, Check, Search, Bell
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
+import { mapToTemplateData } from '../utils/templateMapper';
 import DIYOverlay from '../components/DIYOverlay';
 import RsvpForm from '../components/RsvpForm';
 
@@ -433,6 +434,7 @@ const RSVPPage = ({ data }: { data: InvitationData }) => (
  * --- MAIN APP ---
  */
 const NetflixLuxury: React.FC<{ data: InvitationData; guestName?: string }> = ({ data, guestName = "Tamu Undangan" }) => {
+    const invitation = mapToTemplateData(data);
     const [stage, setStage] = useState<'envelope' | 'hero' | 'content'>('envelope');
     const [activeTab, setActiveTab] = useState('home');
     const [music, setMusic] = useState(false);
@@ -485,8 +487,8 @@ const NetflixLuxury: React.FC<{ data: InvitationData; guestName?: string }> = ({
             {stage === 'envelope' && (
                 <NetflixEnvelope
                     onOpen={() => setStage('hero')}
-                    brideName={data.content.couples.wanita.name.split(' ')[0]}
-                    groomName={data.content.couples.pria.name.split(' ')[0]}
+                    brideName={invitation ? invitation.hero.bride_nickname : data.content.couples.wanita.name.split(' ')[0]}
+                    groomName={invitation ? invitation.hero.groom_nickname : data.content.couples.pria.name.split(' ')[0]}
                     guestName={guestName}
                 />
             )}

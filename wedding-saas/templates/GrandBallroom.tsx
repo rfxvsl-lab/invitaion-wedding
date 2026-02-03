@@ -5,6 +5,7 @@ import {
     Crown, Gem, Stars, Ticket, CheckCircle, Gift
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
+import { mapToTemplateData } from '../utils/templateMapper';
 import RsvpForm from '../components/RsvpForm';
 
 /** * --- KONFIGURASI ASET ---
@@ -282,8 +283,11 @@ const NavBar = ({ activeTab, setTab, data }: { activeTab: string, setTab: (t: st
 // --- PAGES ---
 
 const HomePage = ({ onEnter, data, guestName }: { onEnter: () => void, data: InvitationData, guestName: string }) => {
-    const groomName = data.content.couples.pria.name.split(' ')[0];
-    const brideName = data.content.couples.wanita.name.split(' ')[0];
+    const invitation = mapToTemplateData(data);
+    if (!invitation) return null;
+
+    const groomName = invitation.hero.groom_nickname;
+    const brideName = invitation.hero.bride_nickname;
     const dateObj = new Date(data.content.hero.date);
     const dateStr = `${dateObj.getDate().toString().padStart(2, '0')} . ${(dateObj.getMonth() + 1).toString().padStart(2, '0')} . ${dateObj.getFullYear()}`;
 
@@ -299,6 +303,15 @@ const HomePage = ({ onEnter, data, guestName }: { onEnter: () => void, data: Inv
                 <h1 className="font-luxury text-7xl md:text-9xl text-gold-luxury drop-shadow-sm leading-none">
                     {groomName} <br /> <span className="text-4xl text-[#333]">&</span> <br /> {brideName}
                 </h1>
+            </div>
+
+            {/* Hero Image - Added */}
+            <div className="relative w-40 h-40 md:w-56 md:h-56 mx-auto mb-8 rounded-full border-4 border-[#D4AF37] shadow-xl overflow-hidden">
+                <img
+                    src={invitation.hero.main_image_url}
+                    alt="Couple"
+                    className="w-full h-full object-cover"
+                />
             </div>
 
             <div className="flex items-center gap-4 mb-8 font-grand text-gray-600">
