@@ -63,31 +63,31 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                         <div className="flex justify-between h-20 items-center">
                             {/* Logo */}
                             <a href="#" className="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
-                                <i className="fa-solid fa-envelope-open-text text-3xl text-pink-600 group-hover:scale-110 transition"></i>
-                                <span className="font-serif text-2xl font-bold text-gray-900 tracking-tight">Undangan<span className="text-pink-600">Kita</span></span>
+                                <i className="fa-solid fa-envelope-open-text text-3xl text-primary group-hover:scale-110 transition"></i>
+                                <span className="font-serif text-2xl font-bold text-gray-900 tracking-tight">Undangan<span className="text-primary">Kita</span></span>
                             </a>
 
                             {/* Desktop Menu */}
                             <div className="hidden md:flex space-x-8 items-center">
-                                <a href="#home" className="text-gray-600 hover:text-pink-600 font-medium transition relative group">
+                                <a href="#home" className="text-gray-600 hover:text-primary font-medium transition relative group">
                                     Beranda
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-pink-600 transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
+                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
                                 </a>
-                                <a href="#fitur" className="text-gray-600 hover:text-pink-600 font-medium transition relative group">
+                                <a href="#fitur" className="text-gray-600 hover:text-primary font-medium transition relative group">
                                     Fitur
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-pink-600 transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
+                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
                                 </a>
-                                <a href="#tema" className="text-gray-600 hover:text-pink-600 font-medium transition relative group">
+                                <a href="#tema" className="text-gray-600 hover:text-primary font-medium transition relative group">
                                     Tema
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-pink-600 transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
+                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
                                 </a>
-                                <a href="#harga" className="text-gray-600 hover:text-pink-600 font-medium transition relative group">
+                                <a href="#harga" className="text-gray-600 hover:text-primary font-medium transition relative group">
                                     Harga
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-pink-600 transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
+                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
                                 </a>
-                                <a href="#faq" className="text-gray-600 hover:text-pink-600 font-medium transition relative group">
+                                <a href="#faq" className="text-gray-600 hover:text-primary font-medium transition relative group">
                                     FAQ
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-pink-600 transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
+                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
                                 </a>
                                 {user ? (
                                     <a href="/admin" className="text-purple-600 font-bold hover:text-purple-800 transition">
@@ -99,15 +99,15 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                             {/* CTA Button Desktop */}
                             <div className="hidden md:flex items-center space-x-4">
                                 {user ? (
-                                    <button onClick={() => signOut()} className="text-gray-600 hover:text-pink-600 font-medium">
+                                    <button onClick={() => signOut()} className="text-gray-600 hover:text-primary font-medium">
                                         Keluar
                                     </button>
                                 ) : (
-                                    <button onClick={() => router.push('/login')} className="text-gray-600 hover:text-pink-600 font-medium">
+                                    <button onClick={() => router.push('/login')} className="text-gray-600 hover:text-primary font-medium">
                                         Masuk
                                     </button>
                                 )}
-                                <a href="#tema" className="bg-pink-600 hover:bg-pink-800 text-white px-5 py-2.5 rounded-full font-semibold transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-0.5">
+                                <a href="#tema" className="bg-primary hover:bg-pink-800 text-white px-5 py-2.5 rounded-full font-semibold transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-0.5">
                                     Buat Undangan
                                 </a>
                             </div>
@@ -150,22 +150,22 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full">
                         <div className="grid lg:grid-cols-2 gap-12 items-center">
                             <div className="text-center lg:text-left space-y-8 z-10">
-                                <div className="inline-block px-4 py-1.5 bg-pink-100 text-pink-600 font-semibold rounded-full text-sm mb-4 border border-pink-200">
+                                <div className="inline-block px-4 py-1.5 bg-pink-100 text-primary font-semibold rounded-full text-sm mb-4 border border-pink-200">
                                     🎉 Platform Undangan Digital #1
                                 </div>
                                 <h1 className="font-serif text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                                     Bagikan Kebahagiaan <br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">Tanpa Batas</span>
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">Tanpa Batas</span>
                                 </h1>
                                 <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
                                     Buat undangan pernikahan, ulang tahun, atau acara syukuran dalam hitungan menit. Desain premium, fitur lengkap, dan mudah disebarkan via WhatsApp.
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                    <a href="#tema" className="px-8 py-4 bg-pink-600 text-white rounded-full font-bold shadow-xl shadow-pink-500/20 hover:bg-pink-800 transition transform hover:-translate-y-1">
+                                    <a href="#tema" className="px-8 py-4 bg-primary text-white rounded-full font-bold shadow-xl shadow-pink-500/20 hover:bg-pink-800 transition transform hover:-translate-y-1">
                                         Lihat Tema
                                     </a>
                                     <button onClick={() => openPreview('Floral Rustic Elegance', 'Floral, Modern', 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=800&auto=format&fit=crop')} className="px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-full font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2 group">
-                                        <i className="fa-regular fa-circle-play text-xl group-hover:text-pink-600 transition"></i> Lihat Demo
+                                        <i className="fa-regular fa-circle-play text-xl group-hover:text-primary transition"></i> Lihat Demo
                                     </button>
                                 </div>
                                 <div className="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-500 text-sm">
@@ -217,7 +217,7 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                                 { num: '24/7', label: 'Support Tim' }
                             ].map((stat, idx) => (
                                 <div key={idx} className="group">
-                                    <h3 className="text-4xl font-bold text-gray-900 group-hover:text-pink-600 transition">{stat.num}</h3>
+                                    <h3 className="text-4xl font-bold text-gray-900 group-hover:text-primary transition">{stat.num}</h3>
                                     <p className="text-gray-500 mt-2 font-medium">{stat.label}</p>
                                 </div>
                             ))}
@@ -229,7 +229,7 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                 <section id="fitur" className="py-24 bg-slate-50">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center max-w-3xl mx-auto mb-16">
-                            <span className="text-pink-600 font-bold tracking-wider uppercase text-xs bg-pink-100 px-3 py-1 rounded-full">Features</span>
+                            <span className="text-primary font-bold tracking-wider uppercase text-xs bg-pink-100 px-3 py-1 rounded-full">Features</span>
                             <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 mt-4">Fitur Lengkap untuk Momen Spesial</h2>
                             <p className="mt-4 text-gray-600 text-lg">Semua yang Anda butuhkan untuk membuat undangan digital yang informatif dan berkesan.</p>
                         </div>
@@ -263,14 +263,14 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                                 <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900">Pilihan Tema Eksklusif</h2>
                                 <p className="mt-4 text-gray-600">Beragam kategori tema mulai dari minimalis, floral, adat, hingga modern elegan.</p>
                             </div>
-                            <button onClick={() => router.push('/themes')} className="text-pink-600 font-semibold hover:text-pink-800 transition flex items-center gap-2 group">
+                            <button onClick={() => router.push('/themes')} className="text-primary font-semibold hover:text-pink-800 transition flex items-center gap-2 group">
                                 Lihat Semua Tema <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
                             </button>
                         </div>
 
                         <div className="flex flex-wrap gap-3 mb-10">
                             {['Semua', 'Minimalis', 'Floral', 'Adat Indonesia', 'Luxury'].map((tag, idx) => (
-                                <button key={idx} className={`px-6 py-2.5 rounded-full ${idx === 0 ? 'bg-pink-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'} text-sm font-medium transition`}>
+                                <button key={idx} className={`px-6 py-2.5 rounded-full ${idx === 0 ? 'bg-primary text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'} text-sm font-medium transition`}>
                                     {tag}
                                 </button>
                             ))}
@@ -282,7 +282,7 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                                     <div className="relative overflow-hidden aspect-[4/5]">
                                         <img src={theme.thumbnail_url || 'https://via.placeholder.com/400x500'} alt={theme.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
                                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                            <button onClick={() => openPreview(theme.name, theme.tier || 'Modern', theme.thumbnail_url || '')} className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition transform hover:-translate-y-1 shadow-lg flex items-center gap-2">
+                                            <button onClick={() => openPreview(theme.name, theme.tier || 'Modern', theme.thumbnail_url || '')} className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-primary hover:text-white transition transform hover:-translate-y-1 shadow-lg flex items-center gap-2">
                                                 <i className="fa-solid fa-eye"></i> Preview
                                             </button>
                                         </div>
@@ -293,11 +293,11 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                                     <div className="p-6">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition">{theme.name}</h3>
+                                                <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary transition">{theme.name}</h3>
                                                 <p className="text-sm text-gray-500 mt-1">Kategori: {theme.tier || 'General'}</p>
                                             </div>
                                         </div>
-                                        <button onClick={() => router.push(`/payment?tier=${theme.tier}`)} className="mt-4 w-full bg-slate-100 text-gray-800 py-2 rounded-lg font-bold hover:bg-pink-600 hover:text-white transition">
+                                        <button onClick={() => router.push(`/payment?tier=${theme.tier}`)} className="mt-4 w-full bg-slate-100 text-gray-800 py-2 rounded-lg font-bold hover:bg-primary hover:text-white transition">
                                             Pilih Tema Ini
                                         </button>
                                     </div>
@@ -316,7 +316,7 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="text-center max-w-3xl mx-auto mb-16">
-                            <span className="text-pink-600 font-bold tracking-wider uppercase text-xs bg-pink-100 px-3 py-1 rounded-full">Pricing</span>
+                            <span className="text-primary font-bold tracking-wider uppercase text-xs bg-pink-100 px-3 py-1 rounded-full">Pricing</span>
                             <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 mt-4">Harga Paket Simpel</h2>
                             <p className="mt-4 text-gray-600 text-lg">Pilih paket terbaik sesuai kebutuhan acara Anda. Tanpa biaya tersembunyi.</p>
                         </div>
@@ -340,8 +340,8 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                             </div>
 
                             {/* Premium */}
-                            <div className="bg-white rounded-2xl p-8 shadow-xl border-2 border-pink-600 relative transform scale-105 z-10">
-                                <div className="absolute top-0 right-0 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg shadow-sm">POPULAR</div>
+                            <div className="bg-white rounded-2xl p-8 shadow-xl border-2 border-primary relative transform scale-105 z-10">
+                                <div className="absolute top-0 right-0 bg-primary text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg shadow-sm">POPULAR</div>
                                 <h3 className="text-2xl font-bold text-gray-900">Premium</h3>
                                 <p className="text-sm text-gray-500 mt-2">Paling diminati pengantin.</p>
                                 <div className="my-6 flex items-baseline gap-1">
@@ -349,12 +349,12 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                                     <span className="text-gray-500 text-sm">/acara</span>
                                 </div>
                                 <ul className="space-y-4 mb-8 text-gray-600 text-sm font-medium">
-                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-pink-600 bg-pink-100 p-1 rounded-full text-xs"></i> Masa aktif 1 Tahun</li>
-                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-pink-600 bg-pink-100 p-1 rounded-full text-xs"></i> Unlimited Tamu</li>
-                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-pink-600 bg-pink-100 p-1 rounded-full text-xs"></i> 10 Foto Galeri</li>
-                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-pink-600 bg-pink-100 p-1 rounded-full text-xs"></i> Musik Latar</li>
+                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-primary bg-pink-100 p-1 rounded-full text-xs"></i> Masa aktif 1 Tahun</li>
+                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-primary bg-pink-100 p-1 rounded-full text-xs"></i> Unlimited Tamu</li>
+                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-primary bg-pink-100 p-1 rounded-full text-xs"></i> 10 Foto Galeri</li>
+                                    <li className="flex items-center gap-3"><i className="fa-solid fa-check text-primary bg-pink-100 p-1 rounded-full text-xs"></i> Musik Latar</li>
                                 </ul>
-                                <button onClick={() => router.push('/payment?tier=premium')} className="block w-full py-4 px-6 bg-pink-600 text-white font-bold text-center rounded-xl hover:bg-pink-800 transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-1">Pilih Paket Ini</button>
+                                <button onClick={() => router.push('/payment?tier=premium')} className="block w-full py-4 px-6 bg-primary text-white font-bold text-center rounded-xl hover:bg-pink-800 transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-1">Pilih Paket Ini</button>
                             </div>
 
                             {/* Exclusive */}
@@ -380,7 +380,7 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                 <section id="faq" className="py-24 bg-white">
                     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-12">
-                            <span className="text-pink-600 font-bold tracking-wider uppercase text-xs bg-pink-100 px-3 py-1 rounded-full">Help & Support</span>
+                            <span className="text-primary font-bold tracking-wider uppercase text-xs bg-pink-100 px-3 py-1 rounded-full">Help & Support</span>
                             <h2 className="font-serif text-3xl font-bold text-gray-900 mt-4">Pertanyaan Umum (FAQ)</h2>
                             <p className="mt-4 text-gray-600">Jawaban untuk pertanyaan yang sering diajukan calon pengantin.</p>
                         </div>
@@ -390,10 +390,10 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                                 { id: '1', question: 'Apakah undangan bisa diedit setelah disebar?', answer: 'Tentu saja! Anda bisa mengedit data kapan saja melalui dashboard.' },
                                 { id: '2', question: 'Bagaimana cara menyebar undangan ke WhatsApp?', answer: 'Kami menyediakan fitur Generator Nama Tamu.' }
                             ]).map((faq: any, idx) => (
-                                <div key={faq.id || idx} className={`border border-gray-200 rounded-xl overflow-hidden shadow-sm transition-all duration-300 ${activeFaq === (idx + 1) ? 'border-pink-600 ring-1 ring-pink-600/20' : ''}`}>
+                                <div key={faq.id || idx} className={`border border-gray-200 rounded-xl overflow-hidden shadow-sm transition-all duration-300 ${activeFaq === (idx + 1) ? 'border-primary ring-1 ring-pink-600/20' : ''}`}>
                                     <button onClick={() => setActiveFaq(activeFaq === (idx + 1) ? null : (idx + 1))} className="flex justify-between items-center w-full px-6 py-4 bg-white hover:bg-gray-50 transition text-left">
                                         <span className="font-semibold text-gray-900">{faq.question}</span>
-                                        <i className={`fa-solid fa-chevron-down transition-transform duration-300 text-gray-400 ${activeFaq === (idx + 1) ? 'rotate-180 text-pink-600' : ''}`}></i>
+                                        <i className={`fa-solid fa-chevron-down transition-transform duration-300 text-gray-400 ${activeFaq === (idx + 1) ? 'rotate-180 text-primary' : ''}`}></i>
                                     </button>
                                     {activeFaq === (idx + 1) && (
                                         <div className="px-6 py-4 bg-white text-gray-600 border-t border-gray-100">
@@ -412,8 +412,8 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                         <div className="grid md:grid-cols-4 gap-12 mb-16">
                             <div className="md:col-span-1">
                                 <a href="#" className="flex items-center gap-2 mb-6 group">
-                                    <i className="fa-solid fa-envelope-open-text text-2xl text-pink-600 group-hover:scale-110 transition"></i>
-                                    <span className="font-serif text-2xl font-bold">Undangan<span className="text-pink-600">Kita</span></span>
+                                    <i className="fa-solid fa-envelope-open-text text-2xl text-primary group-hover:scale-110 transition"></i>
+                                    <span className="font-serif text-2xl font-bold">Undangan<span className="text-primary">Kita</span></span>
                                 </a>
                                 <p className="text-slate-400 text-sm leading-relaxed mb-6">Platform pembuatan undangan digital berbasis website yang praktis, elegan, dan ramah lingkungan.</p>
                             </div>
@@ -421,9 +421,9 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                             <div>
                                 <h4 className="font-bold text-lg mb-6 text-white">Menu</h4>
                                 <ul className="space-y-3 text-sm text-slate-400">
-                                    <li><a href="#home" className="hover:text-pink-600 transition flex items-center gap-2">Beranda</a></li>
-                                    <li><a href="#tema" className="hover:text-pink-600 transition flex items-center gap-2">Katalog Tema</a></li>
-                                    <li><a href="#harga" className="hover:text-pink-600 transition flex items-center gap-2">Harga</a></li>
+                                    <li><a href="#home" className="hover:text-primary transition flex items-center gap-2">Beranda</a></li>
+                                    <li><a href="#tema" className="hover:text-primary transition flex items-center gap-2">Katalog Tema</a></li>
+                                    <li><a href="#harga" className="hover:text-primary transition flex items-center gap-2">Harga</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -445,12 +445,12 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                             </div>
                             <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
                                 <div className="mb-6">
-                                    <span className="inline-block py-1 px-3 rounded-full bg-pink-100 text-pink-600 text-xs font-bold tracking-wider uppercase mb-3">{previewModal.category}</span>
+                                    <span className="inline-block py-1 px-3 rounded-full bg-pink-100 text-primary text-xs font-bold tracking-wider uppercase mb-3">{previewModal.category}</span>
                                     <h3 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 leading-tight">{previewModal.title}</h3>
                                     <p className="text-gray-500 mt-4 leading-relaxed">Tema eksklusif dengan desain responsif, animasi halus, dan fitur lengkap untuk hari bahagia Anda.</p>
                                 </div>
                                 <div className="flex flex-col gap-3">
-                                    <button onClick={() => router.push('/payment?tier=premium')} className="w-full py-4 px-6 bg-pink-600 text-white font-bold rounded-xl hover:bg-pink-800 transition shadow-lg shadow-pink-500/30">
+                                    <button onClick={() => router.push('/payment?tier=premium')} className="w-full py-4 px-6 bg-primary text-white font-bold rounded-xl hover:bg-pink-800 transition shadow-lg shadow-pink-500/30">
                                         <i className="fa-solid fa-wand-magic-sparkles mr-2"></i> Gunakan Tema Ini
                                     </button>
                                 </div>
