@@ -28,7 +28,7 @@ export default function AdminDashboard() {
 
         // Strict Admin Check
         if (user.email !== 'mhmmadridho64@gmail.com') {
-            router.push('/admin/my-invitation');
+            router.push('/editor');
         }
     };
 

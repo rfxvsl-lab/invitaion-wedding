@@ -82,11 +82,11 @@ export default function AdminSidebar() {
                         <div className="pt-4 pb-2">
                             <p className="px-4 text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">User Zone</p>
                         </div>
-                        <NavItem href="/admin/my-invitation" icon={<Layout size={20} />} label="Undangan Saya" />
+                        <NavItem href="/editor" icon={<Layout size={20} />} label="Editor Undangan" />
                     </>
                 ) : (
                     <>
-                        <NavItem href="/admin/my-invitation" icon={<Layout size={20} />} label="Undangan Saya" />
+                        <NavItem href="/editor" icon={<Layout size={20} />} label="Editor Undangan" />
                     </>
                 )}
             </nav>
