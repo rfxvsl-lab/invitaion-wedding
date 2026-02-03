@@ -40,10 +40,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         fetchSession();
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
             setSession(session);
             setUser(session?.user ?? null);
             setIsAdmin(session?.user?.email?.toLowerCase() === "mhmmadridho64@gmail.com");
+
+            // Onboarding Check logic
+            if (session?.user) {
+                const { data: profile } = await supabase.from('profiles').select('full_name, phone_number').eq('id', session.user.id).single();
+                // Jika profile kosong atau data belum lengkap, dan bukan sedang di halaman onboarding
+                if ((!profile || !profile.full_name || !profile.phone_number) && window.location.pathname !== '/onboarding') {
+                    // Paksa redirect (gunakan window.location agar pasti)
+                    window.location.href = '/onboarding';
+                }
+            }
+
             setLoading(false);
         });
 

@@ -1,112 +1,106 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/components/AuthProvider';
-import { supabase } from '@/lib/supabase';
 import Head from 'next/head';
 
 export default function Onboarding() {
-    const { user, loading } = useAuth();
+    const { user } = useAuth();
     const router = useRouter();
-
-    const [form, setForm] = useState({ full_name: '', phone_number: '' });
-    const [submitting, setSubmitting] = useState(false);
-    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        full_name: '',
+        phone_number: '',
+    });
 
     useEffect(() => {
-        if (!loading && !user) {
+        if (!user) {
             router.push('/login');
+        } else {
+            // Cek apakah user sudah punya profile lengkap, jika ya, tendang ke dashboard
+            checkProfile();
         }
-    }, [user, loading, router]);
+    }, [user]);
+
+    const checkProfile = async () => {
+        if (!user) return;
+        const { data } = await supabase.from('profiles').select('full_name, phone_number').eq('id', user.id).single();
+        if (data && data.full_name && data.phone_number) {
+            router.push('/admin'); // Sudah lengkap
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setSubmitting(true);
-        setError('');
-
         if (!user) return;
+        setLoading(true);
 
         try {
-            const { error: upsertError } = await supabase.from('profiles').upsert({
-                id: user.id || '',
-                full_name: form.full_name,
-                phone_number: form.phone_number,
+            const { error } = await supabase.from('profiles').upsert({
+                id: user.id,
+                full_name: formData.full_name,
+                phone_number: formData.phone_number,
                 updated_at: new Date().toISOString(),
+                // Set default values for new users
+                tier: 'free',
+                tokens: 5,
+                email: user.email // Simpan email juga untuk referensi admin
             });
 
-            if (upsertError) throw upsertError;
+            if (error) throw error;
 
-            // Success, redirect to home
-            // Set flag to show welcome modal
-            localStorage.setItem(`welcome_shown_${user.email}`, ''); // Reset to ensure modal shows? Or logic in Index handles it.
-            // Actually index logic says "if !localStorage(key) -> show".
-            // So if I don't set it here, it will be empty, and index will show it. Correct.
-
-            router.push('/');
-        } catch (err: any) {
-            setError(err.message);
+            // Redirect ke Dashboard setelah sukses
+            router.push('/admin');
+        } catch (error: any) {
+            alert('Error: ' + error.message);
         } finally {
-            setSubmitting(false);
+            setLoading(false);
         }
     };
 
-    if (loading || !user) return <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">Loading...</div>;
-
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-rose-50 px-4">
             <Head>
                 <title>Lengkapi Profil - UndanganKita</title>
             </Head>
-            <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl">
+            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full animate-fade-up">
                 <div className="text-center mb-8">
-                    <div className="w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i className="fa-solid fa-user-pen text-2xl"></i>
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-900">Selamat Bergabung!</h2>
-                    <p className="text-gray-500 mt-2 text-sm">Silakan lengkapi data diri Anda sebelum mulai membuat undangan.</p>
+                    <h1 className="font-serif text-3xl font-bold text-gray-900 mb-2">Selamat Datang!</h1>
+                    <p className="text-gray-500">Silakan lengkapi data diri Anda untuk melanjutkan ke Dashboard dan klaim 5 Token Gratis.</p>
                 </div>
-
-                {error && (
-                    <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100 flex items-center gap-2">
-                        <i className="fa-solid fa-circle-exclamation"></i>
-                        {error}
-                    </div>
-                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Nama Lengkap</label>
                         <input
                             type="text"
                             required
-                            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition"
-                            placeholder="Contoh: Romeo Montague"
-                            value={form.full_name}
-                            onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+                            placeholder="Contoh: Rizky Billar"
+                            value={formData.full_name}
+                            onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Nomor WhatsApp</label>
-                        <div className="relative">
-                            <span className="absolute left-4 top-3.5 text-gray-500 font-medium">+62</span>
-                            <input
-                                type="tel"
-                                required
-                                className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:border-pink-500 focus:ring-1 focus:ring-pink-500 outline-none transition"
-                                placeholder="812 3456 7890"
-                                value={form.phone_number}
-                                onChange={(e) => setForm({ ...form, phone_number: e.target.value.replace(/[^0-9]/g, '') })}
-                            />
-                        </div>
-                        <p className="text-xs text-gray-400 mt-1">Kami akan mengirimkan notifikasi penting ke nomor ini.</p>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp</label>
+                        <input
+                            type="tel"
+                            required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+                            placeholder="Contoh: 081234567890"
+                            value={formData.phone_number}
+                            onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                        />
+                        <p className="text-xs text-gray-400 mt-1">Nomor ini akan digunakan untuk notifikasi pesanan.</p>
                     </div>
 
                     <button
                         type="submit"
-                        disabled={submitting}
-                        className="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-xl transition shadow-lg shadow-pink-500/20 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        disabled={loading}
+                        className="w-full bg-rose-600 text-white font-bold py-4 rounded-xl hover:bg-rose-700 transition transform hover:-translate-y-1 shadow-lg shadow-rose-200"
                     >
-                        {submitting ? 'Menyimpan...' : 'Simpan & Lanjutkan'} <i className="fa-solid fa-arrow-right"></i>
+                        {loading ? 'Menyimpan...' : 'Simpan & Lanjutkan'}
                     </button>
                 </form>
             </div>

@@ -21,9 +21,11 @@ export default function AdminDashboard() {
 
     const checkAuth = async () => {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user || (user.email !== 'mhmmadridho64@gmail.com' && user.email !== 'undangankita.co.id@gmail.com')) {
+        if (!user) {
             router.push('/login');
         }
+        // Remove strict admin check here, because regular users need dashboard too.
+        // We will handle role-based rendering inside the component.
     };
 
     const fetchStats = async () => {

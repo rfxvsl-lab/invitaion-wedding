@@ -114,15 +114,95 @@ export async function getPendingOrders(): Promise<Order[]> {
 }
 
 export async function updateOrderStatus(orderId: string, status: 'paid' | 'rejected'): Promise<boolean> {
-    const { error } = await supabase
+    // 1. Update Order Status
+    const { data: order, error } = await supabase
         .from('orders')
         .update({ status })
-        .eq('id', orderId);
+        .eq('id', orderId)
+        .select()
+        .single();
 
     if (error) {
         console.error('Error updating order status:', error);
         return false;
     }
+
+    // 2. If PAID, process logic
+    if (status === 'paid' && order) {
+        // A. Update User Profile (Tier)
+        if (order.user_id) {
+            await supabase.from('profiles').update({
+                tier: order.tier_selected
+            }).eq('id', order.user_id);
+        }
+
+        // B. Create Invitation Record (if slug exists)
+        if (order.slug) {
+            // Define defaults first
+            const defaultThemes: Record<string, string> = {
+                'free': 'modern-arch',
+                'basic': 'dark-luxury',
+                'premium': 'elegant-vanilla',
+                'exclusive': 'royal-arabian'
+            };
+
+            // Check if slug taken by another user
+            const { data: existing } = await supabase
+                .from('invitations')
+                .select('id, user_id')
+                .eq('slug', order.slug)
+                .single();
+
+            if (existing && existing.user_id !== order.user_id) {
+                // Conflict: Slug Taken by someone else
+                // We could append a random string or just fail silently/log it
+                // For safety, let's append a random number
+                const newSlug = `${order.slug}-${Math.floor(Math.random() * 1000)}`;
+                // Recursively insert with new slug or just try once
+                await supabase.from('invitations').insert({
+                    slug: newSlug,
+                    user_id: order.user_id,
+                    metadata: {
+                        theme_id: defaultThemes[order.tier_selected] || 'modern-arch',
+                        tier: order.tier_selected,
+                        expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    content: {
+                        hero: {
+                            title: "The Wedding Of",
+                            nicknames: order.customer_name.split(' ')[0] + " & Partner",
+                        },
+                        couple: {
+                            groom: { name: "Nama Pria", father: "Nama Ayah", mother: "Nama Ibu" },
+                            bride: { name: "Nama Wanita", father: "Nama Ayah", mother: "Nama Ibu" }
+                        }
+                    }
+                });
+            } else {
+                // Safe to Insert or Update (if same user)
+                await supabase.from('invitations').upsert({
+                    slug: order.slug,
+                    user_id: order.user_id,
+                    metadata: {
+                        theme_id: defaultThemes[order.tier_selected] || 'modern-arch',
+                        tier: order.tier_selected,
+                        expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    content: {
+                        hero: {
+                            title: "The Wedding Of",
+                            nicknames: order.customer_name.split(' ')[0] + " & Partner",
+                        },
+                        couple: {
+                            groom: { name: "Nama Pria", father: "Nama Ayah", mother: "Nama Ibu" },
+                            bride: { name: "Nama Wanita", father: "Nama Ayah", mother: "Nama Ibu" }
+                        }
+                    }
+                }, { onConflict: 'slug' });
+            }
+        }
+    }
+
     return true;
 }
 

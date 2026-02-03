@@ -40,30 +40,29 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                 <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
                     <div className="text-center lg:text-left animate-fade-up">
                         <div className="inline-flex items-center gap-2 bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-                            <Star size={14} fill="currentColor" /> #1 Platform Undangan Digital
+                            <Star size={14} fill="currentColor" /> {initialContent['hero_badge'] || '#1 Platform Undangan Digital'}
                         </div>
                         <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-[1.1] mb-6">
-                            Bagikan Momen <br /> Bahagiamu dengan <span className="text-rose-600 italic">Elegan.</span>
+                            {initialContent['hero_title'] || 'Bagikan Momen Bahagiamu dengan Elegan.'}
                         </h1>
                         <p className="text-lg text-gray-600 mb-8 max-w-lg mx-auto lg:mx-0">
-                            Buat undangan pernikahan digital yang memukau dalam hitungan menit. Fitur lengkap, desain premium, dan integrasi pembayaran hadiah cashless.
+                            {initialContent['hero_subtitle'] || 'Buat undangan pernikahan digital yang memukau dalam hitungan menit. Fitur lengkap, desain premium, dan integrasi pembayaran hadiah cashless.'}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                             <a href="/pricing" className="bg-rose-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-rose-700 transition-all shadow-xl shadow-rose-200 flex items-center justify-center gap-2">
-                                Buat Undangan Sekarang <ArrowRight size={20} />
+                                {initialContent['hero_cta_primary'] || 'Buat Undangan Sekarang'} <ArrowRight size={20} />
                             </a>
                             <a href="/themes" className="bg-white text-gray-700 border border-gray-200 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
-                                <Layout size={20} className="text-rose-600" /> Lihat Tema
+                                <Layout size={20} className="text-rose-600" /> {initialContent['hero_cta_secondary'] || 'Lihat Tema'}
                             </a>
                         </div>
                     </div>
 
                     <div className="relative animate-fade-up delay-200">
                         <div className="relative z-10 animate-float">
-                            <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80" className="rounded-[2.5rem] shadow-2xl border-8 border-white mx-auto w-64 md:w-80 rotate-[-5deg] hover:rotate-0 transition-transform duration-500" alt="Mobile Preview" />
+                            <img src={initialContent['hero_image'] || "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80"} className="rounded-[2.5rem] shadow-2xl border-8 border-white mx-auto w-64 md:w-80 rotate-[-5deg] hover:rotate-0 transition-transform duration-500" alt="Mobile Preview" />
                             {/* Small Logo Badge */}
                             <div className="absolute top-10 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce">
-                                {/* Simply using text/svg here since SCCLogo is not exported by default, or we can just import the logic */}
                                 <div className="w-10 h-10 bg-rose-600 rounded flex items-center justify-center text-white font-bold">SCC</div>
                             </div>
                         </div>
@@ -74,12 +73,24 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
             {/* FEATURES SNIPPET */}
             <section className="py-20 bg-white">
                 <div className="container mx-auto px-6 text-center">
-                    <span className="text-rose-600 font-bold tracking-widest uppercase text-sm">Kenapa Kami?</span>
-                    <h2 className="text-4xl font-bold mt-2 mb-12">Fitur Terlengkap</h2>
+                    <span className="text-rose-600 font-bold tracking-widest uppercase text-sm">{initialContent['features_badge'] || 'Kenapa Kami?'}</span>
+                    <h2 className="text-4xl font-bold mt-2 mb-12">{initialContent['features_title'] || 'Fitur Terlengkap'}</h2>
                     <div className="grid md:grid-cols-3 gap-8">
-                        <div className="p-6 bg-rose-50 rounded-xl"><Smartphone className="mx-auto text-rose-600 mb-4" size={32} /><h3 className="font-bold mb-2">Responsive</h3><p className="text-sm text-gray-600">Tampilan sempurna di semua layar HP & Desktop.</p></div>
-                        <div className="p-6 bg-rose-50 rounded-xl"><Music className="mx-auto text-rose-600 mb-4" size={32} /><h3 className="font-bold mb-2">Audio Latar</h3><p className="text-sm text-gray-600">Musik romantis mengiringi undangan Anda.</p></div>
-                        <div className="p-6 bg-rose-50 rounded-xl"><CreditCard className="mx-auto text-rose-600 mb-4" size={32} /><h3 className="font-bold mb-2">Digital Gift</h3><p className="text-sm text-gray-600">Terima angpao cashless dengan mudah.</p></div>
+                        <div className="p-6 bg-rose-50 rounded-xl">
+                            <Smartphone className="mx-auto text-rose-600 mb-4" size={32} />
+                            <h3 className="font-bold mb-2">{initialContent['feature_1_title'] || 'Responsive'}</h3>
+                            <p className="text-sm text-gray-600">{initialContent['feature_1_desc'] || 'Tampilan sempurna di semua layar HP & Desktop.'}</p>
+                        </div>
+                        <div className="p-6 bg-rose-50 rounded-xl">
+                            <Music className="mx-auto text-rose-600 mb-4" size={32} />
+                            <h3 className="font-bold mb-2">{initialContent['feature_2_title'] || 'Audio Latar'}</h3>
+                            <p className="text-sm text-gray-600">{initialContent['feature_2_desc'] || 'Musik romantis mengiringi undangan Anda.'}</p>
+                        </div>
+                        <div className="p-6 bg-rose-50 rounded-xl">
+                            <CreditCard className="mx-auto text-rose-600 mb-4" size={32} />
+                            <h3 className="font-bold mb-2">{initialContent['feature_3_title'] || 'Digital Gift'}</h3>
+                            <p className="text-sm text-gray-600">{initialContent['feature_3_desc'] || 'Terima angpao cashless dengan mudah.'}</p>
+                        </div>
                     </div>
                 </div>
             </section>
