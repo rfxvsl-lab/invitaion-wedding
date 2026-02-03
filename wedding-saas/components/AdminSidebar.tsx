@@ -38,9 +38,8 @@ export default function AdminSidebar() {
                         <span className="font-bold text-lg">U</span>
                     </div>
                     <h1 className="text-xl font-bold tracking-tight">
-                        <h1 className="text-xl font-bold tracking-tight">
-                            {isAdmin ? 'Admin Panel' : 'Member Area'}
-                        </h1>
+                        {isAdmin ? 'Admin Panel' : 'Member Area'}
+                    </h1>
                 </div>
 
                 {/* User Profile Card */}
