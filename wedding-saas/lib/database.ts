@@ -65,7 +65,16 @@ export async function deleteFAQ(id: string): Promise<boolean> {
 export async function createOrder(orderData: CreateOrderInput): Promise<{ success: boolean; orderId?: string; error?: string }> {
     const { data, error } = await supabase
         .from('orders')
-        .insert([orderData])
+        .insert([{
+            customer_name: orderData.customer_name,
+            customer_email: orderData.customer_email,
+            customer_phone: orderData.customer_phone,
+            tier_selected: orderData.tier_selected,
+            payment_method: orderData.payment_method,
+            proof_url: orderData.proof_url,
+            slug: orderData.slug,
+            // Store raw details if needed, for now just flattened or standard columns
+        }])
         .select('id')
         .single();
 

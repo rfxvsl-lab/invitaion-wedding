@@ -29,8 +29,22 @@ export interface Order {
     tier_selected: string;
     payment_method: string;
     proof_url: string;
+    slug?: string;
+    details?: any; // To store extra info like couple names separate from customer_name
+}
+
+export interface Order {
+    id: string;
+    user_id: string | null;
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+    tier_selected: string;
+    payment_method: string;
+    proof_url: string;
     status: OrderStatus;
     created_at: string;
+    slug?: string;
 }
 
 export interface CreateOrderInput {
@@ -40,4 +54,5 @@ export interface CreateOrderInput {
     tier_selected: string;
     payment_method: string;
     proof_url: string;
+    slug?: string;
 }

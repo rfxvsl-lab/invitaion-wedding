@@ -361,9 +361,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
     // Fallback themes if DB is empty
     const fallbackThemes: Theme[] = [
-        { id: '1', name: 'Floral Rustic Elegance', thumbnail_url: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f', tier: 'premium', preview_url: '', slug: 'floral-rustic' },
-        { id: '2', name: 'Clean White Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8', tier: 'basic', preview_url: '', slug: 'clean-white' },
-        { id: '3', name: 'Golden Luxury Night', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552', tier: 'exclusive', preview_url: '', slug: 'golden-luxury' },
+        { id: '1', name: 'Floral Rustic Elegance', thumbnail_url: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f', tier: 'premium', preview_url: '', slug: 'floral-rustic', created_at: new Date().toISOString() },
+        { id: '2', name: 'Clean White Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8', tier: 'basic', preview_url: '', slug: 'clean-white', created_at: new Date().toISOString() },
+        { id: '3', name: 'Golden Luxury Night', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552', tier: 'exclusive', preview_url: '', slug: 'golden-luxury', created_at: new Date().toISOString() },
     ];
 
     const displayThemes = (themes && themes.length > 0) ? themes : fallbackThemes;
