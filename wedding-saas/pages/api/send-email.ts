@@ -15,14 +15,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const emailUser = process.env.EMAIL_USER;
     const emailPass = process.env.EMAIL_PASS;
 
-    if (!emailUser || !emailPass) {
-        console.error('Missing SMTP Credentials');
-        return res.status(500).json({ message: 'Server configuration error: Missing SMTP credentials' });
-    }
+    const emailHost = process.env.EMAIL_HOST || 'smtp.gmail.com';
+    const emailPort = Number(process.env.EMAIL_PORT) || 465;
+    const emailSecure = process.env.EMAIL_SECURE === 'true'; // true for 465, false for 587
 
     try {
         const transporter = nodemailer.createTransport({
-            service: 'gmail', // Or use host/port for other providers
+            host: emailHost,
+            port: emailPort,
+            secure: emailSecure, // true for 465, false for other ports
             auth: {
                 user: emailUser,
                 pass: emailPass,
