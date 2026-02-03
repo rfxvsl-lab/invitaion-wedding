@@ -29,7 +29,7 @@ export default function Editor() {
     const fetchInvitation = async () => {
         try {
             // 1. Cek Invitation
-            const { data: existing, error } = await supabase.from('invitations').select('*').eq('user_id', user?.id).single();
+            const { data: existing, error } = await supabase.from('invitations').select('*').eq('user_id', user?.id).maybeSingle();
 
             if (existing) {
                 setInvitation(existing);

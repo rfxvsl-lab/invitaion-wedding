@@ -26,7 +26,7 @@ export default function Onboarding() {
 
     const checkProfile = async () => {
         if (!user) return;
-        const { data } = await supabase.from('profiles').select('full_name, phone_number').eq('id', user.id).single();
+        const { data } = await supabase.from('profiles').select('full_name, phone_number').eq('id', user.id).maybeSingle();
         if (data && data.full_name && data.phone_number) {
             router.push('/admin'); // Sudah lengkap
         }

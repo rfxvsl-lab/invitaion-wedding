@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 // Ignore check if already on onboarding page to prevent loop
                 if (window.location.pathname === '/onboarding') return;
 
-                const { data: profile } = await supabase.from('profiles').select('full_name, phone_number').eq('id', session.user.id).single();
+                const { data: profile } = await supabase.from('profiles').select('full_name, phone_number').eq('id', session.user.id).maybeSingle();
 
                 // If profile incomplete, Force Redirect
                 if (!profile || !profile.full_name || !profile.phone_number) {

@@ -17,7 +17,7 @@ export default function AdminSidebar() {
             setPendingCount(orders.length);
 
             if (user) {
-                const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+                const { data } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle();
                 setProfile(data);
             }
         };
