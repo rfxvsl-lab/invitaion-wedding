@@ -36,7 +36,9 @@ export default function AdminSidebar() {
                     <div className="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center shadow-lg shadow-pink-500/20">
                         <span className="font-bold text-lg">U</span>
                     </div>
-                    <h1 className="text-xl font-bold tracking-tight">Admin Panel</h1>
+                    <h1 className="text-xl font-bold tracking-tight">
+                        {profile?.email === 'mhmmadridho64@gmail.com' ? 'Admin Panel' : 'Member Area'}
+                    </h1>
                 </div>
 
                 {/* User Profile Card */}
@@ -62,19 +64,27 @@ export default function AdminSidebar() {
             </div>
 
             <nav className="space-y-1 flex-1">
-                <NavItem href="/admin" icon={<Home size={20} />} label="Dashboard" />
-                <NavItem href="/admin/my-invitation" icon={<Layout size={20} />} label="Undangan Saya" />
+                {/* Admin Only Menus */}
+                {profile?.email === 'mhmmadridho64@gmail.com' ? (
+                    <>
+                        <NavItem href="/admin" icon={<Home size={20} />} label="Dashboard" />
+                        <NavItem href="/admin/orders" icon={<ShoppingCart size={20} />} label="Orders" badge={pendingCount > 0 ? pendingCount : undefined} />
+                        <NavItem href="/admin/themes" icon={<Palette size={20} />} label="Themes" />
+                        <NavItem href="/admin/cms" icon={<Layout size={20} />} label="Site Content" />
+                        <NavItem href="/admin/faqs" icon={<FileQuestion size={20} />} label="FAQs" />
+                        <NavItem href="/admin/users" icon={<Users size={20} />} label="Users" />
+                        <NavItem href="/admin/settings" icon={<Settings size={20} />} label="Settings" />
 
-                {/* Admin Only Menus - Optional: Hide if not admin */}
-                <div className="pt-4 pb-2">
-                    <p className="px-4 text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Admin Zone</p>
-                </div>
-                <NavItem href="/admin/orders" icon={<ShoppingCart size={20} />} label="Orders" badge={pendingCount > 0 ? pendingCount : undefined} />
-                <NavItem href="/admin/themes" icon={<Palette size={20} />} label="Themes" />
-                <NavItem href="/admin/cms" icon={<Layout size={20} />} label="Site Content" />
-                <NavItem href="/admin/faqs" icon={<FileQuestion size={20} />} label="FAQs" />
-                <NavItem href="/admin/users" icon={<Users size={20} />} label="Users" />
-                <NavItem href="/admin/settings" icon={<Settings size={20} />} label="Settings" />
+                        <div className="pt-4 pb-2">
+                            <p className="px-4 text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">User Zone</p>
+                        </div>
+                        <NavItem href="/admin/my-invitation" icon={<Layout size={20} />} label="Undangan Saya" />
+                    </>
+                ) : (
+                    <>
+                        <NavItem href="/admin/my-invitation" icon={<Layout size={20} />} label="Undangan Saya" />
+                    </>
+                )}
             </nav>
 
             <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition text-slate-400 hover:text-white mt-auto group">

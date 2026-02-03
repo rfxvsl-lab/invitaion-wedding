@@ -23,9 +23,13 @@ export default function AdminDashboard() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
             router.push('/login');
+            return;
         }
-        // Remove strict admin check here, because regular users need dashboard too.
-        // We will handle role-based rendering inside the component.
+
+        // Strict Admin Check
+        if (user.email !== 'mhmmadridho64@gmail.com') {
+            router.push('/admin/my-invitation');
+        }
     };
 
     const fetchStats = async () => {

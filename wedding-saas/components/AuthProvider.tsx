@@ -46,11 +46,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setIsAdmin(session?.user?.email?.toLowerCase() === "mhmmadridho64@gmail.com");
 
             // Onboarding Check logic
+            // Onboarding Check logic
+            // Only check if user is logged in
             if (session?.user) {
+                // Ignore check if already on onboarding page to prevent loop
+                if (window.location.pathname === '/onboarding') return;
+
                 const { data: profile } = await supabase.from('profiles').select('full_name, phone_number').eq('id', session.user.id).single();
-                // Jika profile kosong atau data belum lengkap, dan bukan sedang di halaman onboarding
-                if ((!profile || !profile.full_name || !profile.phone_number) && window.location.pathname !== '/onboarding') {
-                    // Paksa redirect (gunakan window.location agar pasti)
+
+                // If profile incomplete, Force Redirect
+                if (!profile || !profile.full_name || !profile.phone_number) {
                     window.location.href = '/onboarding';
                 }
             }
