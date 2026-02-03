@@ -17,9 +17,12 @@ export default function MyInvitationPage() {
     const [selectedTheme, setSelectedTheme] = useState('');
     const [message, setMessage] = useState('');
 
+    const [showWelcome, setShowWelcome] = useState(false);
+
     useEffect(() => {
         fetchData();
-    }, []);
+        if (router.query.first) setShowWelcome(true);
+    }, [router.query]);
 
     const fetchData = async () => {
         const { data: { user } } = await supabase.auth.getUser();
@@ -117,6 +120,26 @@ export default function MyInvitationPage() {
 
     return (
         <AdminLayout title="Undangan Saya">
+            {showWelcome && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-fade-in">
+                    <div className="bg-white rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl scale-100 animate-jump-in">
+                        <div className="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">🎁</div>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Selamat Datang!</h2>
+                        <p className="text-slate-600 mb-6">
+                            Sebagai pengguna baru, Anda mendapatkan <strong className="text-pink-600">5 Token Gratis</strong>.
+                            <br /><br />
+                            Gunakan token ini untuk mencoba-coba Tema dan Link sebelum memutuskan membayar.
+                        </p>
+                        <button
+                            onClick={() => setShowWelcome(false)}
+                            className="bg-pink-600 text-white w-full py-3 rounded-xl font-bold hover:bg-pink-700 transition"
+                        >
+                            Klaim & Mulai
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className="max-w-4xl mx-auto space-y-8">
                 <header>
                     <h1 className="text-3xl font-extrabold text-slate-900">Kelola Undangan</h1>
