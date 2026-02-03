@@ -64,6 +64,10 @@ export default function AdminSidebar() {
             </div>
 
             <nav className="space-y-1 flex-1">
+                {/* Common Menu */}
+                <NavItem href="/" icon={<Home size={20} />} label="Back to Home" />
+                <div className="my-2 border-b border-slate-800/50"></div>
+
                 {/* Admin Only Menus */}
                 {profile?.email === 'mhmmadridho64@gmail.com' ? (
                     <>

@@ -49,8 +49,8 @@ export default function Onboarding() {
 
             if (error) throw error;
 
-            // Redirect ke My Invitation setelah sukses
-            router.push('/admin/my-invitation?first=true');
+            // Redirect ke Home dengan Welcome Flag
+            router.push('/?welcome=true');
         } catch (error: any) {
             alert('Error: ' + error.message);
         } finally {
