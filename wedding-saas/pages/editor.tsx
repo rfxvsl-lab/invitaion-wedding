@@ -9,7 +9,7 @@ import { InvitationData } from '@/types/invitation';
 import { Eye, Smartphone, Monitor, Save, ArrowLeft } from 'lucide-react';
 
 export default function Editor() {
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [invitation, setInvitation] = useState<any>(null);
@@ -18,12 +18,13 @@ export default function Editor() {
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
+        if (authLoading) return;
         if (!user) {
             router.push('/login');
             return;
         }
         fetchInvitation();
-    }, [user]);
+    }, [user, authLoading]);
 
     const fetchInvitation = async () => {
         try {

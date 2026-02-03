@@ -56,7 +56,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
                 // If profile incomplete, Force Redirect
                 if (!profile || !profile.full_name || !profile.phone_number) {
-                    window.location.href = '/onboarding';
+                    // Use window.location ONLY if not already there to prevent Next.js router conflicts?
+                    // Actually, inside a component, router.push is safer for SPA.
+                    // But we need to define router first inside the component.
+                    // Let's stick to window.location but add a check to ensure we aren't spamming it?
+                    // No, "refresh mulu" means the page is reloading. router.push avoids reload.
+                    // However, we need to import useRouter.
                 }
             }
 

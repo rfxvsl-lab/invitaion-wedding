@@ -5,22 +5,24 @@ import { useAuth } from '@/components/AuthProvider';
 import Head from 'next/head';
 
 export default function Onboarding() {
-    const { user } = useAuth();
+    const { user, loading: authLoading } = useAuth(); // rename to avoid conflict
     const router = useRouter();
-    const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false); // rename loading to saving
     const [formData, setFormData] = useState({
         full_name: '',
         phone_number: '',
     });
 
     useEffect(() => {
+        if (authLoading) return; // Wait for auth load
+
         if (!user) {
             router.push('/login');
         } else {
-            // Cek apakah user sudah punya profile lengkap, jika ya, tendang ke dashboard
+            // Cek apakah user sudah punya profile lengkap
             checkProfile();
         }
-    }, [user]);
+    }, [user, authLoading]);
 
     const checkProfile = async () => {
         if (!user) return;
@@ -33,7 +35,7 @@ export default function Onboarding() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) return;
-        setLoading(true);
+        setSaving(true);
 
         try {
             const { error } = await supabase.from('profiles').upsert({
@@ -54,7 +56,7 @@ export default function Onboarding() {
         } catch (error: any) {
             alert('Error: ' + error.message);
         } finally {
-            setLoading(false);
+            setSaving(false);
         }
     };
 
@@ -97,10 +99,10 @@ export default function Onboarding() {
 
                     <button
                         type="submit"
-                        disabled={loading}
+                        disabled={saving}
                         className="w-full bg-rose-600 text-white font-bold py-4 rounded-xl hover:bg-rose-700 transition transform hover:-translate-y-1 shadow-lg shadow-rose-200"
                     >
-                        {loading ? 'Menyimpan...' : 'Simpan & Lanjutkan'}
+                        {saving ? 'Menyimpan...' : 'Simpan & Lanjutkan'}
                     </button>
                 </form>
             </div>
