@@ -168,8 +168,27 @@ export default function MyInvitationPage() {
                 {!invitation ? (
                     <div className="bg-yellow-50 p-8 rounded-2xl text-center border border-yellow-200">
                         <h3 className="text-xl font-bold text-yellow-800 mb-2">Belum ada Undangan Aktif</h3>
-                        <p className="text-yellow-700 mb-4">Silakan lakukan pemesanan/pembayaran terlebih dahulu.</p>
-                        <Link href="/pricing" className="bg-yellow-600 text-white px-6 py-2 rounded-lg font-bold">Buat Sekarang</Link>
+                        <p className="text-yellow-700 mb-4">Anda punya 5 Token Gratis! Buat undangan pertama Anda sekarang.</p>
+                        <button
+                            onClick={async () => {
+                                setLoading(true);
+                                const defaultSlug = `undangan-${Math.random().toString(36).substring(7)}`;
+                                const { error } = await supabase.from('invitations').insert({
+                                    user_id: profile.id,
+                                    slug: defaultSlug,
+                                    metadata: { theme_id: 'modern-arch', tier: 'free' }
+                                });
+                                if (error) {
+                                    alert('Gagal membuat undangan: ' + error.message);
+                                    setLoading(false);
+                                } else {
+                                    fetchData();
+                                }
+                            }}
+                            className="bg-pink-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-pink-700 transition shadow-lg shadow-pink-200"
+                        >
+                            Mulai Buat Undangan (Gratis)
+                        </button>
                     </div>
                 ) : (
                     <div className="grid md:grid-cols-2 gap-8">
