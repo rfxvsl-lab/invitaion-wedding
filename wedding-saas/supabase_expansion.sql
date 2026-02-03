@@ -71,4 +71,14 @@ USING ( bucket_id = 'payment-proofs' AND (auth.role() = 'service_role' OR auth.j
 -- Also allow public read for now to simplify frontend 'success' page preview if needed, 
 -- though ideally strict. Let's start with Public Read to avoid "Image not found" errors during verification demo.
 CREATE POLICY "Public View Proofs" ON storage.objects FOR SELECT
-USING ( bucket_id = 'payment-proofs' );
+-- 5. STORAGE FOR SITE ASSETS (QRIS, Logo, etc)
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('site-assets', 'site-assets', true)
+ON CONFLICT (id) DO NOTHING;
+
+CREATE POLICY "Public Read Assets" ON storage.objects FOR SELECT
+USING ( bucket_id = 'site-assets' );
+
+CREATE POLICY "Admin Upload Assets" ON storage.objects FOR INSERT 
+WITH CHECK ( bucket_id = 'site-assets' AND (auth.role() = 'service_role' OR auth.jwt() ->> 'email' = 'mhmmadridho64@gmail.com') );
+

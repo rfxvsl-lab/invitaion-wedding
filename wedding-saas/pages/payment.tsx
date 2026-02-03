@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Upload, Loader } from 'lucide-react';
 import { createOrder, uploadPaymentProof } from '../lib/database';
+import { supabase } from '../lib/supabase';
 
 const PaymentPage = () => {
     const router = useRouter();
@@ -18,14 +19,38 @@ const PaymentPage = () => {
     const [previewUrl, setPreviewUrl] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
+    const [instructions, setInstructions] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        const fetchInstructions = async () => {
+            const { data } = await supabase.from('site_content').select('key, value');
+            if (data) {
+                const instructionsMap: Record<string, string> = {};
+                data.forEach((item: any) => {
+                    instructionsMap[item.key] = item.value;
+                });
+                setInstructions(instructionsMap);
+            }
+        };
+        fetchInstructions();
+    }, []);
 
     const tierDisplay = tier ? String(tier).toUpperCase() : 'PAKET';
 
     const paymentMethods = [
         { value: 'qris', label: 'QRIS' },
         { value: 'shopeepay', label: 'ShopeePay' },
-        { value: 'seabank', label: 'SeaBank' }
+        { value: 'seabank', label: 'SeaBank' },
+        { value: 'bank_transfer', label: 'Transfer Bank (BCA/Mandiri/Lainnya)' }
     ];
+
+    const getInstructionText = () => {
+        if (!formData.paymentMethod) return null;
+        if (formData.paymentMethod === 'qris') return instructions['payment_instructions_qris'] || 'Scan QRIS yang tersedia.';
+        if (formData.paymentMethod === 'bank_transfer') return instructions['payment_instructions_bank'] || 'Silakan hubungi admin untuk info rekening.';
+        if (['shopeepay', 'seabank'].includes(formData.paymentMethod)) return instructions['payment_instructions_ewallet'] || 'Silakan hubungi admin untuk info e-wallet.';
+        return null;
+    };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -162,6 +187,21 @@ const PaymentPage = () => {
                                 ))}
                             </select>
                             {errors.paymentMethod && <p className="text-red-500 text-sm mt-1">{errors.paymentMethod}</p>}
+
+                            {/* Dynamic Payment Instruction Display */}
+                            {formData.paymentMethod && (
+                                <div className="mt-4 p-4 bg-gray-50 border rounded-lg text-sm text-gray-700 whitespace-pre-wrap">
+                                    <p className="font-bold mb-2">Instruksi Pembayaran:</p>
+                                    {formData.paymentMethod === 'qris' && instructions['payment_instructions_qris_url'] ? (
+                                        <div className="text-center">
+                                            <img src={instructions['payment_instructions_qris_url']} alt="QRIS" className="max-w-[200px] mx-auto mb-2" />
+                                            <p>{instructions['payment_instructions_qris'] || 'Scan QRIS di atas.'}</p>
+                                        </div>
+                                    ) : (
+                                        <p>{getInstructionText()}</p>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Upload Proof */}

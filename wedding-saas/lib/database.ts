@@ -138,3 +138,24 @@ export async function uploadPaymentProof(file: File): Promise<{ success: boolean
 
     return { success: true, url: data.publicUrl };
 }
+
+export async function uploadSiteAsset(file: File): Promise<{ success: boolean; url?: string; error?: string }> {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `asset-${Date.now()}.${fileExt}`;
+    const filePath = `${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+        .from('site-assets')
+        .upload(filePath, file);
+
+    if (uploadError) {
+        console.error('Error uploading asset:', uploadError);
+        return { success: false, error: uploadError.message };
+    }
+
+    const { data } = supabase.storage
+        .from('site-assets')
+        .getPublicUrl(filePath);
+
+    return { success: true, url: data.publicUrl };
+}

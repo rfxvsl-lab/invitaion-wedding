@@ -4,24 +4,24 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/components/AuthProvider';
 import { supabase } from '@/lib/supabase';
 import { GetServerSideProps } from 'next';
-
-interface SiteContent {
-    key: string;
-    value: string;
-}
+import { getAllThemes, getAllFAQs } from '@/lib/database';
+import { Theme, FAQ } from '@/types/database';
 
 interface HomeProps {
     initialContent: Record<string, string>;
+    themes: Theme[];
+    faqs: FAQ[];
 }
 
-export default function Home({ initialContent }: HomeProps) {
+export default function Home({ initialContent, themes, faqs }: HomeProps) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [faqActive, setFaqActive] = useState<number | null>(1);
+    const [faqActive, setFaqActive] = useState<string | null>(null);
     const [showWelcome, setShowWelcome] = useState(false);
 
     // Use initialContent from Server
     const content = initialContent || {};
+    const t = (key: string, fallback: string) => content[key] || fallback;
 
     const { user, loading, signOut } = useAuth();
     const router = useRouter();
@@ -39,16 +39,8 @@ export default function Home({ initialContent }: HomeProps) {
         if (user && user.email) {
             const checkProfile = async () => {
                 const { data, error } = await supabase.from('profiles').select('id').eq('id', user.id).single();
-
-                if (!data && !error) {
-                    router.push('/onboarding');
-                    return;
-                }
-
-                if (error && error.code === 'PGRST116') {
-                    router.push('/onboarding');
-                    return;
-                }
+                if (!data && !error) router.push('/onboarding');
+                if (error && error.code === 'PGRST116') router.push('/onboarding');
 
                 const key = `welcome_shown_${user.email}`;
                 if (!localStorage.getItem(key)) {
@@ -60,25 +52,10 @@ export default function Home({ initialContent }: HomeProps) {
         }
     }, [user, router]);
 
-    const t = (key: string, fallback: string) => content[key] || fallback;
-
-
-
-
     const handleCreateInvitation = () => {
-        if (user) {
-            router.push('/editor');
-        } else {
-            router.push('/login');
-        }
+        if (user) router.push('/editor');
+        else router.push('/login');
     };
-
-    const handleLoginRedirect = () => {
-        router.push('/login');
-    }
-
-    // Fallback loading UI removed as we use SSR
-
 
     return (
         <>
@@ -102,25 +79,21 @@ export default function Home({ initialContent }: HomeProps) {
 
                             {/* Desktop Menu */}
                             <div className="hidden md:flex space-x-8 items-center">
-                                {['Beranda', 'Fitur', 'Tema', 'Harga', 'FAQ'].map((item) => (
-                                    <a key={item} href={`#${item.toLowerCase()}`} className="text-gray-600 hover:text-pink-600 font-medium transition relative group">
-                                        {item}
-                                        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-pink-600 transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
-                                    </a>
-                                ))}
-                                {/* Admin Link (Only for specific user) */}
-                                {user?.email === 'mhmmadridho64@gmail.com' && (
+                                <a href="/" className="text-gray-600 hover:text-pink-600 font-medium transition">Beranda</a>
+                                <a href="/themes" className="text-gray-600 hover:text-pink-600 font-medium transition">Tema</a>
+                                <a href="/pricing" className="text-gray-600 hover:text-pink-600 font-medium transition">Harga</a>
+                                {/* Admin Link */}
+                                {user?.email === 'mhmmadridho64@gmail.com' || user?.email === 'undangankita.co.id@gmail.com' ? (
                                     <button onClick={() => router.push('/admin')} className="text-red-600 font-bold hover:text-red-800">
                                         Admin Panel
                                     </button>
-                                )}
+                                ) : null}
                             </div>
 
                             {/* CTA Button Desktop */}
                             <div className="hidden md:flex items-center space-x-4">
                                 {user ? (
                                     <div className="flex items-center gap-4">
-                                        <span className="text-sm text-gray-600">Hi, {user.email?.split('@')[0]}</span>
                                         <button onClick={handleCreateInvitation} className="bg-pink-600 hover:bg-pink-800 text-white px-5 py-2.5 rounded-full font-semibold transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-0.5">
                                             Dashboard
                                         </button>
@@ -130,78 +103,15 @@ export default function Home({ initialContent }: HomeProps) {
                                     </div>
                                 ) : (
                                     <>
-                                        <button onClick={handleLoginRedirect} className="text-gray-600 hover:text-pink-600 font-medium">
-                                            Masuk
-                                        </button>
+                                        <button onClick={() => router.push('/login')} className="text-gray-600 hover:text-pink-600 font-medium">Masuk</button>
                                         <button onClick={handleCreateInvitation} className="bg-pink-600 hover:bg-pink-800 text-white px-5 py-2.5 rounded-full font-semibold transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-0.5">
                                             Buat Undangan
                                         </button>
                                     </>
                                 )}
                             </div>
-
-                            {/* Mobile menu button */}
-                            <div className="md:hidden flex items-center">
-                                <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-600 hover:text-pink-600 focus:outline-none p-2">
-                                    <i className={`fa-solid ${mobileMenuOpen ? 'fa-xmark' : 'fa-bars'} text-2xl`}></i>
-                                </button>
-                            </div>
                         </div>
                     </div>
-
-                    {/* Mobile Menu Panel */}
-                    {mobileMenuOpen && (
-                        <div className="md:hidden bg-white border-b border-gray-100 absolute w-full shadow-lg z-50">
-                            <div className="px-4 pt-4 pb-6 space-y-2">
-                                {/* Mobile User Info */}
-                                {user && (
-                                    <div className="mb-4 pb-4 border-b border-gray-100 flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-lg">
-                                            {user.email?.charAt(0).toUpperCase()}
-                                        </div>
-                                        <div className="overflow-hidden">
-                                            <p className="text-xs text-gray-500 font-medium">Signed in as</p>
-                                            <p className="text-sm font-bold text-gray-900 truncate">{user.email}</p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {[
-                                    { label: 'Beranda', href: '#home' },
-                                    { label: 'Fitur', href: '#fitur' },
-                                    { label: 'Tema', href: '#tema' },
-                                    { label: 'Harga', href: '#harga' },
-                                ].map((link) => (
-                                    <a key={link.label} href={link.href} onClick={() => setMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-50 rounded-md">
-                                        {link.label}
-                                    </a>
-                                ))}
-                                {user?.email === 'mhmmadridho.64@gmail.com' && (
-                                    <button onClick={() => { setMobileMenuOpen(false); router.push('/admin'); }} className="block w-full text-left px-3 py-3 text-base font-bold text-red-600 hover:bg-red-50 rounded-md">
-                                        Admin Panel
-                                    </button>
-                                )}
-
-                                <div className="pt-4 border-t border-gray-100 mt-4 flex flex-col gap-3">
-                                    {user ? (
-                                        <div className="flex flex-col gap-2">
-                                            <button onClick={handleCreateInvitation} className="w-full text-center py-3 bg-pink-600 text-white rounded-lg font-bold shadow-md hover:bg-pink-800">
-                                                Dashboard
-                                            </button>
-                                            <button onClick={() => signOut()} className="w-full text-center py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-bold border border-gray-200">
-                                                Logout
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <button onClick={handleLoginRedirect} className="w-full text-center py-2 text-gray-600 font-medium">Masuk</button>
-                                            <button onClick={handleCreateInvitation} className="w-full text-center py-3 bg-pink-600 text-white rounded-lg font-bold shadow-md hover:bg-pink-800">Buat Undangan</button>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
                 </nav>
 
                 {/* Hero Section */}
@@ -212,9 +122,6 @@ export default function Home({ initialContent }: HomeProps) {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full">
                         <div className="grid lg:grid-cols-2 gap-12 items-center">
                             <div className="text-center lg:text-left space-y-8 z-10">
-                                <div className="inline-block px-4 py-1.5 bg-pink-100 text-pink-600 font-semibold rounded-full text-sm mb-4 border border-pink-200">
-                                    {t('hero_badge', '🎉 Platform Undangan Digital #1')}
-                                </div>
                                 <h1 className="font-serif text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
                                     {t('hero_title', 'Bagikan Kebahagiaan')} <br />
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600">{t('hero_highlight', 'Tanpa Batas')}</span>
@@ -223,17 +130,12 @@ export default function Home({ initialContent }: HomeProps) {
                                     {t('hero_description', 'Buat undangan pernikahan, ulang tahun, atau acara syukuran dalam hitungan menit. Desain premium, fitur lengkap, dan mudah disebarkan via WhatsApp.')}
                                 </p>
                                 <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                                    <a href="#tema" className="px-8 py-4 bg-pink-600 text-white rounded-full font-bold shadow-xl shadow-pink-500/20 hover:bg-pink-800 transition transform hover:-translate-y-1 text-center">
-                                        {t('hero_btn_primary', 'Lihat Tema')}
+                                    <a href="/themes" className="px-8 py-4 bg-pink-600 text-white rounded-full font-bold shadow-xl shadow-pink-500/20 hover:bg-pink-800 transition transform hover:-translate-y-1 text-center">
+                                        Lihat Tema
                                     </a>
-                                    <a href="#tema" className="px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-full font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2 group">
-                                        <i className="fa-regular fa-circle-play text-xl group-hover:text-pink-600 transition"></i> {t('hero_btn_secondary', 'Lihat Demo')}
+                                    <a href="/pricing" className="px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-full font-bold hover:bg-gray-50 transition flex items-center justify-center gap-2 group">
+                                        Lihat Harga
                                     </a>
-                                </div>
-                                <div className="pt-6 flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-500 text-sm">
-                                    <div className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> {t('hero_feature_1', 'Proses Cepat')}</div>
-                                    <div className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> {t('hero_feature_2', 'Aktif Selamanya')}</div>
-                                    <div className="flex items-center gap-2"><i className="fa-solid fa-check text-green-500"></i> {t('hero_feature_3', 'Revisi Mudah')}</div>
                                 </div>
                             </div>
 
@@ -241,35 +143,8 @@ export default function Home({ initialContent }: HomeProps) {
                             <div className="relative mx-auto lg:mx-0 w-full max-w-md lg:max-w-xl">
                                 <div className="relative bg-white p-3 rounded-[2.5rem] shadow-2xl border-4 border-gray-100 rotate-2 hover:rotate-0 transition duration-700 ease-in-out group cursor-pointer">
                                     <img src="https://images.unsplash.com/photo-1605106702734-205df224ecce?q=80&w=1000&auto=format&fit=crop" alt="Contoh Undangan Digital" className="rounded-[2rem] w-full h-[500px] object-cover filter brightness-105 group-hover:brightness-110 transition" />
-                                    <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg flex items-center gap-3 animate-bounce border border-gray-100">
-                                        <div className="bg-green-100 p-2.5 rounded-full text-green-600"><i className="fa-brands fa-whatsapp text-2xl"></i></div>
-                                        <div><p className="text-xs text-gray-500 font-medium">Auto Send</p><p className="font-bold text-gray-800">WhatsApp</p></div>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Fitur Section */}
-                <section id="fitur" className="py-24 bg-slate-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center max-w-3xl mx-auto mb-16">
-                            <span className="text-pink-600 font-bold tracking-wider uppercase text-xs bg-pink-100 px-3 py-1 rounded-full">{t('feature_badge', 'Features')}</span>
-                            <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900 mt-4">{t('feature_title', 'Fitur Lengkap')}</h2>
-                            <p className="mt-4 text-gray-600 text-lg">{t('feature_desc', 'Semua fitur untuk momen spesial.')}</p>
-                        </div>
-
-                        <div className="grid md:grid-cols-3 gap-8">
-                            {[1, 2, 3, 4, 5, 6].map((num) => (
-                                <div key={num} className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 group border border-slate-100 hover:border-pink-100">
-                                    <div className="w-14 h-14 bg-pink-50 rounded-xl flex items-center justify-center text-pink-600 text-2xl mb-6 group-hover:scale-110 transition duration-300 shadow-sm">
-                                        <i className={`fa-solid ${num === 1 ? 'fa-music' : num === 2 ? 'fa-map-location-dot' : num === 3 ? 'fa-calendar-check' : num === 4 ? 'fa-gift' : num === 5 ? 'fa-images' : 'fa-wand-magic-sparkles'}`}></i>
-                                    </div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-pink-600 transition">{t(`feature_${num}_title`, 'Judul Fitur')}</h3>
-                                    <p className="text-gray-600 leading-relaxed">{t(`feature_${num}_desc`, 'Deskripsi fitur...')}</p>
-                                </div>
-                            ))}
                         </div>
                     </div>
                 </section>
@@ -280,79 +155,66 @@ export default function Home({ initialContent }: HomeProps) {
                         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                             <div className="max-w-2xl">
                                 <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900">Pilihan Tema Eksklusif</h2>
-                                <p className="mt-4 text-gray-600">Beragam kategori tema mulai dari minimalis, floral, adat, hingga modern elegan.</p>
+                                <p className="mt-4 text-gray-600">Tema terbaru yang dapat Anda pilih via Admin Panel.</p>
                             </div>
+                            <a href="/themes" className="text-pink-600 font-bold hover:text-pink-800 flex items-center gap-2">
+                                Lihat Semua Tema <i className="fa-solid fa-arrow-right"></i>
+                            </a>
                         </div>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {[1, 2, 3].map((num) => {
-                                const idKey = `theme_${num}_id`;
-                                const titleKey = `theme_${num}_title`;
-                                const descKey = `theme_${num}_desc`;
-                                const imgKey = `theme_${num}_img`;
-
-                                const id = content[idKey] || (num === 1 ? 'rustic-wood' : num === 2 ? 'classic-serif' : 'dark-luxury');
-                                const title = content[titleKey] || (num === 1 ? 'Floral Rustic Elegance' : num === 2 ? 'Clean White Minimalist' : 'Golden Luxury Night');
-                                const img = content[imgKey] || (num === 1 ? 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f?q=80&w=800&auto=format&fit=crop' : num === 2 ? 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=800&auto=format&fit=crop' : 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop');
-
-                                return (
-                                    <div key={num} className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 bg-white">
-                                        <div className="relative overflow-hidden aspect-[4/5]">
-                                            <img src={img} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt={title} />
-                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col items-center justify-center gap-3">
-                                                <a href={`/demo/${id}`} target="_blank" className="bg-white text-gray-900 px-6 py-2.5 rounded-full text-sm font-bold hover:bg-pink-600 hover:text-white transition shadow-lg flex items-center gap-2">
-                                                    <i className="fa-solid fa-eye"></i> Live Demo
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div className="p-6">
-                                            <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition">{title}</h3>
+                            {themes.slice(0, 3).map((theme) => (
+                                <div key={theme.id} className="group rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 bg-white">
+                                    <div className="relative overflow-hidden aspect-[4/5]">
+                                        <img src={theme.thumbnail_url || 'https://via.placeholder.com/400x500?text=No+Image'} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt={theme.name} />
+                                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-pink-600">
+                                            {theme.tier}
                                         </div>
                                     </div>
-                                );
-                            })}
+                                    <div className="p-6">
+                                        <h3 className="text-lg font-bold text-gray-900 group-hover:text-pink-600 transition">{theme.name}</h3>
+                                        <div className="mt-4 flex gap-2">
+                                            {theme.preview_url && (
+                                                <a href={theme.preview_url} target="_blank" className="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg text-center text-sm font-bold hover:bg-gray-200">
+                                                    Preview
+                                                </a>
+                                            )}
+                                            <a href={`/payment?tier=${theme.tier}`} className="flex-1 bg-pink-600 text-white py-2 rounded-lg text-center text-sm font-bold hover:bg-pink-700">
+                                                Pilih
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-
                     </div>
                 </section>
 
-                {/* Pricing Section */}
+                {/* Pricing Section - Quick View */}
                 <section id="harga" className="py-24 bg-slate-50 relative overflow-hidden">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                         <div className="text-center max-w-3xl mx-auto mb-16">
-                            <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900">{t('pricing_title', 'Harga Paket Simpel')}</h2>
-                            <p className="mt-4 text-gray-600">{t('pricing_desc', 'Pilih paket terbaik.')}</p>
+                            <h2 className="font-serif text-3xl md:text-4xl font-bold text-gray-900">{t('pricing_title', 'Harga Paket')}</h2>
+                            <p className="mt-4 text-gray-600">Pilih paket sesuai kebutuhan Anda.</p>
                         </div>
-
                         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-center">
-                            {/* Basic */}
-                            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:border-pink-200 transition relative group hover:-translate-y-1 duration-300">
-                                <h3 className="text-xl font-bold text-gray-900">{t('pricing_1_name', 'Basic')}</h3>
-                                <p className="text-sm text-gray-500 mt-2">{t('pricing_1_desc', 'Cocok untuk acara kecil.')}</p>
-                                <div className="my-6 flex items-baseline gap-1">
-                                    <span className="text-4xl font-bold text-gray-900">{t('pricing_1_price', 'Rp 49.000')}</span>
+                            {/* Simple Cards directing to Payment */}
+                            {['basic', 'premium', 'exclusive'].map((tier) => (
+                                <div key={tier} className={`bg-white rounded-2xl p-8 shadow-sm border border-gray-100 transition relative group hover:-translate-y-1 duration-300 ${tier === 'premium' ? 'border-2 border-pink-600 shadow-xl scale-105 z-10' : ''}`}>
+                                    <h3 className="text-xl font-bold text-gray-900 capitalize">{tier}</h3>
+                                    <div className="my-6">
+                                        <span className="text-4xl font-bold text-gray-900">
+                                            {tier === 'basic' ? 'Rp 49rb' : tier === 'premium' ? 'Rp 99rb' : 'Rp 149rb'}
+                                        </span>
+                                    </div>
+                                    <button onClick={() => router.push(`/payment?tier=${tier}`)} className={`block w-full py-3 px-4 font-bold text-center rounded-xl transition ${tier === 'premium' ? 'bg-pink-600 text-white hover:bg-pink-800' : 'bg-slate-100 text-gray-800 hover:bg-slate-200'}`}>
+                                        Pilih Paket Ini
+                                    </button>
                                 </div>
-                                <a href="#tema" className="block w-full py-3 px-4 bg-slate-100 text-gray-800 font-bold text-center rounded-xl hover:bg-slate-200 transition">Pilih Paket</a>
-                            </div>
-                            {/* Premium */}
-                            <div className="bg-white rounded-2xl p-8 shadow-xl border-2 border-pink-600 relative transform scale-105 z-10">
-                                <div className="absolute top-0 right-0 bg-pink-600 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg shadow-sm">POPULAR</div>
-                                <h3 className="text-2xl font-bold text-gray-900">{t('pricing_2_name', 'Premium')}</h3>
-                                <p className="text-sm text-gray-500 mt-2">{t('pricing_2_desc', 'Paling diminati.')}</p>
-                                <div className="my-6 flex items-baseline gap-1">
-                                    <span className="text-5xl font-bold text-gray-900 tracking-tight">{t('pricing_2_price', 'Rp 99.000')}</span>
-                                </div>
-                                <a href="#tema" className="block w-full py-4 px-6 bg-pink-600 text-white font-bold text-center rounded-xl hover:bg-pink-800 transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-1">Pilih Paket Ini</a>
-                            </div>
-                            {/* Exclusive */}
-                            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 hover:border-pink-200 transition relative group hover:-translate-y-1 duration-300">
-                                <h3 className="text-xl font-bold text-gray-900">{t('pricing_3_name', 'Exclusive')}</h3>
-                                <p className="text-sm text-gray-500 mt-2">{t('pricing_3_desc', 'Fitur lengkap.')}</p>
-                                <div className="my-6 flex items-baseline gap-1">
-                                    <span className="text-4xl font-bold text-gray-900">{t('pricing_3_price', 'Rp 149.000')}</span>
-                                </div>
-                                <a href="#tema" className="block w-full py-3 px-4 bg-slate-100 text-gray-800 font-bold text-center rounded-xl hover:bg-slate-200 transition">Pilih Paket</a>
-                            </div>
+                            ))}
+                        </div>
+                        <div className="text-center mt-12">
+                            <a href="/pricing" className="text-pink-600 font-bold hover:underline">Lihat Perbandingan Lengkap &rarr;</a>
                         </div>
                     </div>
                 </section>
@@ -361,20 +223,19 @@ export default function Home({ initialContent }: HomeProps) {
                 <section id="faq" className="py-24 bg-white">
                     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="text-center mb-12">
-                            <h2 className="font-serif text-3xl font-bold text-gray-900 mt-4">{t('faq_title', 'FAQ')}</h2>
-                            <p className="mt-4 text-gray-600">{t('faq_desc', 'Pertanyaan umum.')}</p>
+                            <h2 className="font-serif text-3xl font-bold text-gray-900 mt-4">Pertanyaan Umum</h2>
                         </div>
 
                         <div className="space-y-4">
-                            {[1, 2, 3].map((num) => (
-                                <div key={num} className={`border border-gray-200 rounded-xl overflow-hidden shadow-sm transition-all duration-300 ${faqActive === num ? 'border-pink-600 ring-1 ring-pink-600/20' : ''}`}>
-                                    <button onClick={() => setFaqActive(faqActive === num ? null : num)} className="flex justify-between items-center w-full px-6 py-4 bg-white hover:bg-gray-50 transition text-left">
-                                        <span className="font-semibold text-gray-900">{t(`faq_${num}_q`, 'Pertanyaan...')}</span>
-                                        <i className={`fa-solid fa-chevron-down transition-transform duration-300 text-gray-400 ${faqActive === num ? 'rotate-180 text-pink-600' : ''}`}></i>
+                            {faqs.map((faq) => (
+                                <div key={faq.id} className={`border border-gray-200 rounded-xl overflow-hidden shadow-sm transition-all duration-300 ${faqActive === faq.id ? 'border-pink-600 ring-1 ring-pink-600/20' : ''}`}>
+                                    <button onClick={() => setFaqActive(faqActive === faq.id ? null : faq.id)} className="flex justify-between items-center w-full px-6 py-4 bg-white hover:bg-gray-50 transition text-left">
+                                        <span className="font-semibold text-gray-900">{faq.question}</span>
+                                        <i className={`fa-solid fa-chevron-down transition-transform duration-300 text-gray-400 ${faqActive === faq.id ? 'rotate-180 text-pink-600' : ''}`}></i>
                                     </button>
-                                    {faqActive === num && (
-                                        <div className="px-6 py-4 bg-white text-gray-600 border-t border-gray-100 animate-fadeIn">
-                                            {t(`faq_${num}_a`, 'Jawaban...')}
+                                    {faqActive === faq.id && (
+                                        <div className="px-6 py-4 bg-white text-gray-600 border-t border-gray-100 animate-fadeIn whitespace-pre-line">
+                                            {faq.answer}
                                         </div>
                                     )}
                                 </div>
@@ -386,126 +247,36 @@ export default function Home({ initialContent }: HomeProps) {
                 {/* Footer */}
                 <footer className="bg-slate-900 text-slate-300 pt-20 pb-10 border-t border-slate-800">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                            {/* Brand Column */}
-                            <div className="space-y-6">
-                                <div className="flex items-center gap-2">
-                                    <i className="fa-solid fa-envelope-open-text text-2xl text-pink-600"></i>
-                                    <span className="font-serif text-xl font-bold text-white tracking-tight">Undangan<span className="text-pink-600">Kita</span></span>
-                                </div>
-                                <p className="text-sm leading-relaxed text-slate-400">
-                                    {t('footer_desc', 'Platform pembuatan undangan digital berbasis website yang praktis, elegan, dan ramah lingkungan.')}
-                                </p>
-                                <div className="flex gap-4">
-                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition duration-300">
-                                        <i className="fa-brands fa-instagram"></i>
-                                    </a>
-                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition duration-300">
-                                        <i className="fa-brands fa-tiktok"></i>
-                                    </a>
-                                    <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 hover:text-white transition duration-300">
-                                        <i className="fa-brands fa-youtube"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            {/* Menu Column */}
-                            <div>
-                                <h4 className="text-white font-bold text-lg mb-6">{t('footer_menu_title', 'Menu')}</h4>
-                                <ul className="space-y-4 text-sm">
-                                    <li><a href="#home" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Beranda</a></li>
-                                    <li><a href="#tema" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Katalog Tema</a></li>
-                                    <li><a href="#harga" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Harga</a></li>
-                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Tentang Kami</a></li>
-                                </ul>
-                            </div>
-
-                            {/* Legal Column */}
-                            <div>
-                                <h4 className="text-white font-bold text-lg mb-6">{t('footer_legal_title', 'Legal')}</h4>
-                                <ul className="space-y-4 text-sm">
-                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Syarat & Ketentuan</a></li>
-                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Kebijakan Privasi</a></li>
-                                    <li><a href="#" className="hover:text-pink-600 transition flex items-center gap-2"><i className="fa-solid fa-chevron-right text-xs text-slate-600"></i> Refund Policy</a></li>
-                                </ul>
-                            </div>
-
-                            {/* Contact Column */}
-                            <div>
-                                <h4 className="text-white font-bold text-lg mb-6">{t('footer_contact_title', 'Hubungi Kami')}</h4>
-                                <div className="space-y-6">
-                                    <div className="flex gap-4 items-start">
-                                        <div className="mt-1"><i className="fa-brands fa-whatsapp text-green-500 text-xl"></i></div>
-                                        <div>
-                                            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">WhatsApp</p>
-                                            <p className="text-white font-medium hover:text-green-500 cursor-pointer transition">{t('contact_wa', '+62 812 3456 7890')}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-4 items-start">
-                                        <div className="mt-1"><i className="fa-regular fa-envelope text-pink-500 text-xl"></i></div>
-                                        <div>
-                                            <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Email</p>
-                                            <p className="text-white font-medium hover:text-pink-500 cursor-pointer transition">{t('contact_email', 'hello@undangankita.com')}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
-                            <p>{t('footer_copy', '© 2024 UndanganKita. All rights reserved.')}</p>
-                            <p dangerouslySetInnerHTML={{ __html: t('footer_bottom_right', 'Made with <span class="text-red-500">❤</span> in Indonesia.') }}></p>
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+                            <p>© 2024 UndanganKita. All rights reserved.</p>
                         </div>
                     </div>
                 </footer>
-
-
-
-
-                {/* Welcome Modal */}
-                {showWelcome && user && (
-                    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-                        <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center animate-in zoom-in-95 duration-300 relative">
-                            <button onClick={() => setShowWelcome(false)} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                                <i className="fa-solid fa-xmark text-lg"></i>
-                            </button>
-                            <div className="w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <span className="text-3xl">🎉</span>
-                            </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Selamat Datang!</h3>
-                            <p className="text-gray-600 mb-6">Halo, <span className="font-semibold text-pink-600">{user.email?.split('@')[0]}</span>! Senang bertemu Anda kembali.</p>
-                            <button onClick={() => setShowWelcome(false)} className="w-full py-2.5 bg-pink-600 text-white font-bold rounded-xl hover:bg-pink-700 transition">
-                                Mulai Buat Undangan
-                            </button>
-                        </div>
-                    </div>
-                )}
             </div>
         </>
     );
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-    try {
-        const { data, error } = await supabase.from('site_content').select('key, value');
-
-        const initialContent: Record<string, string> = {};
-        if (data) {
-            data.forEach((item: any) => {
-                initialContent[item.key] = item.value;
-            });
-        }
-
-        return {
-            props: {
-                initialContent,
-            },
-        };
-    } catch (err) {
-        return {
-            props: {
-                initialContent: {},
-            },
-        };
+    // Fetch Site Content
+    const { data: contentData } = await supabase.from('site_content').select('key, value');
+    const initialContent: Record<string, string> = {};
+    if (contentData) {
+        contentData.forEach((item: any) => initialContent[item.key] = item.value);
     }
+
+    // Fetch Themes (Client side helper works here because we use same supabase client, as long as ENV vars are present in Node)
+    // To be safe, let's just use the supabase client directly here for SSR
+    const { data: themes } = await supabase.from('themes').select('*').order('tier', { ascending: true });
+
+    // Fetch FAQs
+    const { data: faqs } = await supabase.from('faqs').select('*').order('display_order', { ascending: true });
+
+    return {
+        props: {
+            initialContent,
+            themes: themes || [],
+            faqs: faqs || []
+        },
+    };
 };
