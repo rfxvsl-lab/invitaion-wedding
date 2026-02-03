@@ -30,9 +30,15 @@ export default function AdminCMSPage() {
 
     useEffect(() => {
         const init = async () => {
-            await checkAuth();
-            await fetchContent();
-            setLoading(false);
+            try {
+                await checkAuth();
+                await fetchContent();
+            } catch (err) {
+                console.error("CMS Init Error:", err);
+                showToast("Gagal memuat data CMS", 'error');
+            } finally {
+                setLoading(false);
+            }
         };
         init();
     }, []);

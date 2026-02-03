@@ -38,7 +38,7 @@ export default function Editor() {
         try {
             console.log("Fetching invitation for user:", user?.id);
             // 1. Cek Invitation
-            const { data: existing, error } = await supabase.from('invitations').select('*').eq('user_id', user?.id).maybeSingle();
+            const { data: existing, error } = await supabase.from('invitations').select('*').eq('user_id', user?.id).limit(1).maybeSingle();
 
             if (error) {
                 console.error("Supabase Error:", error);
@@ -75,7 +75,7 @@ export default function Editor() {
             slug: defaultSlug,
             metadata: { theme_id: 'modern-arch', tier: 'free' },
             content: {} // will trigger default merge
-        }).select().single();
+        }).select().maybeSingle();
 
         if (error) {
             console.error('Error creating invitation:', error);
