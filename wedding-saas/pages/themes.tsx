@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getAllThemes } from '../lib/database';
 import { Theme } from '../types/database';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const ThemesPage = () => {
     const [themes, setThemes] = useState<Theme[]>([]);
@@ -10,7 +12,17 @@ const ThemesPage = () => {
 
     useEffect(() => {
         const fetch = async () => {
-            const data = await getAllThemes();
+            let data = await getAllThemes();
+
+            // Fallback for demo/prototype if DB is empty
+            if (!data || data.length === 0) {
+                data = [
+                    { id: '1', name: 'Floral Rustic Elegance', thumbnail_url: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f', tier: 'premium', preview_url: '', slug: 'floral-rustic', created_at: new Date().toISOString() },
+                    { id: '2', name: 'Clean White Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8', tier: 'basic', preview_url: '', slug: 'clean-white', created_at: new Date().toISOString() },
+                    { id: '3', name: 'Golden Luxury Night', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552', tier: 'exclusive', preview_url: '', slug: 'golden-luxury', created_at: new Date().toISOString() },
+                ];
+            }
+
             setThemes(data);
             setLoading(false);
         };
@@ -21,19 +33,7 @@ const ThemesPage = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header */}
-            <header className="bg-white shadow-sm sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        WeddingSaaS
-                    </Link>
-                    <nav className="flex gap-6">
-                        <Link href="/" className="hover:text-purple-600 transition">Home</Link>
-                        <Link href="/themes" className="text-purple-600 font-semibold transition">Tema</Link>
-                        <Link href="/pricing" className="hover:text-purple-600 transition">Harga</Link>
-                    </nav>
-                </div>
-            </header>
+            <Navbar />
 
             <main className="max-w-7xl mx-auto px-4 py-12">
                 <div className="text-center mb-12">
@@ -50,8 +50,8 @@ const ThemesPage = () => {
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`px-6 py-2 rounded-full capitalize font-medium transition ${filter === f
-                                    ? 'bg-purple-600 text-white shadow-lg'
-                                    : 'bg-white text-gray-600 hover:bg-purple-50'
+                                ? 'bg-purple-600 text-white shadow-lg'
+                                : 'bg-white text-gray-600 hover:bg-purple-50'
                                 }`}
                         >
                             {f}
@@ -99,6 +99,7 @@ const ThemesPage = () => {
                     </div>
                 )}
             </main>
+            <Footer />
         </div>
     );
 };

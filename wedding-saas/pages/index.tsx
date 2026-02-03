@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/components/AuthProvider';
 import { supabase } from '@/lib/supabase';
 import { GetServerSideProps } from 'next';
 import { Theme, FAQ } from '@/types/database';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 interface HomeProps {
     initialContent: Record<string, string>;
@@ -13,8 +15,6 @@ interface HomeProps {
 }
 
 export default function Home({ initialContent, reversedThemes, faqs }: HomeProps & { reversedThemes: Theme[] }) {
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const [activeFaq, setActiveFaq] = useState<number | null>(1);
     const [previewModal, setPreviewModal] = useState({
         open: false,
@@ -23,16 +23,8 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
         image: ''
     });
 
-    const { user, signOut } = useAuth();
+    const { user } = useAuth();
     const router = useRouter();
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     const openPreview = (title: string, category: string, image: string) => {
         setPreviewModal({ open: true, title, category, image });
@@ -51,96 +43,10 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
             <Head>
                 <title>UndanganKita - Buat Undangan Digital Elegan</title>
                 <meta name="description" content="Platform pembuatan undangan digital pernikahan, ulang tahun, dan acara lainnya dengan desain premium." />
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-                <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
             </Head>
 
             <div className="font-sans text-slate-600 antialiased bg-slate-50 relative scroll-smooth">
-
-                {/* Navbar */}
-                <nav className={`fixed w-full z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all duration-300 ${scrolled ? 'shadow-md' : ''}`}>
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-between h-20 items-center">
-                            {/* Logo */}
-                            <a href="#" className="flex-shrink-0 flex items-center gap-2 cursor-pointer group">
-                                <i className="fa-solid fa-envelope-open-text text-3xl text-primary group-hover:scale-110 transition"></i>
-                                <span className="font-serif text-2xl font-bold text-gray-900 tracking-tight">Undangan<span className="text-primary">Kita</span></span>
-                            </a>
-
-                            {/* Desktop Menu */}
-                            <div className="hidden md:flex space-x-8 items-center">
-                                <a href="#home" className="text-gray-600 hover:text-primary font-medium transition relative group">
-                                    Beranda
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
-                                </a>
-                                <a href="#fitur" className="text-gray-600 hover:text-primary font-medium transition relative group">
-                                    Fitur
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
-                                </a>
-                                <a href="#tema" className="text-gray-600 hover:text-primary font-medium transition relative group">
-                                    Tema
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
-                                </a>
-                                <a href="#harga" className="text-gray-600 hover:text-primary font-medium transition relative group">
-                                    Harga
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
-                                </a>
-                                <a href="#faq" className="text-gray-600 hover:text-primary font-medium transition relative group">
-                                    FAQ
-                                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition duration-300"></span>
-                                </a>
-                                {user ? (
-                                    <a href="/admin" className="text-purple-600 font-bold hover:text-purple-800 transition">
-                                        Dashboard
-                                    </a>
-                                ) : null}
-                            </div>
-
-                            {/* CTA Button Desktop */}
-                            <div className="hidden md:flex items-center space-x-4">
-                                {user ? (
-                                    <button onClick={() => signOut()} className="text-gray-600 hover:text-primary font-medium">
-                                        Keluar
-                                    </button>
-                                ) : (
-                                    <button onClick={() => router.push('/login')} className="text-gray-600 hover:text-primary font-medium">
-                                        Masuk
-                                    </button>
-                                )}
-                                <a href="#tema" className="bg-primary hover:bg-pink-800 text-white px-5 py-2.5 rounded-full font-semibold transition shadow-lg shadow-pink-500/30 transform hover:-translate-y-0.5">
-                                    Buat Undangan
-                                </a>
-                            </div>
-
-                            {/* Mobile menu button */}
-                            <div className="md:hidden flex items-center">
-                                <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-gray-600 hover:text-pink-600 focus:outline-none p-2">
-                                    {!mobileMenuOpen ? (
-                                        <i className="fa-solid fa-bars text-2xl"></i>
-                                    ) : (
-                                        <i className="fa-solid fa-xmark text-2xl"></i>
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Mobile Menu Panel */}
-                    {mobileMenuOpen && (
-                        <div className="md:hidden bg-white border-b border-gray-100 absolute w-full shadow-lg z-50 animate-fadeIn">
-                            <div className="px-4 pt-2 pb-6 space-y-2">
-                                <a href="#home" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-50 rounded-md">Beranda</a>
-                                <a href="#fitur" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-50 rounded-md">Fitur</a>
-                                <a href="#tema" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-50 rounded-md">Tema</a>
-                                <a href="#harga" onClick={() => setMobileMenuOpen(false)} className="block px-3 py-3 text-base font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-50 rounded-md">Harga</a>
-                                <div className="pt-4 border-t border-gray-100 mt-4 flex flex-col gap-3">
-                                    <button onClick={() => router.push('/login')} className="w-full text-center py-2 text-gray-600 font-medium">Masuk</button>
-                                    <a href="#tema" onClick={() => setMobileMenuOpen(false)} className="w-full text-center py-3 bg-pink-600 text-white rounded-lg font-bold shadow-md hover:bg-pink-800">Buat Undangan Sekarang</a>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </nav>
+                <Navbar />
 
                 {/* Hero Section */}
                 <section id="home" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center">
@@ -407,31 +313,7 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                 </section>
 
                 {/* Footer */}
-                <footer className="bg-slate-900 text-white pt-20 pb-10 border-t border-slate-800">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid md:grid-cols-4 gap-12 mb-16">
-                            <div className="md:col-span-1">
-                                <a href="#" className="flex items-center gap-2 mb-6 group">
-                                    <i className="fa-solid fa-envelope-open-text text-2xl text-primary group-hover:scale-110 transition"></i>
-                                    <span className="font-serif text-2xl font-bold">Undangan<span className="text-primary">Kita</span></span>
-                                </a>
-                                <p className="text-slate-400 text-sm leading-relaxed mb-6">Platform pembuatan undangan digital berbasis website yang praktis, elegan, dan ramah lingkungan.</p>
-                            </div>
-
-                            <div>
-                                <h4 className="font-bold text-lg mb-6 text-white">Menu</h4>
-                                <ul className="space-y-3 text-sm text-slate-400">
-                                    <li><a href="#home" className="hover:text-primary transition flex items-center gap-2">Beranda</a></li>
-                                    <li><a href="#tema" className="hover:text-primary transition flex items-center gap-2">Katalog Tema</a></li>
-                                    <li><a href="#harga" className="hover:text-primary transition flex items-center gap-2">Harga</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className="border-t border-slate-800 pt-8 text-slate-500 text-sm text-center">
-                            &copy; 2024 UndanganKita. All rights reserved.
-                        </div>
-                    </div>
-                </footer>
+                <Footer />
 
                 {/* Preview Modal */}
                 {previewModal.open && (
@@ -477,10 +359,19 @@ export const getServerSideProps: GetServerSideProps = async () => {
     // Fetch FAQs
     const { data: faqs } = await supabase.from('faqs').select('*').order('display_order', { ascending: true });
 
+    // Fallback themes if DB is empty
+    const fallbackThemes: Theme[] = [
+        { id: '1', name: 'Floral Rustic Elegance', thumbnail_url: 'https://images.unsplash.com/photo-1607190074257-dd4b7af0309f', tier: 'premium', preview_url: '', slug: 'floral-rustic' },
+        { id: '2', name: 'Clean White Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8', tier: 'basic', preview_url: '', slug: 'clean-white' },
+        { id: '3', name: 'Golden Luxury Night', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552', tier: 'exclusive', preview_url: '', slug: 'golden-luxury' },
+    ];
+
+    const displayThemes = (themes && themes.length > 0) ? themes : fallbackThemes;
+
     return {
         props: {
             initialContent,
-            reversedThemes: themes ? themes.reverse() : [], // Just to mix it up or keep specific order
+            reversedThemes: displayThemes.reverse(), // Just to mix it up or keep specific order
             faqs: faqs || []
         },
     };

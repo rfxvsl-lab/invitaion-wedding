@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Check, X } from 'lucide-react';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const PricingPage = () => {
     const tiers = [
@@ -85,19 +87,7 @@ const PricingPage = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-            {/* Header */}
-            <header className="bg-white shadow-sm sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        WeddingSaaS
-                    </Link>
-                    <nav className="flex gap-6">
-                        <Link href="/" className="hover:text-purple-600 transition">Home</Link>
-                        <Link href="/themes" className="hover:text-purple-600 transition">Tema</Link>
-                        <Link href="/pricing" className="text-purple-600 font-semibold">Harga</Link>
-                    </nav>
-                </div>
-            </header>
+            <Navbar />
 
             {/* Hero */}
             <section className="max-w-7xl mx-auto px-4 py-16 text-center">
@@ -155,6 +145,7 @@ const PricingPage = () => {
                     ))}
                 </div>
             </section>
+            <Footer />
         </div>
     );
 };
