@@ -3,29 +3,30 @@ import { useRouter } from 'next/router';
 import { Home, Users, Palette, ShoppingCart, FileQuestion, Settings, Layout, LogOut } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { getPendingOrders } from '../lib/database';
+import { useAuth } from './AuthProvider'; // Import Context
 
 export default function AdminSidebar() {
     const router = useRouter();
+    const { user, isAdmin, signOut } = useAuth(); // Use Global Auth
     const [pendingCount, setPendingCount] = useState(0);
-    const [profile, setProfile] = useState<any>(null); // State for user profile
+    const [profile, setProfile] = useState<any>(null);
 
     useEffect(() => {
         const fetchStats = async () => {
             const orders = await getPendingOrders();
             setPendingCount(orders.length);
 
-            // Fetch User Profile (Tokens & Tier)
-            const { data: { user } } = await supabase.auth.getUser();
             if (user) {
                 const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
                 setProfile(data);
             }
         };
         fetchStats();
-    }, []);
+    }, [user]);
 
+    // Cleanup manual signout since we have it from hook
     const handleSignOut = async () => {
-        await supabase.auth.signOut();
+        await signOut();
         router.push('/');
     };
 
@@ -37,8 +38,9 @@ export default function AdminSidebar() {
                         <span className="font-bold text-lg">U</span>
                     </div>
                     <h1 className="text-xl font-bold tracking-tight">
-                        {profile?.email === 'mhmmadridho64@gmail.com' ? 'Admin Panel' : 'Member Area'}
-                    </h1>
+                        <h1 className="text-xl font-bold tracking-tight">
+                            {isAdmin ? 'Admin Panel' : 'Member Area'}
+                        </h1>
                 </div>
 
                 {/* User Profile Card */}
@@ -69,7 +71,7 @@ export default function AdminSidebar() {
                 <div className="my-2 border-b border-slate-800/50"></div>
 
                 {/* Admin Only Menus */}
-                {profile?.email === 'mhmmadridho64@gmail.com' ? (
+                {isAdmin ? (
                     <>
                         <NavItem href="/admin" icon={<Home size={20} />} label="Dashboard" />
                         <NavItem href="/admin/orders" icon={<ShoppingCart size={20} />} label="Orders" badge={pendingCount > 0 ? pendingCount : undefined} />

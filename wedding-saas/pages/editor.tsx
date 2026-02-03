@@ -61,7 +61,8 @@ export default function Editor() {
             setData(mergedData);
             setLoading(false);
         } else {
-            alert("Gagal membuat data awal. Silakan refresh.");
+            console.error('Error creating invitation:', error);
+            alert("Gagal membuat data awal: " + (error?.message || "Unknown Error"));
         }
     };
 
