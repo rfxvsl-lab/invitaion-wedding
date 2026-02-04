@@ -153,8 +153,8 @@ export default function Editor() {
         if (!invitation || !data) return;
 
         // 1. Check for Default Slug
-        if (data.metadata.slug.startsWith('undangan-') && data.metadata.slug.length > 15) {
-            // Assume random slug is "undangan-" + 7-8 random chars, so length usually > 15
+        // 1. Check for Default Slug
+        if (isDefaultSlug(data.metadata.slug)) {
             setShowSlugWarning(true);
             return;
         }
@@ -190,6 +190,24 @@ export default function Editor() {
 
     // Find Active Template Component
     const ActiveTemplate = TEMPLATES.find(t => t.id === data.metadata.theme_id)?.component || (() => <div className="p-10 text-center">Template Not Found</div>);
+
+    const isDefaultSlug = (slug: string) => {
+        return slug.startsWith('undangan-') && slug.length > 15;
+    };
+
+    useEffect(() => {
+        if (data && isDefaultSlug(data.metadata.slug)) {
+            setShowSlugWarning(true);
+        }
+    }, [data?.metadata.slug]);
+
+    const handleLivePreview = () => {
+        if (data && isDefaultSlug(data.metadata.slug)) {
+            setShowSlugWarning(true);
+        } else if (invitation?.slug) {
+            window.open(`/${invitation.slug}`, '_blank');
+        }
+    };
 
     return (
         <div className="flex flex-col lg:flex-row h-screen bg-white overflow-hidden font-sans text-slate-900">
@@ -237,13 +255,12 @@ export default function Editor() {
                             <Monitor size={18} />
                         </button>
                     </div>
-                    <a
-                        href={`/${invitation?.slug}`}
-                        target="_blank"
+                    <button
+                        onClick={handleLivePreview}
                         className="flex items-center gap-2 text-xs font-bold text-pink-600 bg-pink-50 px-3 py-1.5 rounded-lg border border-pink-100 hover:bg-pink-100 transition"
                     >
                         <Eye size={14} /> Live Preview
-                    </a>
+                    </button>
                 </div>
 
                 {/* Canvas */}
