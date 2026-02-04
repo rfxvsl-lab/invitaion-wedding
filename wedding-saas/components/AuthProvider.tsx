@@ -63,7 +63,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
                 // If profile incomplete, Force Redirect
                 if (!profileData || !profileData.full_name || !profileData.phone_number) {
-                    // Redirect logic handled by router in pages usually, or client side logic
+                    if (window.location.pathname !== '/onboarding') {
+                        window.location.href = '/onboarding';
+                    }
                 }
             } else {
                 setProfile(null);
