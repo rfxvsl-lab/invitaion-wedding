@@ -50,25 +50,26 @@ export default function Navbar() {
                         </Link>
                     ))}
 
+                    {user && (user.email === 'mhmmadridho64@gmail.com' || user.email === 'undangankita.co.id@gmail.com') && (
+                        <Link
+                            href="/admin"
+                            className="text-sm font-bold text-purple-600 hover:text-purple-800 transition-colors"
+                        >
+                            Dashboard
+                        </Link>
+                    )}
+
                     {user ? (
-                        <>
-                            <Link
-                                href="/admin"
-                                className="text-sm font-bold text-purple-600 hover:text-purple-800 transition-colors"
-                            >
-                                Dashboard
-                            </Link>
-                            <button onClick={() => signOut()} className="text-sm font-bold text-gray-500 hover:text-rose-600 transition-colors">
-                                Keluar
-                            </button>
-                        </>
+                        <button onClick={() => signOut()} className="text-sm font-bold text-gray-500 hover:text-rose-600 transition-colors">
+                            Keluar
+                        </button>
                     ) : (
                         <Link href="/login" className="text-sm font-bold text-gray-600 hover:text-rose-600 transition-colors">
                             Masuk
                         </Link>
                     )}
 
-                    <Link href="/pricing" className="bg-rose-600 text-white px-6 py-2 rounded-full font-bold hover:bg-rose-700 transition-transform hover:scale-105 shadow-lg shadow-rose-200">
+                    <Link href="/editor" className="bg-rose-600 text-white px-6 py-2 rounded-full font-bold hover:bg-rose-700 transition-transform hover:scale-105 shadow-lg shadow-rose-200">
                         Buat Undangan
                     </Link>
                 </div>
@@ -93,22 +94,23 @@ export default function Navbar() {
                         </Link>
                     ))}
 
+                    {user && (user.email === 'mhmmadridho64@gmail.com' || user.email === 'undangankita.co.id@gmail.com') && (
+                        <Link href="/admin" onClick={() => setMobileMenuOpen(false)} className="text-left font-semibold py-2 border-b border-gray-100 text-purple-600">
+                            Dashboard
+                        </Link>
+                    )}
+
                     {user ? (
-                        <>
-                            <Link href="/admin" onClick={() => setMobileMenuOpen(false)} className="text-left font-semibold py-2 border-b border-gray-100 text-purple-600">
-                                Dashboard
-                            </Link>
-                            <button onClick={() => { signOut(); setMobileMenuOpen(false); }} className="text-left font-semibold py-2 border-b border-gray-100 text-gray-500">
-                                Keluar
-                            </button>
-                        </>
+                        <button onClick={() => { signOut(); setMobileMenuOpen(false); }} className="text-left font-semibold py-2 border-b border-gray-100 text-gray-500">
+                            Keluar
+                        </button>
                     ) : (
                         <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-left font-semibold py-2 border-b border-gray-100 text-gray-600">
                             Masuk
                         </Link>
                     )}
 
-                    <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className="bg-rose-600 text-white w-full py-3 rounded-lg font-bold text-center hover:bg-rose-700">
+                    <Link href="/editor" onClick={() => setMobileMenuOpen(false)} className="bg-rose-600 text-white w-full py-3 rounded-lg font-bold text-center hover:bg-rose-700">
                         Buat Undangan
                     </Link>
                 </div>
