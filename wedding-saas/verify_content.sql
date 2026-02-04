@@ -50,7 +50,7 @@ ON CONFLICT (key) DO UPDATE SET
 
 -- 2. Verify Themes Exist (at least one)
 INSERT INTO public.themes (name, slug, thumbnail_url, tier, preview_url)
-SELECT 'Modern Architecture', 'modern-arch', 'https://images.unsplash.com/photo-1605218427368-35b86d9a9249', 'free', '#'
+SELECT 'Modern Architecture', 'modern-arch', 'https://images.unsplash.com/photo-1605218427368-35b86d9a9249', 'free', '/preview/modern-arch'
 WHERE NOT EXISTS (SELECT 1 FROM public.themes);
 
 -- 3. Verify FAQs Exist
