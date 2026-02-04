@@ -19,6 +19,16 @@ export default function Editor() {
     const [showSlugWarning, setShowSlugWarning] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+    const isDefaultSlug = (slug: string) => {
+        return slug.startsWith('undangan-') && slug.length > 15;
+    };
+
+    useEffect(() => {
+        if (data && isDefaultSlug(data.metadata.slug)) {
+            setShowSlugWarning(true);
+        }
+    }, [data?.metadata.slug]);
+
     useEffect(() => {
         if (authLoading) return;
         if (!user) {
@@ -190,16 +200,6 @@ export default function Editor() {
 
     // Find Active Template Component
     const ActiveTemplate = TEMPLATES.find(t => t.id === data.metadata.theme_id)?.component || (() => <div className="p-10 text-center">Template Not Found</div>);
-
-    const isDefaultSlug = (slug: string) => {
-        return slug.startsWith('undangan-') && slug.length > 15;
-    };
-
-    useEffect(() => {
-        if (data && isDefaultSlug(data.metadata.slug)) {
-            setShowSlugWarning(true);
-        }
-    }, [data?.metadata.slug]);
 
     const handleLivePreview = () => {
         if (data && isDefaultSlug(data.metadata.slug)) {
