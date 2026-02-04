@@ -162,7 +162,7 @@ export default function Editor() {
         setSaving(true);
         try {
             const { error } = await supabase.from('invitations').update({
-                content: data.content,
+                content: { ...data.content, engagement: data.engagement },
                 metadata: data.metadata,
                 // Update slug if changed in settings
                 slug: data.metadata.slug
@@ -300,7 +300,7 @@ export default function Editor() {
 
             {/* SUCCESS MODAL */}
             {showSuccessModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center animate-bounce-in">
                         <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <Save size={32} />

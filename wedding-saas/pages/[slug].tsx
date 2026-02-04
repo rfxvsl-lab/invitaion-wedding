@@ -111,7 +111,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const { data: invitation, error } = await supabase
         .from('invitations')
-        .select('data')
+        .select('content, metadata')
         .eq('slug', slug)
         .single();
 
@@ -119,14 +119,26 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         return {
             props: {
                 error: 'Undangan tidak ditemukan',
-                guestName: "Tamu Undangan"
+                guestName: "Tamu Undangan",
+                data: null
             }
         };
     }
 
+    const invitationData: InvitationData = {
+        content: invitation.content,
+        metadata: invitation.metadata,
+        engagement: invitation.content.engagement || {
+            rsvp: true,
+            rsvp_settings: { whatsapp_number: '', message_template: '' },
+            wishes: [],
+            gifts: []
+        }
+    };
+
     return {
         props: {
-            data: invitation.data,
+            data: invitationData,
             guestName: decodeURIComponent(guestName)
         }
     };
