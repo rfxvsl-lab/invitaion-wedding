@@ -20,12 +20,12 @@ export default function ThemesPage() {
             // Fallback content if empty
             if (!data || data.length === 0) {
                 data = [
-                    { id: '1', name: 'Pink Floral', thumbnail_url: 'https://images.unsplash.com/photo-1507915977619-6ccfe8003ae6?w=600&q=80', tier: 'premium', preview_url: '', slug: 'floral-rustic', created_at: new Date().toISOString() },
-                    { id: '2', name: 'Modern Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80', tier: 'basic', preview_url: '', slug: 'clean-white', created_at: new Date().toISOString() },
-                    { id: '3', name: 'Luxury Gold', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'exclusive', preview_url: '', slug: 'golden-luxury', created_at: new Date().toISOString() },
-                    { id: '4', name: 'Javanese Heritage', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'premium', preview_url: '', slug: 'javanese-heritage', created_at: new Date().toISOString() },
-                    { id: '5', name: 'Rustic Wood', thumbnail_url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80', tier: 'basic', preview_url: '', slug: 'rustic-wood', created_at: new Date().toISOString() },
-                    { id: '6', name: 'Islamic Geometric', thumbnail_url: 'https://images.unsplash.com/photo-1548685913-fe6678babe8d?w=600&q=80', tier: 'exclusive', preview_url: '', slug: 'islamic-geo', created_at: new Date().toISOString() }
+                    { id: '1', name: 'Pink Floral', thumbnail_url: 'https://images.unsplash.com/photo-1507915977619-6ccfe8003ae6?w=600&q=80', tier: 'premium', preview_url: '/preview/modern-arch', slug: 'floral-rustic', created_at: new Date().toISOString() },
+                    { id: '2', name: 'Modern Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80', tier: 'basic', preview_url: '/preview/modern-arch', slug: 'clean-white', created_at: new Date().toISOString() },
+                    { id: '3', name: 'Luxury Gold', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'exclusive', preview_url: '/preview/modern-arch', slug: 'golden-luxury', created_at: new Date().toISOString() },
+                    { id: '4', name: 'Javanese Heritage', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'premium', preview_url: '/preview/modern-arch', slug: 'javanese-heritage', created_at: new Date().toISOString() },
+                    { id: '5', name: 'Rustic Wood', thumbnail_url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80', tier: 'basic', preview_url: '/preview/modern-arch', slug: 'rustic-wood', created_at: new Date().toISOString() },
+                    { id: '6', name: 'Islamic Geometric', thumbnail_url: 'https://images.unsplash.com/photo-1548685913-fe6678babe8d?w=600&q=80', tier: 'exclusive', preview_url: '/preview/modern-arch', slug: 'islamic-geo', created_at: new Date().toISOString() }
                 ];
             }
             setThemes(data);
