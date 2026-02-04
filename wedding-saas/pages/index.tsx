@@ -28,7 +28,7 @@ interface HomeProps {
 
 export default function Home({ initialContent, reversedThemes, faqs, testimonials }: HomeProps & { reversedThemes: Theme[] }) {
     const [activeFaq, setActiveFaq] = useState<number | null>(null);
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
     const router = useRouter();
 
     const displayThemes = reversedThemes && reversedThemes.length > 0 ? reversedThemes : [];
@@ -39,10 +39,22 @@ export default function Home({ initialContent, reversedThemes, faqs, testimonial
     ];
 
     const [showWelcome, setShowWelcome] = useState(false);
+    const [greeting, setGreeting] = useState('');
 
     useEffect(() => {
         if (router.query.welcome) setShowWelcome(true);
     }, [router.query]);
+
+    useEffect(() => {
+        if (user && profile?.full_name) {
+            const createdAt = new Date(user.created_at || '').getTime();
+            const lastSignIn = new Date(user.last_sign_in_at || '').getTime();
+            // If last sign in is significantly later (e.g., > 10 mins) than creation, assume returning user
+            const isReturning = (lastSignIn - createdAt) > 600000;
+
+            setGreeting(isReturning ? `Selamat Datang Kembali, ${profile.full_name}` : `Hi, ${profile.full_name}`);
+        }
+    }, [user, profile]);
 
     const handleCreateInvitation = async () => {
         if (!user) {
@@ -91,9 +103,16 @@ export default function Home({ initialContent, reversedThemes, faqs, testimonial
 
                 <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
                     <div className="text-center lg:text-left animate-fade-up">
-                        <div className="inline-flex items-center gap-2 bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
-                            <Star size={14} fill="currentColor" /> {initialContent['hero_badge'] || '#1 Platform Undangan Digital'}
-                        </div>
+                        {greeting && (
+                            <div className="inline-block mb-6 px-6 py-2 bg-gradient-to-r from-rose-500 to-pink-600 text-white rounded-full font-bold shadow-lg shadow-rose-200 animate-bounce-in">
+                                {greeting} 👋
+                            </div>
+                        )}
+                        {!greeting && (
+                            <div className="inline-flex items-center gap-2 bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">
+                                <Star size={14} fill="currentColor" /> {initialContent['hero_badge'] || '#1 Platform Undangan Digital'}
+                            </div>
+                        )}
                         <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-[1.1] mb-6">
                             {initialContent['hero_title'] || 'Bagikan Momen Bahagiamu dengan Elegan.'}
                         </h1>

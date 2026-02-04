@@ -288,9 +288,10 @@ export default function Editor() {
                         <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <span className="text-3xl">⚠️</span>
                         </div>
-                        <h3 className="text-xl font-bold text-slate-900 mb-2">Ganti Link Undangan Dulu!</h3>
-                        <p className="text-slate-600 mb-6">
-                            Link undangan Anda masih default (acak). Silakan ganti menjadi nama yang cantik (misal: <strong>romeo-juliet</strong>) sebelum menyimpan.
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Peringatan Link Undangan</h3>
+                        <p className="text-slate-600 mb-6 font-medium">
+                            KAMU BELUM MENGGANTI SLUG PADA SETTING.<br />
+                            GANTI SEKARANG DENGAN NAMA ANDA DAN PASANGAN.
                         </p>
                         <div className="flex gap-3 justify-center">
                             <button
@@ -302,13 +303,11 @@ export default function Editor() {
                             <button
                                 onClick={() => {
                                     setShowSlugWarning(false);
-                                    // Logic to focus on settings input would be nice, but simple close is OK for now.
-                                    // User needs to go to settings manually.
                                     alert("Silakan buka tab 'SETTINGS' di sidebar kiri lalu ganti 'Link Undangan'.");
                                 }}
                                 className="px-6 py-2 bg-pink-600 text-white font-bold rounded-full hover:bg-pink-700 transition"
                             >
-                                Ganti Link Sekarang
+                                Ganti Sekarang
                             </button>
                         </div>
                     </div>

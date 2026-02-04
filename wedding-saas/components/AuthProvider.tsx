@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 interface AuthContextType {
     user: User | null;
     session: Session | null;
+    profile: any | null;
     loading: boolean;
     isAdmin: boolean;
     signOut: () => Promise<void>;
@@ -15,6 +16,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
     user: null,
     session: null,
+    profile: null,
     loading: true,
     isAdmin: false,
     signOut: async () => { },
@@ -23,6 +25,7 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
+    const [profile, setProfile] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
 
@@ -35,6 +38,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setSession(session);
             setUser(session?.user ?? null);
             setIsAdmin(session?.user?.email?.toLowerCase() === "mhmmadridho64@gmail.com");
+
+            if (session?.user) {
+                const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+                setProfile(data);
+            }
+
             setLoading(false);
         };
 
@@ -45,24 +54,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(session?.user ?? null);
             setIsAdmin(session?.user?.email?.toLowerCase() === "mhmmadridho64@gmail.com");
 
-            // Onboarding Check logic
-            // Onboarding Check logic
-            // Only check if user is logged in
             if (session?.user) {
                 // Ignore check if already on onboarding page to prevent loop
                 if (window.location.pathname === '/onboarding') return;
 
-                const { data: profile } = await supabase.from('profiles').select('full_name, phone_number').eq('id', session.user.id).maybeSingle();
+                const { data: profileData } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
+                setProfile(profileData);
 
                 // If profile incomplete, Force Redirect
-                if (!profile || !profile.full_name || !profile.phone_number) {
-                    // Use window.location ONLY if not already there to prevent Next.js router conflicts?
-                    // Actually, inside a component, router.push is safer for SPA.
-                    // But we need to define router first inside the component.
-                    // Let's stick to window.location but add a check to ensure we aren't spamming it?
-                    // No, "refresh mulu" means the page is reloading. router.push avoids reload.
-                    // However, we need to import useRouter.
+                if (!profileData || !profileData.full_name || !profileData.phone_number) {
+                    // Redirect logic handled by router in pages usually, or client side logic
                 }
+            } else {
+                setProfile(null);
             }
 
             setLoading(false);
@@ -76,7 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, session, loading, isAdmin, signOut }}>
+        <AuthContext.Provider value={{ user, session, profile, loading, isAdmin, signOut }}>
             {children}
         </AuthContext.Provider>
     );
