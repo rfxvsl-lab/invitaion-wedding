@@ -215,23 +215,70 @@ export default function Home({ initialContent, reversedThemes, faqs, testimonial
                     <div className="text-center mb-16">
                         <span className="text-rose-600 font-bold uppercase tracking-widest text-sm">Cerita Mereka</span>
                         <h2 className="text-4xl font-bold mt-2">Apa Kata Pengantin?</h2>
+                        <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
+                            Pengalaman nyata dari pasangan yang telah menggunakan UndanganKita.
+                        </p>
+                        {/* Write Review Button */}
+                        {user && (
+                            <button
+                                onClick={() => router.push('/testimoni')}
+                                className="mt-6 px-6 py-2 bg-rose-50 border border-rose-200 text-rose-700 rounded-full font-bold hover:bg-rose-100 transition inline-flex items-center gap-2"
+                            >
+                                <Quote size={18} /> Tulis Ulasan
+                            </button>
+                        )}
                     </div>
+
                     <div className="grid md:grid-cols-3 gap-8">
-                        {displayTestimonials.map(item => (
-                            <div key={item.id} className="bg-slate-50 p-8 rounded-2xl relative border border-slate-100">
-                                <Quote className="absolute top-6 right-6 text-rose-200" size={40} />
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-12 h-12 rounded-full bg-rose-200 flex items-center justify-center text-rose-600 font-bold overflow-hidden">
-                                        {item.avatar_url ? <img src={item.avatar_url} alt={item.name} className="w-full h-full object-cover" /> : ('U' + item.id.slice(0, 1))}
+                        {displayTestimonials.map((item, idx) => (
+                            <div key={item.id || idx} className="bg-slate-50 p-8 rounded-2xl relative border border-slate-100 flex flex-col h-full hover:shadow-lg transition-shadow">
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="w-12 h-12 rounded-full bg-rose-200 flex items-center justify-center text-rose-600 font-bold overflow-hidden shrink-0">
+                                        {item.avatar_url ? <img src={item.avatar_url} alt={item.name} className="w-full h-full object-cover" /> : (item.name ? item.name.charAt(0) : 'U')}
                                     </div>
                                     <div>
-                                        <h4 className="font-bold">{item.name}</h4>
-                                        <div className="flex text-yellow-400 text-xs gap-0.5">
-                                            {[...Array(item.rating || 5)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
-                                        </div>
+                                        <h4 className="font-bold text-slate-900">{item.name}</h4>
+                                        <p className="text-xs text-rose-500 font-bold uppercase tracking-wider">{item.role || 'Pengantin'}</p>
                                     </div>
                                 </div>
-                                <p className="text-gray-600 leading-relaxed text-sm">"{item.content}"</p>
+
+                                {/* Rating */}
+                                <div className="flex text-yellow-400 gap-0.5 mb-4">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star key={i} size={16} fill={i < (item.rating || 5) ? "currentColor" : "none"} className={i < (item.rating || 5) ? "" : "text-slate-300"} />
+                                    ))}
+                                </div>
+
+                                {/* Content */}
+                                <p className="text-gray-600 leading-relaxed text-sm italic mb-6 flex-grow">"{item.content}"</p>
+
+                                {/* Screenshot & Template Badge */}
+                                <div className="mt-auto space-y-3 pt-4 border-t border-slate-200/50">
+                                    {/* Template Badge */}
+                                    {(item as any).template_name && (
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-600">
+                                            <Layout size={12} className="text-rose-500" />
+                                            Tema: {(item as any).template_name}
+                                        </div>
+                                    )}
+
+                                    {/* Screenshot Thumbnail (Clickable) */}
+                                    {(item as any).image_base64 && (
+                                        <div
+                                            className="relative h-32 w-full rounded-xl overflow-hidden cursor-pointer group border border-slate-200"
+                                            onClick={() => window.open((item as any).image_base64, '_blank')}
+                                        >
+                                            <img
+                                                src={(item as any).image_base64}
+                                                alt="Bukti Undangan"
+                                                className="w-full h-full object-cover transition duration-500 group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition flex items-center justify-center">
+                                                <Eye className="text-white opacity-0 group-hover:opacity-100 transition transform scale-75 group-hover:scale-100" />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </div>
