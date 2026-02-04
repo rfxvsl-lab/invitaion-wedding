@@ -5,6 +5,7 @@ import { supabase } from '../../lib/supabase';
 import { getAllThemes, deleteTheme } from '../../lib/database';
 import { Theme } from '../../types/database';
 import AdminLayout from '@/components/AdminLayout';
+import { TEMPLATES } from '@/lib/templates';
 
 const AdminThemesPage = () => {
     const router = useRouter();
@@ -116,6 +117,32 @@ const AdminThemesPage = () => {
                                 className="w-full border border-slate-200 rounded-xl px-4 py-3 text-slate-700 focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition"
                             />
                         </div>
+
+                        <div className="md:col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-2">
+                            <label className="block text-sm font-bold text-slate-700 mb-2">⚡ Quick Select (Dari Kode)</label>
+                            <select
+                                onChange={(e) => {
+                                    const selected = TEMPLATES.find(t => t.id === e.target.value);
+                                    if (selected) {
+                                        setNewTheme({
+                                            ...newTheme,
+                                            name: selected.name,
+                                            slug: selected.id,
+                                            tier: selected.tier,
+                                            preview_url: '#'
+                                        });
+                                    }
+                                }}
+                                className="w-full border border-slate-300 rounded-lg px-4 py-2 text-slate-700 bg-white"
+                            >
+                                <option value="">-- Pilih Template Tersedia --</option>
+                                {TEMPLATES.map(t => (
+                                    <option key={t.id} value={t.id}>{t.name} ({t.tier}) - {t.id}</option>
+                                ))}
+                            </select>
+                            <p className="text-xs text-slate-500 mt-2">Memilih ini akan otomatis mengisi Nama, Slug, dan Tier.</p>
+                        </div>
+
                         <div>
                             <label className="block text-sm font-bold text-slate-700 mb-2">Slug (ID Unik)</label>
                             <input
