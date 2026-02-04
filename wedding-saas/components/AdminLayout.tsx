@@ -16,7 +16,7 @@ export default function AdminLayout({ children, title = 'Admin Panel - UndanganK
 
             <AdminSidebar />
 
-            <main className="flex-1 ml-64 p-8 animate-in fade-in duration-500">
+            <main className="flex-1 ml-0 lg:ml-64 p-4 lg:p-8 animate-in fade-in duration-500 pt-20 lg:pt-8">
                 <div className="max-w-7xl mx-auto">
                     {children}
                 </div>

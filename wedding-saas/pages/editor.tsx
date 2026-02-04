@@ -192,13 +192,13 @@ export default function Editor() {
     const ActiveTemplate = TEMPLATES.find(t => t.id === data.metadata.theme_id)?.component || (() => <div className="p-10 text-center">Template Not Found</div>);
 
     return (
-        <div className="flex h-screen bg-white overflow-hidden font-sans text-slate-900">
+        <div className="flex flex-col lg:flex-row h-screen bg-white overflow-hidden font-sans text-slate-900">
             <Head>
                 <title>Editor Undangan - UndanganKita</title>
             </Head>
 
             {/* LEFT SIDEBAR (Controls) */}
-            <div className="w-[400px] flex-shrink-0 flex flex-col border-r border-slate-200 bg-white z-20 shadow-xl">
+            <div className="w-full lg:w-[400px] h-[50vh] lg:h-full flex-shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r border-slate-200 bg-white z-20 shadow-xl">
                 {/* Header Navbar in Sidebar */}
                 <div className="h-16 flex items-center px-6 border-b border-slate-100 justify-between bg-white shrink-0">
                     <button onClick={() => router.push('/')} className="text-slate-500 hover:text-slate-800 transition flex items-center gap-2 text-sm font-bold">
@@ -247,13 +247,13 @@ export default function Editor() {
                 </div>
 
                 {/* Canvas */}
-                <div className="flex-1 overflow-y-auto p-8 flex items-start justify-center cursor-default custom-scrollbar">
+                <div className="flex-1 overflow-y-auto p-4 lg:p-8 flex items-start justify-center cursor-default custom-scrollbar bg-slate-200/50">
                     <div
                         className={`transition-all duration-500 bg-white shadow-2xl overflow-hidden origin-top
-                            ${previewMode === 'mobile' ? 'w-[375px] min-h-[800px] rounded-[3rem] border-[8px] border-slate-800' : 'w-full h-full rounded-xl border border-slate-200'}
+                            ${previewMode === 'mobile' ? 'w-[320px] sm:w-[375px] min-h-[600px] lg:min-h-[800px] rounded-[2rem] lg:rounded-[3rem] border-[8px] border-slate-800' : 'w-full h-full rounded-xl border border-slate-200'}
                         `}
                         style={{
-                            transform: previewMode === 'mobile' ? 'scale(0.95)' : 'scale(1)'
+                            transform: previewMode === 'mobile' ? 'scale(0.85) sm:scale(0.95) lg:scale(1)' : 'scale(1)'
                         }}
                     >
                         {/* Render Template with Live Data */}

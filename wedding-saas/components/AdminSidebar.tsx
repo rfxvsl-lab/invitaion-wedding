@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Home, Users, Palette, ShoppingCart, FileQuestion, Settings, Layout, LogOut } from 'lucide-react';
+import { Home, Users, Palette, ShoppingCart, FileQuestion, Settings, Layout, LogOut, Menu, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { getPendingOrders } from '../lib/database';
 import { useAuth } from './AuthProvider'; // Import Context
+import { BrandLogo } from './Logo';
 
 export default function AdminSidebar() {
     const router = useRouter();
     const { user, isAdmin, signOut } = useAuth(); // Use Global Auth
     const [pendingCount, setPendingCount] = useState(0);
     const [profile, setProfile] = useState<any>(null);
+    const [isOpen, setIsOpen] = useState(false); // Mobile Menu State
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -30,73 +32,105 @@ export default function AdminSidebar() {
         router.push('/');
     };
 
+    // Close sidebar when route changes on mobile
+    useEffect(() => {
+        setIsOpen(false);
+    }, [router.pathname]);
+
     return (
-        <aside className="w-64 bg-slate-900 text-white p-6 flex flex-col fixed h-full z-10 transition-all duration-300">
-            <div className="mb-8">
-                <div className="flex items-center gap-3 mb-6">
-                    <div className="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center shadow-lg shadow-pink-500/20">
-                        <span className="font-bold text-lg">U</span>
+        <>
+            {/* Mobile Hamburger Button */}
+            <button
+                onClick={() => setIsOpen(true)}
+                className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-900 text-white rounded-lg shadow-lg"
+            >
+                <Menu size={24} />
+            </button>
+
+            {/* Overlay for Mobile */}
+            {isOpen && (
+                <div
+                    onClick={() => setIsOpen(false)}
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+                />
+            )}
+
+            {/* Sidebar */}
+            <aside className={`w-64 bg-slate-900 text-white p-6 flex flex-col fixed h-full z-50 transition-all duration-300 transform 
+                ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 shadow-2xl lg:shadow-none`}>
+
+                {/* Close Button Mobile */}
+                <button
+                    onClick={() => setIsOpen(false)}
+                    className="lg:hidden absolute top-4 right-4 text-slate-400 hover:text-white"
+                >
+                    <X size={24} />
+                </button>
+
+                <div className="mb-0 lg:mb-8 mt-8 lg:mt-0">
+                    <div className="flex items-center gap-3 mb-6">
+                        <BrandLogo size={32} />
+                        <h1 className="text-xl font-bold tracking-tight">
+                            {isAdmin ? 'Admin Panel' : 'Member Area'}
+                        </h1>
                     </div>
-                    <h1 className="text-xl font-bold tracking-tight">
-                        {isAdmin ? 'Admin Panel' : 'Member Area'}
-                    </h1>
+
+                    {/* User Profile Card */}
+                    {profile && (
+                        <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 mb-2 animate-fade-in">
+                            <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
+                                    {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'U'}
+                                </div>
+                                <div className="overflow-hidden">
+                                    <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Tier Member</p>
+                                    <p className="text-sm font-bold text-white truncate capitalize">{profile.tier || 'Free'}</p>
+                                </div>
+                            </div>
+                            <div className="bg-slate-900 rounded-lg p-2 flex justify-between items-center px-3 border border-slate-700">
+                                <span className="text-xs text-slate-400 font-bold">TOKENS</span>
+                                <span className="text-sm font-bold text-yellow-500 flex items-center gap-1">
+                                    {profile.tokens ?? 0} <span className="text-yellow-500/50">⚡</span>
+                                </span>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
-                {/* User Profile Card */}
-                {profile && (
-                    <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 mb-2 animate-fade-in">
-                        <div className="flex items-center gap-3 mb-2">
-                            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
-                                {profile.full_name ? profile.full_name.charAt(0).toUpperCase() : 'U'}
+                <nav className="space-y-1 flex-1 overflow-y-auto custom-scrollbar">
+                    {/* Common Menu */}
+                    <NavItem href="/" icon={<Home size={20} />} label="Back to Home" />
+                    <div className="my-2 border-b border-slate-800/50"></div>
+
+                    {/* Admin Only Menus */}
+                    {isAdmin ? (
+                        <>
+                            <NavItem href="/admin" icon={<Home size={20} />} label="Dashboard" />
+                            <NavItem href="/admin/orders" icon={<ShoppingCart size={20} />} label="Orders" badge={pendingCount > 0 ? pendingCount : undefined} />
+                            <NavItem href="/admin/themes" icon={<Palette size={20} />} label="Themes" />
+                            <NavItem href="/admin/cms" icon={<Layout size={20} />} label="Site Content" />
+                            <NavItem href="/admin/faqs" icon={<FileQuestion size={20} />} label="FAQs" />
+                            <NavItem href="/admin/users" icon={<Users size={20} />} label="Users" />
+                            <NavItem href="/admin/settings" icon={<Settings size={20} />} label="Settings" />
+
+                            <div className="pt-4 pb-2">
+                                <p className="px-4 text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">User Zone</p>
                             </div>
-                            <div className="overflow-hidden">
-                                <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Tier Member</p>
-                                <p className="text-sm font-bold text-white truncate capitalize">{profile.tier || 'Free'}</p>
-                            </div>
-                        </div>
-                        <div className="bg-slate-900 rounded-lg p-2 flex justify-between items-center px-3 border border-slate-700">
-                            <span className="text-xs text-slate-400 font-bold">TOKENS</span>
-                            <span className="text-sm font-bold text-yellow-500 flex items-center gap-1">
-                                {profile.tokens ?? 0} <span className="text-yellow-500/50">⚡</span>
-                            </span>
-                        </div>
-                    </div>
-                )}
-            </div>
+                            <NavItem href="/editor" icon={<Layout size={20} />} label="Editor Undangan" />
+                        </>
+                    ) : (
+                        <>
+                            <NavItem href="/editor" icon={<Layout size={20} />} label="Editor Undangan" />
+                        </>
+                    )}
+                </nav>
 
-            <nav className="space-y-1 flex-1">
-                {/* Common Menu */}
-                <NavItem href="/" icon={<Home size={20} />} label="Back to Home" />
-                <div className="my-2 border-b border-slate-800/50"></div>
-
-                {/* Admin Only Menus */}
-                {isAdmin ? (
-                    <>
-                        <NavItem href="/admin" icon={<Home size={20} />} label="Dashboard" />
-                        <NavItem href="/admin/orders" icon={<ShoppingCart size={20} />} label="Orders" badge={pendingCount > 0 ? pendingCount : undefined} />
-                        <NavItem href="/admin/themes" icon={<Palette size={20} />} label="Themes" />
-                        <NavItem href="/admin/cms" icon={<Layout size={20} />} label="Site Content" />
-                        <NavItem href="/admin/faqs" icon={<FileQuestion size={20} />} label="FAQs" />
-                        <NavItem href="/admin/users" icon={<Users size={20} />} label="Users" />
-                        <NavItem href="/admin/settings" icon={<Settings size={20} />} label="Settings" />
-
-                        <div className="pt-4 pb-2">
-                            <p className="px-4 text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">User Zone</p>
-                        </div>
-                        <NavItem href="/editor" icon={<Layout size={20} />} label="Editor Undangan" />
-                    </>
-                ) : (
-                    <>
-                        <NavItem href="/editor" icon={<Layout size={20} />} label="Editor Undangan" />
-                    </>
-                )}
-            </nav>
-
-            <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition text-slate-400 hover:text-white mt-auto group">
-                <LogOut size={20} className="group-hover:text-red-400 transition" />
-                <span>Sign Out</span>
-            </button>
-        </aside>
+                <button onClick={handleSignOut} className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition text-slate-400 hover:text-white mt-auto group shrink-0">
+                    <LogOut size={20} className="group-hover:text-red-400 transition" />
+                    <span>Sign Out</span>
+                </button>
+            </aside>
+        </>
     );
 }
 

@@ -8,20 +8,35 @@ import { Theme, FAQ } from '@/types/database';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Star, Smartphone, Music, CreditCard, Layout, ArrowRight, Quote, Eye } from 'lucide-react';
-import { SCCLogo } from '@/components/Navbar'; // Assuming we can export it or redefine it locally if not exported
+
+
+interface Testimonial {
+    id: string;
+    name: string;
+    role: string;
+    content: string;
+    rating: number;
+    avatar_url: string;
+}
 
 interface HomeProps {
     initialContent: Record<string, string>;
     themes: Theme[];
     faqs: FAQ[];
+    testimonials: Testimonial[];
 }
 
-export default function Home({ initialContent, reversedThemes, faqs }: HomeProps & { reversedThemes: Theme[] }) {
-    const [activeFaq, setActiveFaq] = useState<number | null>(1);
+export default function Home({ initialContent, reversedThemes, faqs, testimonials }: HomeProps & { reversedThemes: Theme[] }) {
+    const [activeFaq, setActiveFaq] = useState<number | null>(null);
     const { user } = useAuth();
     const router = useRouter();
 
     const displayThemes = reversedThemes && reversedThemes.length > 0 ? reversedThemes : [];
+    const displayTestimonials = testimonials && testimonials.length > 0 ? testimonials : [
+        { id: '1', name: 'Pengguna 1', role: 'Pengantin', content: 'Sangat puas dengan layanannya! Desainnya elegan dan proses pembuatannya sangat cepat. Fitur RSVP sangat membantu kami mendata tamu.', rating: 5, avatar_url: '' },
+        { id: '2', name: 'Pengguna 2', role: 'Pengantin', content: 'Sangat puas dengan layanannya! Desainnya elegan dan proses pembuatannya sangat cepat. Fitur RSVP sangat membantu kami mendata tamu.', rating: 5, avatar_url: '' },
+        { id: '3', name: 'Pengguna 3', role: 'Pengantin', content: 'Sangat puas dengan layanannya! Desainnya elegan dan proses pembuatannya sangat cepat. Fitur RSVP sangat membantu kami mendata tamu.', rating: 5, avatar_url: '' },
+    ];
 
     const [showWelcome, setShowWelcome] = useState(false);
 
@@ -34,9 +49,6 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
             router.push('/login');
             return;
         }
-        // Redirect logic to Editor
-        // Logic: Check if user has invitation? If not create one? 
-        // Better: Go to /editor, let editor handle creation/loading.
         router.push('/editor');
     };
 
@@ -186,24 +198,54 @@ export default function Home({ initialContent, reversedThemes, faqs }: HomeProps
                         <h2 className="text-4xl font-bold mt-2">Apa Kata Pengantin?</h2>
                     </div>
                     <div className="grid md:grid-cols-3 gap-8">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className="bg-slate-50 p-8 rounded-2xl relative border border-slate-100">
+                        {displayTestimonials.map(item => (
+                            <div key={item.id} className="bg-slate-50 p-8 rounded-2xl relative border border-slate-100">
                                 <Quote className="absolute top-6 right-6 text-rose-200" size={40} />
                                 <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-12 h-12 rounded-full bg-rose-200 flex items-center justify-center text-rose-600 font-bold">U{i}</div>
+                                    <div className="w-12 h-12 rounded-full bg-rose-200 flex items-center justify-center text-rose-600 font-bold overflow-hidden">
+                                        {item.avatar_url ? <img src={item.avatar_url} alt={item.name} className="w-full h-full object-cover" /> : ('U' + item.id.slice(0, 1))}
+                                    </div>
                                     <div>
-                                        <h4 className="font-bold">Pengguna {i}</h4>
-                                        <div className="flex text-yellow-400 text-xs"><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /><Star size={12} fill="currentColor" /></div>
+                                        <h4 className="font-bold">{item.name}</h4>
+                                        <div className="flex text-yellow-400 text-xs gap-0.5">
+                                            {[...Array(item.rating || 5)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+                                        </div>
                                     </div>
                                 </div>
-                                <p className="text-gray-600 leading-relaxed text-sm">
-                                    "Sangat puas dengan layanannya! Desainnya elegan dan proses pembuatannya sangat cepat. Fitur RSVP sangat membantu kami mendata tamu."
-                                </p>
+                                <p className="text-gray-600 leading-relaxed text-sm">"{item.content}"</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
+
+            {/* FAQ SECTION */}
+            {faqs && faqs.length > 0 && (
+                <section className="py-20 bg-rose-50">
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <div className="text-center mb-16">
+                            <span className="text-rose-600 font-bold uppercase tracking-widest text-sm">Ada Pertanyaan?</span>
+                            <h2 className="text-4xl font-bold mt-2">Tanya Jawab (FAQ)</h2>
+                        </div>
+                        <div className="space-y-4">
+                            {faqs.map((faq, index) => (
+                                <div key={faq.id} className="bg-white rounded-xl shadow-sm border border-rose-100 overflow-hidden">
+                                    <button
+                                        onClick={() => setActiveFaq(activeFaq === index ? null : index)}
+                                        className="w-full px-6 py-4 flex items-center justify-between font-bold text-left text-gray-800 hover:bg-rose-50/50 transition"
+                                    >
+                                        {faq.question}
+                                        <span className={`transition-transform duration-300 ${activeFaq === index ? 'rotate-180' : ''}`}>▼</span>
+                                    </button>
+                                    <div className={`px-6 text-gray-600 text-sm leading-relaxed transition-all duration-300 ease-in-out overflow-hidden ${activeFaq === index ? 'max-h-96 py-4 border-t border-gray-100' : 'max-h-0'}`}>
+                                        {faq.answer}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             <Footer />
         </div>
@@ -224,6 +266,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     // Fetch FAQs
     const { data: faqs } = await supabase.from('faqs').select('*').order('display_order', { ascending: true });
 
+    // Fetch Testimonials
+    const { data: testimonials } = await supabase.from('testimonials').select('*').order('display_order', { ascending: true });
+
     // Fallback themes if DB is empty
     const fallbackThemes: Theme[] = [
         { id: '1', name: 'Pink Floral', thumbnail_url: 'https://images.unsplash.com/photo-1507915977619-6ccfe8003ae6?w=600&q=80', tier: 'premium', preview_url: '', slug: 'floral-rustic', created_at: new Date().toISOString() },
@@ -236,8 +281,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     return {
         props: {
             initialContent,
-            reversedThemes: displayThemes.reverse(), // Just to mix it up or keep specific order
-            faqs: faqs || []
+            reversedThemes: displayThemes.reverse(),
+            faqs: faqs || [],
+            testimonials: testimonials || []
         },
     };
 };

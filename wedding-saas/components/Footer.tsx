@@ -1,13 +1,14 @@
 import React from 'react';
 import { Instagram, Facebook, Twitter } from 'lucide-react';
 import Link from 'next/link';
+import { BrandLogo } from './Logo';
 
 export default function Footer() {
     return (
         <footer className="bg-gray-900 text-white pt-20 pb-10">
             <div className="container mx-auto px-6 text-center">
                 <div className="flex items-center justify-center gap-2 mb-6 group cursor-pointer">
-                    <div className="w-10 h-10 bg-rose-600 rounded-lg flex items-center justify-center font-bold text-white group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-rose-900/50">SCC</div>
+                    <BrandLogo size={40} className="group-hover:scale-110 transition-transform duration-300" />
                     <span className="font-script text-2xl group-hover:text-rose-400 transition-colors">Undangan Kita</span>
                 </div>
 
