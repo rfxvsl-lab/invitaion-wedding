@@ -3,31 +3,37 @@ import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Check } from 'lucide-react';
+import { GetServerSideProps } from 'next';
+import { supabase } from '@/lib/supabase';
 
-export default function PricingPage() {
+interface PricingProps {
+    content: Record<string, string>;
+}
+
+export default function PricingPage({ content }: PricingProps) {
     const router = useRouter();
 
     const packages = [
         {
-            title: "Basic",
-            price: "Rp 50.000",
-            feats: ['100 Tamu', '3 Pilihan Tema', 'Music Auto Play', 'Masa Aktif 3 Bulan'],
-            fullPrice: 'Rp 99.000',
+            title: content['pricing_1_name'] || "Basic",
+            price: content['pricing_1_price'] || "Rp 50.000",
+            feats: (content['pricing_1_desc'] || '100 Tamu, 3 Pilihan Tema, Music Auto Play, Masa Aktif 3 Bulan').split(', '),
+            fullPrice: content['pricing_1_full'] || 'Rp 99.000',
             tier: 'basic'
         },
         {
-            title: "Premium",
-            price: "Rp 100.000",
-            feats: ['Tamu Tak Terbatas', 'Semua Tema Premium', 'Digital Envelope', 'Masa Aktif Selamanya'],
+            title: content['pricing_2_name'] || "Premium",
+            price: content['pricing_2_price'] || "Rp 100.000",
+            feats: (content['pricing_2_desc'] || 'Tamu Tak Terbatas, Semua Tema Premium, Digital Envelope, Masa Aktif Selamanya').split(', '),
             pop: true,
-            fullPrice: 'Rp 149.000',
+            fullPrice: content['pricing_2_full'] || 'Rp 149.000',
             tier: 'premium'
         },
         {
-            title: "Exclusive",
-            price: "Rp 150.000",
-            feats: ['Custom Domain (.com)', 'Prioritas Support', 'Hapus Watermark', 'Video Invitation'],
-            fullPrice: 'Rp 299.000',
+            title: content['pricing_3_name'] || "Exclusive",
+            price: content['pricing_3_price'] || "Rp 150.000",
+            feats: (content['pricing_3_desc'] || 'Custom Domain (.com), Prioritas Support, Hapus Watermark, Video Invitation').split(', '),
+            fullPrice: content['pricing_3_full'] || 'Rp 299.000',
             tier: 'exclusive'
         }
     ];
@@ -43,8 +49,8 @@ export default function PricingPage() {
 
             <main className="flex-1 pt-32 pb-20 container mx-auto px-6">
                 <div className="text-center max-w-2xl mx-auto mb-16 animate-fade-up">
-                    <h1 className="text-4xl font-bold mb-4 text-gray-900">Pilihan Paket Hemat</h1>
-                    <p className="text-gray-500">Tanpa biaya bulanan. Bayar sekali, aktif selamanya.</p>
+                    <h1 className="text-4xl font-bold mb-4 text-gray-900">{content['pricing_title'] || 'Pilihan Paket Hemat'}</h1>
+                    <p className="text-gray-500">{content['pricing_desc'] || 'Tanpa biaya bulanan. Bayar sekali, aktif selamanya.'}</p>
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto animate-fade-up delay-100">
@@ -78,3 +84,18 @@ export default function PricingPage() {
         </div>
     );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    // Fetch Site Content
+    const { data: contentData } = await supabase.from('site_content').select('key, value');
+    const content: Record<string, string> = {};
+    if (contentData) {
+        contentData.forEach((item: any) => content[item.key] = item.value);
+    }
+
+    return {
+        props: {
+            content
+        },
+    };
+};
