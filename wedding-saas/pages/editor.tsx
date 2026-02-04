@@ -16,6 +16,8 @@ export default function Editor() {
     const [previewMode, setPreviewMode] = useState<'mobile' | 'desktop'>('mobile');
     const [data, setData] = useState<InvitationData | null>(null);
     const [saving, setSaving] = useState(false);
+    const [showSlugWarning, setShowSlugWarning] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(() => {
         if (authLoading) return;
@@ -149,6 +151,14 @@ export default function Editor() {
 
     const saveChanges = async () => {
         if (!invitation || !data) return;
+
+        // 1. Check for Default Slug
+        if (data.metadata.slug.startsWith('undangan-') && data.metadata.slug.length > 15) {
+            // Assume random slug is "undangan-" + 7-8 random chars, so length usually > 15
+            setShowSlugWarning(true);
+            return;
+        }
+
         setSaving(true);
         try {
             const { error } = await supabase.from('invitations').update({
@@ -159,9 +169,18 @@ export default function Editor() {
             }).eq('id', invitation.id);
 
             if (error) throw error;
-            alert("Perubahan berhasil disimpan! ✅");
+
+            // Show Success Modal instead of Alert
+            setShowSuccessModal(true);
+
         } catch (err: any) {
-            alert("Gagal menyimpan: " + err.message);
+            console.error("Save Error:", err);
+            // Handle Unique Constraint Violation (Duplicate Slug)
+            if (err.code === '23505' || err.message?.includes('invitations_slug_key')) {
+                alert("Gagal Menyimpan: Link/Slug undangan ini sudah dipakai orang lain. Silakan ganti dengan yang lain di menu Settings.");
+            } else {
+                alert("Gagal menyimpan: " + err.message);
+            }
         } finally {
             setSaving(false);
         }
@@ -244,6 +263,74 @@ export default function Editor() {
                     </div>
                 </div>
             </div>
+
+            {/* SLUG WARNING MODAL */}
+            {showSlugWarning && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center animate-bounce-in">
+                        <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <span className="text-3xl">⚠️</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Ganti Link Undangan Dulu!</h3>
+                        <p className="text-slate-600 mb-6">
+                            Link undangan Anda masih default (acak). Silakan ganti menjadi nama yang cantik (misal: <strong>romeo-juliet</strong>) sebelum menyimpan.
+                        </p>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => setShowSlugWarning(false)}
+                                className="px-6 py-2 bg-slate-100 text-slate-700 font-bold rounded-full hover:bg-slate-200 transition"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowSlugWarning(false);
+                                    // Logic to focus on settings input would be nice, but simple close is OK for now.
+                                    // User needs to go to settings manually.
+                                    alert("Silakan buka tab 'SETTINGS' di sidebar kiri lalu ganti 'Link Undangan'.");
+                                }}
+                                className="px-6 py-2 bg-pink-600 text-white font-bold rounded-full hover:bg-pink-700 transition"
+                            >
+                                Ganti Link Sekarang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* SUCCESS MODAL */}
+            {showSuccessModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 text-center animate-bounce-in">
+                        <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <Save size={32} />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">Undangan Berhasil Disimpan!</h3>
+                        <p className="text-slate-600 mb-2">
+                            Undangan Anda sudah siap disebar.
+                        </p>
+                        <div className="bg-slate-50 p-3 rounded-lg mb-6 border border-slate-200 font-mono text-sm text-slate-600 break-all select-all">
+                            {typeof window !== 'undefined' ? window.location.origin : ''}/{data?.metadata.slug}
+                        </div>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => setShowSuccessModal(false)}
+                                className="px-6 py-2 bg-slate-100 text-slate-700 font-bold rounded-full hover:bg-slate-200 transition"
+                            >
+                                Tutup
+                            </button>
+                            <a
+                                href={`/${data?.metadata.slug}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-6 py-2 bg-pink-600 text-white font-bold rounded-full hover:bg-pink-700 transition flex items-center gap-2"
+                            >
+                                <Eye size={16} /> Buka Undangan
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
