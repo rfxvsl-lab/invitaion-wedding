@@ -67,8 +67,14 @@ export default function Home({ initialContent, reversedThemes, faqs, testimonial
     return (
         <div className="page-enter bg-white">
             <Head>
-                <title>UndanganKita - Bagikan Momen Bahagiamu</title>
-                <meta name="description" content="Platform undangan pernikahan digital #1 di Indonesia." />
+                <title>Buat Undangan Pernikahan Digital Online - Undangkan Kita</title>
+                <meta name="description" content="Platform pembuatan undangan pernikahan digital website. Murah, cepat, dan fitur lengkap dengan RSVP, Galeri, dan Amplop Digital." />
+                <meta name="keywords" content="undangan digital, undangan website, wedding invitation, undangan online murah" />
+
+                {/* Open Graph untuk thumbnail di WA/IG */}
+                <meta property="og:title" content="Undangkan Kita - Buat Undangan Digital Cepat" />
+                <meta property="og:description" content="Tersedia berbagai tema premium untuk pernikahan impian Anda." />
+                <meta property="og:image" content="https://undangkankita.web.id/og-image.jpg" />
             </Head>
 
             {/* WELCOME MODAL */}
