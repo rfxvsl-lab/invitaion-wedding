@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../../lib/supabase';
 import AdminLayout from '@/components/AdminLayout';
+import { isAdmin } from '../../lib/admin';
 
 interface UserProfile {
     id: string;
@@ -22,9 +23,8 @@ const AdminUsersPage = () => {
 
     const checkAuth = async () => {
         const { data: { user } } = await supabase.auth.getUser();
-        console.log("Admin Users Page - Current User:", user?.email); // DEBUG
-        if (!user || user.email !== 'mhmmadridho64@gmail.com') {
-            // router.push('/login'); // Temporarily comment out redirect to debug
+        if (!isAdmin(user?.email)) {
+            router.push('/login');
         }
     };
 
