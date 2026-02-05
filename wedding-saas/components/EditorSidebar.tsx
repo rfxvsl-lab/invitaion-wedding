@@ -413,6 +413,32 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                         {(plan === 'premium' || plan === 'exclusive') && (
                             <DIYEditor initialLayout={data.metadata.diy_layout} plan={plan} onLayoutChange={(layout) => onUpdate('metadata.diy_layout', layout)} />
                         )}
+
+                        {/* CUSTOM BACKGROUND SECTION */}
+                        <div className="mb-6 border-b border-slate-100 pb-6">
+                            <div className="flex items-center justify-between mb-2">
+                                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Background Custom</label>
+                                {(plan === 'free' || plan === 'basic') && <span className="text-[9px] bg-slate-900 text-white px-2 py-0.5 rounded font-bold">PREMIUM</span>}
+                            </div>
+
+                            {/* Locked Overlay for Free/Basic */}
+                            {(plan === 'free' || plan === 'basic') ? (
+                                <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
+                                    <p className="text-xs text-slate-500 mb-2">Upgrade ke Premium untuk ganti background sesuka hati.</p>
+                                    <button disabled className="text-[10px] font-bold text-slate-400 bg-slate-200 px-3 py-1.5 rounded-lg cursor-not-allowed">
+                                        Upload Background
+                                    </button>
+                                </div>
+                            ) : (
+                                <ImageUploader
+                                    label="Upload Background Image"
+                                    currentUrl={data.metadata.custom_bg_url}
+                                    onUpdate={(url) => onUpdate('metadata.custom_bg_url', url)}
+                                />
+                            )}
+                            <p className="text-[10px] text-slate-400 mt-2 italic">Kosongkan jika ingin menggunakan background bawaan tema.</p>
+                        </div>
+
                         {/* Music Section ... */}
                         <div className="mb-4">
                             <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Musik Latar</label>

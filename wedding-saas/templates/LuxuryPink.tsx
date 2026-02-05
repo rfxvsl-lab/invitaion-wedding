@@ -27,6 +27,16 @@ const GlobalStyles = () => (
       color: #4a4a4a;
       overflow-x: hidden;
     }
+    
+    /* CUSTOM BG OVERRIDE */
+    .custom-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
 
     h1, h2, h3 { font-family: 'Playfair Display', serif; }
     .font-script { font-family: 'Great Vibes', cursive; }
@@ -498,9 +508,13 @@ const LuxuryPink: React.FC<{ data: InvitationData; guestName?: string }> = ({ da
             <audio ref={audioRef} loop src={data.metadata.music_url || "https://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg"} />
 
             {/* Animated Background */}
-            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                {hearts}
-            </div>
+            {data.metadata.custom_bg_url ? (
+                <div className="custom-bg" style={{ backgroundImage: `url(${data.metadata.custom_bg_url})` }}></div>
+            ) : (
+                <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                    {hearts}
+                </div>
+            )}
 
             {/* Amplop Pembuka */}
             {!isOpened && (

@@ -64,17 +64,28 @@ const GlobalStyles = () => (
 /**
  * --- BACKGROUND SYSTEM (CANVAS) ---
  */
-const CanvasBackground = () => (
+const CanvasBackground = ({ customBg }: { customBg?: string }) => (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Animated Gradients */}
-        <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-30 animate-[spin_20s_linear_infinite]"
-            style={{
-                background: 'conic-gradient(from 0deg, #1DB954, transparent, #121212, transparent, #1DB954)',
-                filter: 'blur(100px)'
-            }}
-        ></div>
-        <div className="absolute inset-0 bg-[#121212]/80"></div>
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/stardust.png")` }}></div>
+        {customBg ? (
+            <>
+                {/* Custom Background Image */}
+                <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url("${customBg}")` }}></div>
+                {/* Dark Overlay for Text Readability */}
+                <div className="absolute inset-0 bg-black/60"></div>
+            </>
+        ) : (
+            <>
+                {/* Animated Gradients (Default) */}
+                <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-30 animate-[spin_20s_linear_infinite]"
+                    style={{
+                        background: 'conic-gradient(from 0deg, #1DB954, transparent, #121212, transparent, #1DB954)',
+                        filter: 'blur(100px)'
+                    }}
+                ></div>
+                <div className="absolute inset-0 bg-[#121212]/80"></div>
+                <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/stardust.png")` }}></div>
+            </>
+        )}
     </div>
 );
 
@@ -582,7 +593,7 @@ const SpotiLove: React.FC<TemplateProps> = ({ data }) => {
         <div className="min-h-screen bg-[#121212] text-white">
             <GlobalStyles />
             <audio ref={audioRef} loop src={DATA.musicUrl} />
-            <CanvasBackground />
+            <CanvasBackground customBg={data.metadata.custom_bg_url} />
 
             {/* OPENING SEQUENCE (Z-INDEX HIGH) */}
             {showOpening && (
