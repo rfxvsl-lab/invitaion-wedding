@@ -49,11 +49,11 @@ const AdminUsersPage = () => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch users');
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP Error ${response.status}`);
             }
 
             const profiles = await response.json();
-
             const mappedUsers = profiles?.map(p => ({
                 id: p.id,
                 email: p.email || '-',
@@ -65,8 +65,9 @@ const AdminUsersPage = () => {
 
             setUsers(mappedUsers as any);
             setLoading(false);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Fetch error:", error);
+            alert("Gagal load data: " + error.message);
             setLoading(false);
         }
     };
