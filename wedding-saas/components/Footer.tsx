@@ -9,7 +9,7 @@ export default function Footer() {
             <div className="container mx-auto px-6 text-center">
                 <div className="flex items-center justify-center gap-2 mb-6 group cursor-pointer">
                     <BrandLogo size={40} className="group-hover:scale-110 transition-transform duration-300" />
-                    <span className="font-script text-2xl group-hover:text-rose-400 transition-colors">Undangan Kita</span>
+                    <span className="font-script text-2xl group-hover:text-rose-400 transition-colors">Undangkan Kita</span>
                 </div>
 
                 <p className="text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
@@ -35,7 +35,7 @@ export default function Footer() {
                 </div>
 
                 <div className="text-gray-600 text-sm border-t border-gray-800 pt-8">
-                    &copy; {new Date().getFullYear()} Undangan Kita SCC. All rights reserved.
+                    &copy; {new Date().getFullYear()} Undangkan Kita SCC. All rights reserved.
                 </div>
             </div>
         </footer>

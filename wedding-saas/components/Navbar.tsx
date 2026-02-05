@@ -35,7 +35,7 @@ export default function Navbar() {
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-3 cursor-pointer group">
                     <BrandLogo size={45} />
-                    <span className="font-script text-3xl font-bold text-rose-600 group-hover:text-rose-700 transition-colors">Undangan Kita</span>
+                    <span className="font-script text-3xl font-bold text-rose-600 group-hover:text-rose-700 transition-colors">Undangkan Kita</span>
                 </Link>
 
                 {/* Desktop Menu */}

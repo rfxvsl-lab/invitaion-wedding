@@ -50,7 +50,7 @@ export default function Login() {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://undangankita.web.id',
+                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://undangkankita.web.id',
                 }
             });
             if (error) throw error;
@@ -72,7 +72,7 @@ export default function Login() {
                 email,
                 password,
                 options: {
-                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://undangankita.web.id',
+                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://undangkankita.web.id',
                 }
             });
 
@@ -92,7 +92,7 @@ export default function Login() {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: typeof window !== 'undefined' ? `${window.location.origin}` : 'https://undangankita.web.id',
+                    redirectTo: typeof window !== 'undefined' ? `${window.location.origin}` : 'https://undangkankita.web.id',
                 }
             });
             if (error) throw error;

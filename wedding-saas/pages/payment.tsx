@@ -184,7 +184,7 @@ export default function PaymentPage() {
                     <div className="flex items-center gap-3">
                         <Link href="/" className="flex items-center gap-2 group">
                             <SCCLogo size={35} />
-                            <span className="font-script text-2xl font-bold text-rose-600 group-hover:text-rose-700 transition-colors">Undangan Kita</span>
+                            <span className="font-script text-2xl font-bold text-rose-600 group-hover:text-rose-700 transition-colors">Undangkan Kita</span>
                         </Link>
                         <div className="h-6 w-[1px] bg-gray-300 mx-2 hidden md:block"></div>
                         <span className="text-gray-500 font-bold text-sm hidden md:block">Secure Checkout</span>
@@ -517,7 +517,7 @@ export default function PaymentPage() {
 
             {/* FOOTER SIMPLE */}
             <footer className="bg-white border-t border-gray-100 py-8 text-center text-sm text-gray-500">
-                <p>&copy; 2024 Undangan Kita SCC. All rights reserved.</p>
+                <p>&copy; 2024 Undangkan Kita SCC. All rights reserved.</p>
                 <div className="flex justify-center gap-4 mt-2">
                     <Link href="/terms" className="hover:text-rose-600">Syarat & Ketentuan</Link>
                     <span>•</span>

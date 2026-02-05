@@ -129,7 +129,7 @@ const EnvelopeOverlay: React.FC<EnvelopeProps> = ({ onOpen, groomName, brideName
 
                     {/* Invitation Card Inside */}
                     <div className="absolute top-2 left-2 right-2 h-[90%] bg-white rounded flex flex-col items-center justify-center p-4 shadow-md invitation-card z-10">
-                        <h2 className="font-script text-3xl text-rose-600">Undangan Kita</h2>
+                        <h2 className="font-script text-3xl text-rose-600">Undangkan Kita</h2>
                         <p className="text-xs text-gray-500 mt-2 uppercase tracking-widest">Wedding Invitation</p>
                         <Heart size={16} className="mt-4 text-rose-400 fill-rose-100" />
                     </div>
