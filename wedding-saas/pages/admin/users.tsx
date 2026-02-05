@@ -30,26 +30,45 @@ const AdminUsersPage = () => {
 
     const fetchUsers = async () => {
         setLoading(true);
-        // Use RPC with Security Definer to bypass RLS
-        const { data: profiles, error } = await supabase.rpc('get_all_users');
+        try {
+            // Get current session token for API authorization
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
 
-        if (error) {
-            console.error('Error fetching users:', error);
+            if (!token) {
+                console.error("No access token found");
+                setLoading(false);
+                return;
+            }
+
+            // Fetch from Server-Side API (Bypasses RLS)
+            const response = await fetch('/api/admin/users', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch users');
+            }
+
+            const profiles = await response.json();
+
+            const mappedUsers = profiles?.map(p => ({
+                id: p.id,
+                email: p.email || '-',
+                name: p.full_name || 'No Name',
+                phone: p.phone_number || '-',
+                tier: p.tier || 'free',
+                joined_at: p.created_at || new Date().toISOString()
+            })) || [];
+
+            setUsers(mappedUsers as any);
             setLoading(false);
-            return;
+        } catch (error) {
+            console.error("Fetch error:", error);
+            setLoading(false);
         }
-
-        const mappedUsers = profiles?.map(p => ({
-            id: p.id,
-            email: p.email || '-',
-            name: p.full_name || 'No Name',
-            phone: p.phone_number || '-',
-            tier: p.tier || 'free',
-            joined_at: p.created_at || new Date().toISOString()
-        })) || [];
-
-        setUsers(mappedUsers as any);
-        setLoading(false);
     };
 
     return (
