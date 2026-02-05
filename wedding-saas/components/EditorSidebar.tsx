@@ -604,7 +604,11 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                 <Input label="Judul Hero (The Wedding Of)" value={getValue('content.texts.hero_title') || 'The Wedding Of'} onChange={(v) => onUpdate('content.texts.hero_title', v)} />
                                 <Input label="Sub-Judul Hero" value={getValue('content.texts.hero_subtitle') || 'We Are Getting Married'} onChange={(v) => onUpdate('content.texts.hero_subtitle', v)} />
                                 <Input label="Judul Bagian Pasangan" value={getValue('content.texts.couple_title') || 'The Couple'} onChange={(v) => onUpdate('content.texts.couple_title', v)} />
-                                {/* ... other text inputs ... */}
+                                <Input label="Judul Akad Nikah" value={getValue('content.texts.akad_title') || 'Akad Nikah'} onChange={(v) => onUpdate('content.texts.akad_title', v)} />
+                                <Input label="Judul Resepsi" value={getValue('content.texts.resepsi_title') || 'Resepsi'} onChange={(v) => onUpdate('content.texts.resepsi_title', v)} />
+                                <Input label="Judul Galeri" value={getValue('content.texts.gallery_title') || 'Galeri Foto'} onChange={(v) => onUpdate('content.texts.gallery_title', v)} />
+                                <Input label="Judul Amplop Digital" value={getValue('content.texts.gift_title') || 'Wedding Gift'} onChange={(v) => onUpdate('content.texts.gift_title', v)} />
+                                <Input label="Judul RSVP" value={getValue('content.texts.rsvp_title') || 'R.S.V.P'} onChange={(v) => onUpdate('content.texts.rsvp_title', v)} />
                                 <Input label="Teks Footer" value={getValue('content.texts.footer_text') || 'Thank you'} onChange={(v) => onUpdate('content.texts.footer_text', v)} />
                             </div>
                         </div>
