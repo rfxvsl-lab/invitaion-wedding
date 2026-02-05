@@ -205,8 +205,8 @@ export default function PaymentPage() {
 
             {/* HEADER KHUSUS CHECKOUT (Minimalist) */}
             <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
+                <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex justify-between items-center">
+                    <div className="flex items-center gap-2 md:gap-3">
                         <Link href="/" className="flex items-center gap-2 group">
                             <SCCLogo size={35} />
                             <span className="font-script text-2xl font-bold text-rose-600 group-hover:text-rose-700 transition-colors">Undangkan Kita</span>
@@ -230,20 +230,20 @@ export default function PaymentPage() {
                     <div className="lg:col-span-8">
 
                         {/* Progress Indicator */}
-                        <div className="flex items-center mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                            <div className={`flex items-center gap-2 ${step >= 1 ? 'text-rose-600' : 'text-gray-400'}`}>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 ${step >= 1 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>1</div>
-                                <span className="font-bold text-sm hidden sm:inline">Data Diri</span>
+                        <div className="flex items-center mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+                            <div className={`flex items-center gap-2 flex-shrink-0 ${step >= 1 ? 'text-rose-600' : 'text-gray-400'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${step >= 1 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>1</div>
+                                <span className="font-bold text-sm whitespace-nowrap">Data Diri</span>
                             </div>
-                            <div className={`flex-1 h-[2px] mx-4 ${step >= 2 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
-                            <div className={`flex items-center gap-2 ${step >= 2 ? 'text-rose-600' : 'text-gray-400'}`}>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 ${step >= 2 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>2</div>
-                                <span className="font-bold text-sm hidden sm:inline">Pembayaran</span>
+                            <div className={`flex-1 min-w-[20px] h-[2px] mx-2 md:mx-4 ${step >= 2 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
+                            <div className={`flex items-center gap-2 flex-shrink-0 ${step >= 2 ? 'text-rose-600' : 'text-gray-400'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${step >= 2 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>2</div>
+                                <span className="font-bold text-sm whitespace-nowrap">Pembayaran</span>
                             </div>
-                            <div className={`flex-1 h-[2px] mx-4 ${step >= 3 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
-                            <div className={`flex items-center gap-2 ${step >= 3 ? 'text-rose-600' : 'text-gray-400'}`}>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 ${step >= 3 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>3</div>
-                                <span className="font-bold text-sm hidden sm:inline">Selesai</span>
+                            <div className={`flex-1 min-w-[20px] h-[2px] mx-2 md:mx-4 ${step >= 3 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
+                            <div className={`flex items-center gap-2 flex-shrink-0 ${step >= 3 ? 'text-rose-600' : 'text-gray-400'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${step >= 3 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>3</div>
+                                <span className="font-bold text-sm whitespace-nowrap">Selesai</span>
                             </div>
                         </div>
 
@@ -364,11 +364,11 @@ export default function PaymentPage() {
                                             </div>
 
                                             <div className="mt-4 pl-10 fade-in">
-                                                <div className="bg-white border border-gray-200 rounded-lg p-4 inline-block shadow-sm">
+                                                <div className="bg-white border border-gray-200 rounded-lg p-4 inline-block shadow-sm max-w-full">
                                                     <img
                                                         src="/qris_default.jpg"
                                                         alt="QRIS"
-                                                        className="w-64 h-auto max-w-full rounded-lg"
+                                                        className="w-full md:w-64 h-auto max-w-full rounded-lg"
                                                     />
                                                 </div>
                                                 <p className="text-sm font-bold text-gray-700 mt-3">Scan kode QR di dapan aplikasi pembayaran Anda.</p>
@@ -434,12 +434,12 @@ export default function PaymentPage() {
                                             <p className="text-sm text-gray-500">Total Tagihan</p>
                                             <p className="text-2xl font-bold text-rose-600">{priceDisplay}</p>
                                         </div>
-                                        <div className="flex gap-3 w-full md:w-auto">
-                                            <button onClick={() => setStep(1)} disabled={loading} className="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors w-1/3 md:w-auto">Kembali</button>
+                                        <div className="flex flex-col-reverse md:flex-row gap-3 w-full md:w-auto mt-4 md:mt-0">
+                                            <button onClick={() => setStep(1)} disabled={loading} className="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors w-full md:w-auto">Kembali</button>
                                             <button
                                                 onClick={handleSubmitPayment}
                                                 disabled={loading}
-                                                className="flex-1 md:flex-none bg-rose-600 text-white px-8 py-3 rounded-xl font-bold text-lg hover:bg-rose-700 transition-all shadow-lg flex items-center justify-center gap-2"
+                                                className="w-full md:w-auto bg-rose-600 text-white px-8 py-3 rounded-xl font-bold text-lg hover:bg-rose-700 transition-all shadow-lg flex items-center justify-center gap-2"
                                             >
                                                 {loading ? (
                                                     <>
