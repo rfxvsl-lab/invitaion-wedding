@@ -13,7 +13,7 @@ export default function Footer() {
                 </div>
 
                 <p className="text-gray-400 mb-8 max-w-md mx-auto leading-relaxed">
-                    Platform pembuatan undangan pernikahan digital #1 di Indonesia. Hemat, Praktis, dan Elegan.
+                    Platform pembuatan undangan pernikahan digital di Indonesia. Hemat, Praktis, dan Elegan.
                 </p>
 
                 <div className="flex justify-center gap-6 mb-8">

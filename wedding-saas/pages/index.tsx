@@ -131,7 +131,7 @@ export default function Home({ initialContent, reversedThemes, faqs, testimonial
 
                     <div className="relative animate-fade-up delay-200">
                         <div className="relative z-10 animate-float">
-                            <img src={initialContent['hero_image'] || "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80"} className="rounded-[2.5rem] shadow-3xl border-11 border-white mx-auto w-64 md:w-80 rotate-[-5deg] hover:rotate-0 transition-transform duration-500" alt="Mobile Preview" />
+                            <img src={initialContent['hero_image'] || "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=600&q=80"} className="rounded-[2.5rem] shadow-2xl border-2 border-white mx-auto w-64 md:w-80 rotate-[-5deg] hover:rotate-0 transition-transform duration-500" alt="Mobile Preview" />
                             {/* Small Logo Badge */}
                             <div className="absolute top-10 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-bounce">
                                 <div className="px-2 py-2 bg-rose-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">Trusted!</div>
