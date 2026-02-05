@@ -8,6 +8,10 @@ import { BrandLogo } from './Logo';
 
 export default function Navbar() {
     const [profileOpen, setProfileOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const { user, profile, signOut } = useAuth();
+    const router = useRouter();
 
     useEffect(() => {
         const handleScroll = () => {
