@@ -39,8 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // 3. Fetch All Profiles using ADMIN Client (Service Role)
         const { data: profiles, error: dbError } = await supabaseAdmin
             .from('profiles')
-            .select('*')
-            .order('created_at', { ascending: false });
+            .select('*');
 
         if (dbError) throw dbError;
 

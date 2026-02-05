@@ -80,6 +80,17 @@ const AdminUsersPage = () => {
                     <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold">{users.length} Users Total</span>
                 </div>
 
+                {/* DEBUG PANEL */}
+                <div className="p-4 bg-gray-100 border-b border-gray-300 text-xs font-mono overflow-auto max-h-40">
+                    <p className="font-bold text-red-600">DEBUG MODE (Temporary):</p>
+                    <p>Loading: {loading ? 'YES' : 'NO'}</p>
+                    <p>User Count: {users.length}</p>
+                    <details>
+                        <summary className="cursor-pointer text-blue-600">Click to see Raw Data</summary>
+                        <pre>{JSON.stringify(users, null, 2)}</pre>
+                    </details>
+                </div>
+
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-slate-50 border-b border-slate-100">
