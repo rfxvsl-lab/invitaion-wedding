@@ -423,54 +423,29 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
 };
 
 export default EditorSidebar;
-
-const getValue = (path: string) => {
-    return path.split('.').reduce((o: any, i) => (o ? o[i] : ''), data);
-};
-
-const handleThemeChange = (themeId: string, tier: 'free' | 'basic' | 'premium' | 'exclusive') => {
-    // FREE TIER: Block non-free themes + Token system
-    if (plan === 'free') {
-        if (tier !== 'free') {
-            alert('🔒 Template ini memerlukan upgrade ke ' + (tier === 'exclusive' ? 'Premium/Exclusive' : tier.toUpperCase()) + ' plan!');
-            return;
-        }
-        // Token system for free tier
-        if (tokens <= 0) {
-            alert('❌ Token Anda habis! Upgrade ke Basic plan untuk unlimited edits.');
-            return;
-        }
-        if (confirm(`🪙 Gunakan 1 token untuk ganti tema?\n\nSisa token: ${tokens - 1}/5`)) {
-            setTokens(tokens - 1);
-            onUpdate('metadata.theme_id', themeId);
-        }
+if (plan === 'basic') {
+    if (tier === 'premium' || tier === 'exclusive') {
+        alert('🔒 Template ini memerlukan upgrade ke ' + tier.toUpperCase() + ' plan!');
         return;
     }
-
-    // BASIC TIER: Allow Free + Basic templates only
-    if (plan === 'basic') {
-        if (tier === 'premium' || tier === 'exclusive') {
-            alert('🔒 Template ini memerlukan upgrade ke ' + tier.toUpperCase() + ' plan!');
-            return;
-        }
-        // No token system for basic users
-        onUpdate('metadata.theme_id', themeId);
-        return;
-    }
-
-    // PREMIUM TIER: Allow all except Exclusive
-    if (plan === 'premium') {
-        if (tier === 'exclusive') {
-            alert('🔒 Template Exclusive hanya untuk Exclusive plan!');
-            return;
-        }
-        // No token, unlimited edits
-        onUpdate('metadata.theme_id', themeId);
-        return;
-    }
-
-    // EXCLUSIVE/OTHER: Allow all templates
+    // No token system for basic users
     onUpdate('metadata.theme_id', themeId);
+    return;
+}
+
+// PREMIUM TIER: Allow all except Exclusive
+if (plan === 'premium') {
+    if (tier === 'exclusive') {
+        alert('🔒 Template Exclusive hanya untuk Exclusive plan!');
+        return;
+    }
+    // No token, unlimited edits
+    onUpdate('metadata.theme_id', themeId);
+    return;
+}
+
+// EXCLUSIVE/OTHER: Allow all templates
+onUpdate('metadata.theme_id', themeId);
 };
 
 const handleMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
