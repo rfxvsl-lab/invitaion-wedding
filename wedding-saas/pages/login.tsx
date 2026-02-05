@@ -50,7 +50,7 @@ export default function Login() {
             const { error } = await supabase.auth.signInWithOtp({
                 email,
                 options: {
-                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://weddinginvitation-18.vercel.app',
+                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://undangankita.web.id',
                 }
             });
             if (error) throw error;
@@ -72,7 +72,7 @@ export default function Login() {
                 email,
                 password,
                 options: {
-                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://weddinginvitation-18.vercel.app',
+                    emailRedirectTo: typeof window !== 'undefined' ? window.location.origin : 'https://undangankita.web.id',
                 }
             });
 
@@ -92,7 +92,7 @@ export default function Login() {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: typeof window !== 'undefined' ? `${window.location.origin}` : 'https://weddinginvitation-18.vercel.app',
+                    redirectTo: typeof window !== 'undefined' ? `${window.location.origin}` : 'https://undangankita.web.id',
                 }
             });
             if (error) throw error;
