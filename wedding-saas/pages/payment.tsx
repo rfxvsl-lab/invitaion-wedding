@@ -70,7 +70,16 @@ const SCCLogo = ({ size = 40 }) => (
 /**
  * --- MAIN PAYMENT PAGE ---
  */
-export default function PaymentPage() {
+import { GetStaticProps } from 'next';
+
+/**
+ * --- MAIN PAYMENT PAGE ---
+ */
+interface PaymentPageProps {
+    serverConfig: Record<string, string>;
+}
+
+export default function PaymentPage({ serverConfig }: PaymentPageProps) {
     const router = useRouter();
     const { tier } = router.query;
     const tierName = tier ? String(tier).toUpperCase() : 'PREMIUM';
@@ -93,33 +102,14 @@ export default function PaymentPage() {
     const [orderIdDisplay, setOrderIdDisplay] = useState('');
 
     // Derived state for display
-    const [config, setConfig] = useState<Record<string, string>>({});
+    const config = serverConfig || {}; // Use server-provided config
     const [prices, setPrices] = useState<Record<string, string>>({
         'free': 'Rp 0',
-        'basic': 'Rp 50.000',
-        'premium': 'Rp 100.000',
-        'exclusive': 'Rp 150.000'
+        'basic': config['payment_price_basic'] || 'Rp 50.000',
+        'premium': config['payment_price_premium'] || 'Rp 100.000',
+        'exclusive': config['payment_price_exclusive'] || 'Rp 150.000'
     });
 
-    useEffect(() => {
-        const fetchConfig = async () => {
-            const { data } = await supabase.from('site_content').select('*').eq('section', 'payment');
-            if (data) {
-                const newConfig: Record<string, string> = {};
-                data.forEach(item => newConfig[item.key] = item.value);
-                setConfig(newConfig);
-
-                // Update prices from config if available
-                setPrices({
-                    'free': 'Rp 0',
-                    'basic': newConfig['payment_price_basic'] || 'Rp 50.000',
-                    'premium': newConfig['payment_price_premium'] || 'Rp 100.000',
-                    'exclusive': newConfig['payment_price_exclusive'] || 'Rp 150.000'
-                });
-            }
-        };
-        fetchConfig();
-    }, []);
 
     const priceDisplay = config[`payment_price_${tierName.toLowerCase()}`] || prices[tierName.toLowerCase()] || prices['premium'];
     const originalPrice = config[`payment_original_price_${tierName.toLowerCase()}`] || '';
@@ -560,3 +550,19 @@ export default function PaymentPage() {
         </div>
     );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+    // Fetch Payment Config
+    const { data } = await supabase.from('site_content').select('*').eq('section', 'payment');
+    const serverConfig: Record<string, string> = {};
+    if (data) {
+        data.forEach(item => serverConfig[item.key] = item.value);
+    }
+
+    return {
+        props: {
+            serverConfig
+        },
+        revalidate: 30, // ISR: Update setiap 30 detik
+    };
+};

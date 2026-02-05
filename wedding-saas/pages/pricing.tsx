@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Check } from 'lucide-react';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import { supabase } from '@/lib/supabase';
 
 interface PricingProps {
@@ -85,7 +85,7 @@ export default function PricingPage({ content }: PricingProps) {
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     // Fetch Site Content
     const { data: contentData } = await supabase.from('site_content').select('key, value');
     const content: Record<string, string> = {};
@@ -97,5 +97,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
         props: {
             content
         },
+        revalidate: 30, // ISR: Update setiap 30 detik
     };
 };
