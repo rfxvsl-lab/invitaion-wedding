@@ -3,7 +3,7 @@ INSERT INTO site_content (section, key, value) VALUES
 -- Global Settings
 ('payment', 'payment_intro_title', 'Secure Checkout'),
 ('payment', 'payment_intro_desc', 'Selesaikan pembayaran untuk mengaktifkan undangan Anda.'),
-('payment', 'payment_qris_image', 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Commons_QR_code.png/150px-Commons_QR_code.png'),
+('payment', 'payment_qris_image', '/qris_default.jpg'),
 
 -- Bank Accounts (Global)
 ('payment', 'payment_bank_bca', '1234567890 a.n PT Undangan Kita'),

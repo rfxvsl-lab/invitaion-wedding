@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/components/AuthProvider';
 import { supabase } from '@/lib/supabase';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
 import { Theme, FAQ } from '@/types/database';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -324,7 +324,7 @@ export default function Home({ initialContent, reversedThemes, faqs, testimonial
     );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
     // Fetch Site Content
     const { data: contentData } = await supabase.from('site_content').select('key, value');
     const initialContent: Record<string, string> = {};
@@ -357,5 +357,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
             faqs: faqs || [],
             testimonials: testimonials || []
         },
+        revalidate: 30, // ISR: Update content every 30 seconds
     };
 };

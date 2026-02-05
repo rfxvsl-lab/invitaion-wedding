@@ -38,6 +38,14 @@ export default function Editor() {
         fetchInvitation();
     }, [user, authLoading]);
 
+    // SYNC DATA TO IFRAME
+    useEffect(() => {
+        const iframe = document.getElementById('preview-frame') as HTMLIFrameElement;
+        if (iframe && iframe.contentWindow && data) {
+            iframe.contentWindow.postMessage({ type: 'UPDATE_DATA', payload: data }, '*');
+        }
+    }, [data]);
+
     const fetchInvitation = async () => {
         // Safety Timeout
         const timeout = setTimeout(() => {
@@ -267,16 +275,26 @@ export default function Editor() {
                 <div className="flex-1 overflow-y-auto p-4 lg:p-8 flex items-start justify-center cursor-default custom-scrollbar bg-slate-200/50">
                     <div
                         className={`transition-all duration-500 bg-white shadow-2xl overflow-hidden origin-top
-                            ${previewMode === 'mobile' ? 'w-[320px] sm:w-[375px] min-h-[600px] lg:min-h-[800px] rounded-[2rem] lg:rounded-[3rem] border-[8px] border-slate-800' : 'w-full h-full rounded-xl border border-slate-200'}
+                            ${previewMode === 'mobile' ? 'w-[375px] h-[812px] rounded-[3rem] border-[12px] border-slate-900 shadow-xl' : 'w-full h-full rounded-none lg:rounded-xl border border-slate-200'}
                         `}
                         style={{
-                            transform: previewMode === 'mobile' ? 'scale(0.85) sm:scale(0.95) lg:scale(1)' : 'scale(1)'
+                            transform: previewMode === 'mobile' ? 'scale(0.85) lg:scale(0.95)' : 'scale(1)'
                         }}
                     >
-                        {/* Render Template with Live Data */}
-                        <div className="w-full h-full overflow-y-auto scrollbar-hide">
-                            <ActiveTemplate data={data} guestName="Tamu Undangan" />
-                        </div>
+                        {/* IFRAME PREVIEWER */}
+                        <iframe
+                            id="preview-frame"
+                            src="/preview-renderer"
+                            className="w-full h-full bg-white"
+                            title="Preview"
+                            onLoad={(e) => {
+                                // Send initial data when iframe loads
+                                const iframe = e.currentTarget;
+                                if (iframe.contentWindow && data) {
+                                    iframe.contentWindow.postMessage({ type: 'UPDATE_DATA', payload: data }, '*');
+                                }
+                            }}
+                        />
                     </div>
                 </div>
             </div>
