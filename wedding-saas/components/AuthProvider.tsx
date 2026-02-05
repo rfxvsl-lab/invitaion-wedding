@@ -61,11 +61,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const { data: profileData } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
                 setProfile(profileData);
 
-                // If profile incomplete, Force Redirect
-                if (!profileData || !profileData.full_name || !profileData.phone_number) {
-                    if (window.location.pathname !== '/onboarding' && !window.location.pathname.startsWith('/preview')) {
-                        window.location.href = '/onboarding';
-                    }
+                // If profile incomplete, Force Redirect ONLY on critical pages
+                // We don't want to block them from viewing their website (/[slug]) or Testimonials
+                const protectedPrefixes = ['/editor', '/dashboard'];
+                const isProtectedPage = protectedPrefixes.some(prefix => window.location.pathname.startsWith(prefix));
+
+                if (isProtectedPage && (!profileData || !profileData.full_name || !profileData.phone_number)) {
+                    window.location.href = '/onboarding';
                 }
             } else {
                 setProfile(null);
