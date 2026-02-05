@@ -427,8 +427,135 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                 </div>
                             </div>
                         </div>
-                        {/* Gift, Quote, RSVP same as before */}
-                        {/* ... */}
+                        {/* QUOTE SECTION */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mt-4">
+                            <SectionHeader icon={Quote} title="Kutipan (Quote)" />
+                            <div className="mb-4">
+                                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Isi Kutipan</label>
+                                <textarea
+                                    className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition resize-none h-24"
+                                    value={getValue('content.quote.content')}
+                                    onChange={(e) => onUpdate('content.quote.content', e.target.value)}
+                                    placeholder="Tulis kutipan indah di sini..."
+                                />
+                            </div>
+                            <Input label="Sumber / Penulis" value={getValue('content.quote.source')} onChange={(v) => onUpdate('content.quote.source', v)} />
+                        </div>
+
+                        {/* GIFT SECTION */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mt-4">
+                            <SectionHeader icon={Gift} title="Amplop Digital (Hadiah)" />
+
+                            {data.engagement.gifts?.map((gift: any, index: number) => (
+                                <div key={index} className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 group relative hover:border-pink-200 transition-colors">
+                                    <button
+                                        onClick={() => {
+                                            const newGifts = [...(data.engagement.gifts || [])];
+                                            newGifts.splice(index, 1);
+                                            onUpdate('engagement.gifts', newGifts);
+                                        }}
+                                        className="absolute top-2 right-2 text-slate-300 hover:text-red-500 transition p-1"
+                                    >
+                                        <Trash2 size={14} />
+                                    </button>
+
+                                    <div className="grid grid-cols-2 gap-3 mb-3">
+                                        <div>
+                                            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Bank / E-Wallet</label>
+                                            <input
+                                                className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-pink-500"
+                                                value={gift.bank_name}
+                                                onChange={(e) => {
+                                                    const newGifts = [...(data.engagement.gifts || [])];
+                                                    newGifts[index].bank_name = e.target.value;
+                                                    onUpdate('engagement.gifts', newGifts);
+                                                }}
+                                                placeholder="BCA"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">No. Rekening</label>
+                                            <input
+                                                className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-pink-500"
+                                                value={gift.account_number}
+                                                onChange={(e) => {
+                                                    const newGifts = [...(data.engagement.gifts || [])];
+                                                    newGifts[index].account_number = e.target.value;
+                                                    onUpdate('engagement.gifts', newGifts);
+                                                }}
+                                                placeholder="1234567890"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Atas Nama</label>
+                                        <input
+                                            className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-pink-500"
+                                            value={gift.account_holder}
+                                            onChange={(e) => {
+                                                const newGifts = [...(data.engagement.gifts || [])];
+                                                newGifts[index].account_holder = e.target.value;
+                                                onUpdate('engagement.gifts', newGifts);
+                                            }}
+                                            placeholder="Nama Pemilik"
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+
+                            <button
+                                onClick={() => {
+                                    const newGifts = [...(data.engagement.gifts || [])];
+                                    newGifts.push({ bank_name: '', account_number: '', account_holder: '' });
+                                    onUpdate('engagement.gifts', newGifts);
+                                }}
+                                className="w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:border-pink-400 hover:text-pink-600 hover:bg-pink-50 transition flex items-center justify-center gap-2"
+                            >
+                                <Plus size={16} /> Tambah Rekening
+                            </button>
+                        </div>
+
+                        {/* RSVP PREFERENCES */}
+                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mt-4">
+                            <SectionHeader icon={MessageSquare} title="Konfirmasi Kehadiran (RSVP)" />
+
+                            <div className="flex items-center justify-between mb-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <div>
+                                    <h4 className="text-sm font-bold text-slate-800">Aktifkan RSVP?</h4>
+                                    <p className="text-[10px] text-slate-500 mt-0.5">Tamu bisa kirim konfirmasi kehadiran via WhatsApp.</p>
+                                </div>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={data.engagement.rsvp !== false}
+                                        onChange={(e) => onUpdate('engagement.rsvp', e.target.checked)}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-pink-600"></div>
+                                </label>
+                            </div>
+
+                            {data.engagement.rsvp !== false && (
+                                <div className="space-y-4 animate-fade-in">
+                                    <Input
+                                        label="Nomor WhatsApp Penerima"
+                                        value={getValue('engagement.rsvp_settings.whatsapp_number')}
+                                        onChange={(v) => onUpdate('engagement.rsvp_settings.whatsapp_number', v)}
+                                        placeholder="6281234567890"
+                                        subtext={<span className="text-[10px] text-slate-400">Gunakan format internasional (62...) tanpa tanda plus.</span>}
+                                    />
+                                    <div>
+                                        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Pesan Default</label>
+                                        <textarea
+                                            className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition resize-none h-24"
+                                            value={getValue('engagement.rsvp_settings.message_template') || "Halo, saya [Nama] ingin konfirmasi kehadiran..."}
+                                            onChange={(e) => onUpdate('engagement.rsvp_settings.message_template', e.target.value)}
+                                            placeholder="Halo, saya [Nama] ingin konfirmasi kehadiran..."
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
 
