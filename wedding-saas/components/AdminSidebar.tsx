@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Home, Users, Palette, ShoppingCart, FileQuestion, Settings, Layout, LogOut, Menu, X } from 'lucide-react';
+import { Home, Users, Palette, ShoppingCart, FileQuestion, Settings, Layout, LogOut, Menu, X, CreditCard } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { getPendingOrders } from '../lib/database';
 import { useAuth } from './AuthProvider'; // Import Context
@@ -111,6 +111,7 @@ export default function AdminSidebar() {
                             <NavItem href="/admin/cms" icon={<Layout size={20} />} label="Site Content" />
                             <NavItem href="/admin/faqs" icon={<FileQuestion size={20} />} label="FAQs" />
                             <NavItem href="/admin/users" icon={<Users size={20} />} label="Users" />
+                            <NavItem href="/admin/payment-settings" icon={<CreditCard size={20} />} label="Payment Settings" />
                             <NavItem href="/admin/settings" icon={<Settings size={20} />} label="Settings" />
 
                             <div className="pt-4 pb-2">

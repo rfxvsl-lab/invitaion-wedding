@@ -93,13 +93,35 @@ export default function PaymentPage() {
     const [orderIdDisplay, setOrderIdDisplay] = useState('');
 
     // Derived state for display
-    const prices: Record<string, string> = {
+    const [config, setConfig] = useState<Record<string, string>>({});
+    const [prices, setPrices] = useState<Record<string, string>>({
         'free': 'Rp 0',
         'basic': 'Rp 50.000',
         'premium': 'Rp 100.000',
         'exclusive': 'Rp 150.000'
-    };
-    const priceDisplay = prices[String(tier)] || 'Rp 100.000';
+    });
+
+    useEffect(() => {
+        const fetchConfig = async () => {
+            const { data } = await supabase.from('site_content').select('*').eq('section', 'payment');
+            if (data) {
+                const newConfig: Record<string, string> = {};
+                data.forEach(item => newConfig[item.key] = item.value);
+                setConfig(newConfig);
+
+                // Update prices from config if available
+                setPrices({
+                    'free': 'Rp 0',
+                    'basic': newConfig['payment_price_basic'] || 'Rp 50.000',
+                    'premium': newConfig['payment_price_premium'] || 'Rp 100.000',
+                    'exclusive': newConfig['payment_price_exclusive'] || 'Rp 150.000'
+                });
+            }
+        };
+        fetchConfig();
+    }, []);
+
+    const priceDisplay = prices[String(tier)] || prices['premium'];
 
     const selectedPlan = {
         name: `${tierName} Plan`,
@@ -187,7 +209,7 @@ export default function PaymentPage() {
                             <span className="font-script text-2xl font-bold text-rose-600 group-hover:text-rose-700 transition-colors">Undangkan Kita</span>
                         </Link>
                         <div className="h-6 w-[1px] bg-gray-300 mx-2 hidden md:block"></div>
-                        <span className="text-gray-500 font-bold text-sm hidden md:block">Secure Checkout</span>
+                        <span className="text-gray-500 font-bold text-sm hidden md:block">{config['payment_intro_title'] || 'Secure Checkout'}</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1.5 rounded-full text-xs font-bold border border-green-100">
@@ -341,7 +363,7 @@ export default function PaymentPage() {
                                             {paymentMethod === 'qris' && (
                                                 <div className="mt-4 pl-10 fade-in">
                                                     <div className="bg-white border border-gray-200 rounded-lg p-4 inline-block shadow-sm">
-                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Commons_QR_code.png/150px-Commons_QR_code.png" alt="QRIS" className="w-32 h-32 opacity-80 mix-blend-multiply" />
+                                                        <img src={config['payment_qris_image'] || "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Commons_QR_code.png/150px-Commons_QR_code.png"} alt="QRIS" className="w-32 h-32 opacity-80 mix-blend-multiply" />
                                                     </div>
                                                     <p className="text-xs text-gray-500 mt-2">Scan kode QR di atas untuk pembayaran otomatis.</p>
                                                 </div>
@@ -366,14 +388,15 @@ export default function PaymentPage() {
                                                 <CreditCard className="text-gray-400" />
                                             </div>
 
-                                            {paymentMethod === 'bank_transfer' && (
-                                                <div className="mt-4 pl-10 grid grid-cols-2 md:grid-cols-4 gap-3 fade-in">
-                                                    <button className="border rounded p-2 text-sm font-bold text-blue-800 hover:bg-blue-50 transition-colors">BCA</button>
-                                                    <button className="border rounded p-2 text-sm font-bold text-yellow-600 hover:bg-yellow-50 transition-colors">Mandiri</button>
-                                                    <button className="border rounded p-2 text-sm font-bold text-green-600 hover:bg-green-50 transition-colors">BNI</button>
-                                                    <button className="border rounded p-2 text-sm font-bold text-blue-500 hover:bg-blue-50 transition-colors">BRI</button>
-                                                </div>
-                                            )}
+                                            <div className="mt-4 pl-10 space-y-2 fade-in">
+                                                <p className="text-sm font-bold text-gray-700">Silakan transfer ke salah satu rekening berikut:</p>
+                                                <ul className="text-sm text-gray-600 space-y-1">
+                                                    {config['payment_bank_bca'] && <li><span className="font-bold w-16 inline-block">BCA:</span> {config['payment_bank_bca']}</li>}
+                                                    {config['payment_bank_mandiri'] && <li><span className="font-bold w-16 inline-block">Mandiri:</span> {config['payment_bank_mandiri']}</li>}
+                                                    {config['payment_bank_bni'] && <li><span className="font-bold w-16 inline-block">BNI:</span> {config['payment_bank_bni']}</li>}
+                                                    {config['payment_bank_bri'] && <li><span className="font-bold w-16 inline-block">BRI:</span> {config['payment_bank_bri']}</li>}
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
 
