@@ -30,11 +30,8 @@ const AdminUsersPage = () => {
 
     const fetchUsers = async () => {
         setLoading(true);
-        // Fetch from 'profiles' directly
-        const { data: profiles, error } = await supabase
-            .from('profiles')
-            .select('*')
-            .order('created_at', { ascending: false });
+        // Use RPC with Security Definer to bypass RLS
+        const { data: profiles, error } = await supabase.rpc('get_all_users');
 
         if (error) {
             console.error('Error fetching users:', error);
