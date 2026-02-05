@@ -230,20 +230,20 @@ export default function PaymentPage() {
                     <div className="lg:col-span-8">
 
                         {/* Progress Indicator */}
-                        <div className="flex items-center mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-                            <div className={`flex items-center gap-2 flex-shrink-0 ${step >= 1 ? 'text-rose-600' : 'text-gray-400'}`}>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${step >= 1 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>1</div>
-                                <span className="font-bold text-sm whitespace-nowrap">Data Diri</span>
+                        <div className="flex items-center mb-6 md:mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                            <div className={`flex items-center gap-2 ${step >= 1 ? 'text-rose-600' : 'text-gray-400'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 ${step >= 1 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>1</div>
+                                <span className="font-bold text-xs md:text-sm hidden sm:inline">Data Diri</span>
                             </div>
-                            <div className={`flex-1 min-w-[20px] h-[2px] mx-2 md:mx-4 ${step >= 2 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
-                            <div className={`flex items-center gap-2 flex-shrink-0 ${step >= 2 ? 'text-rose-600' : 'text-gray-400'}`}>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${step >= 2 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>2</div>
-                                <span className="font-bold text-sm whitespace-nowrap">Pembayaran</span>
+                            <div className={`flex-1 h-[2px] mx-2 md:mx-4 ${step >= 2 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
+                            <div className={`flex items-center gap-2 ${step >= 2 ? 'text-rose-600' : 'text-gray-400'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 ${step >= 2 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>2</div>
+                                <span className="font-bold text-xs md:text-sm hidden sm:inline">Pembayaran</span>
                             </div>
-                            <div className={`flex-1 min-w-[20px] h-[2px] mx-2 md:mx-4 ${step >= 3 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
-                            <div className={`flex items-center gap-2 flex-shrink-0 ${step >= 3 ? 'text-rose-600' : 'text-gray-400'}`}>
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 flex-shrink-0 ${step >= 3 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>3</div>
-                                <span className="font-bold text-sm whitespace-nowrap">Selesai</span>
+                            <div className={`flex-1 h-[2px] mx-2 md:mx-4 ${step >= 3 ? 'bg-rose-600' : 'bg-gray-200'}`}></div>
+                            <div className={`flex items-center gap-2 ${step >= 3 ? 'text-rose-600' : 'text-gray-400'}`}>
+                                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm border-2 ${step >= 3 ? 'border-rose-600 bg-rose-50' : 'border-gray-300'}`}>3</div>
+                                <span className="font-bold text-xs md:text-sm hidden sm:inline">Selesai</span>
                             </div>
                         </div>
 
@@ -296,7 +296,9 @@ export default function PaymentPage() {
                                         <label className="block text-sm font-bold text-gray-700 mb-2">Link Undangan (Slug)</label>
                                         <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-rose-500 transition-all bg-gray-50">
                                             <span className="px-4 py-3 text-gray-500 border-r border-gray-300 text-sm md:text-base flex items-center gap-1">
-                                                <LinkIcon size={14} /> undangkankita.web.id/
+                                                <LinkIcon size={14} />
+                                                <span className="hidden sm:inline">undangkankita.web.id/</span>
+                                                <span className="sm:hidden">web.id/</span>
                                             </span>
                                             <input
                                                 type="text"
@@ -327,7 +329,7 @@ export default function PaymentPage() {
                                         <button
                                             onClick={handleNext}
                                             disabled={loading}
-                                            className="bg-rose-600 text-white px-8 py-3.5 rounded-xl font-bold text-lg hover:bg-rose-700 transition-all shadow-lg hover:shadow-rose-200 flex items-center gap-2"
+                                            className="w-full md:w-auto bg-rose-600 text-white px-8 py-3.5 rounded-xl font-bold text-lg hover:bg-rose-700 transition-all shadow-lg hover:shadow-rose-200 flex items-center justify-center gap-2"
                                         >
                                             {loading ? <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span> : <>Lanjut <ArrowRight size={20} /></>}
                                         </button>

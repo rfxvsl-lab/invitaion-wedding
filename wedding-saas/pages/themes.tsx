@@ -1,41 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { GetStaticProps } from 'next';
 import { supabase } from '../lib/supabase';
 import { getAllThemes } from '../lib/database';
-import { Theme } from '../types/database'; // Import the shared Theme type
+import { Theme } from '../types/database';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Eye, Star } from 'lucide-react';
 
-export default function ThemesPage() {
-    const [themes, setThemes] = useState<Theme[]>([]);
-    const [loading, setLoading] = useState(true);
+interface ThemesPageProps {
+    themes: Theme[];
+}
+
+export default function ThemesPage({ themes }: ThemesPageProps) {
     const [filter, setFilter] = useState('all');
     const router = useRouter();
 
-    useEffect(() => {
-        const fetch = async () => {
-            let data = await getAllThemes();
-            // Fallback content if empty
-            if (!data || data.length === 0) {
-                data = [
-                    { id: '1', name: 'Pink Floral', thumbnail_url: 'https://images.unsplash.com/photo-1507915977619-6ccfe8003ae6?w=600&q=80', tier: 'premium', preview_url: '/preview/modern-arch', slug: 'floral-rustic', created_at: new Date().toISOString() },
-                    { id: '2', name: 'Modern Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80', tier: 'basic', preview_url: '/preview/modern-arch', slug: 'clean-white', created_at: new Date().toISOString() },
-                    { id: '3', name: 'Luxury Gold', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'exclusive', preview_url: '/preview/modern-arch', slug: 'golden-luxury', created_at: new Date().toISOString() },
-                    { id: '4', name: 'Javanese Heritage', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'premium', preview_url: '/preview/modern-arch', slug: 'javanese-heritage', created_at: new Date().toISOString() },
-                    { id: '5', name: 'Rustic Wood', thumbnail_url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80', tier: 'basic', preview_url: '/preview/modern-arch', slug: 'rustic-wood', created_at: new Date().toISOString() },
-                    { id: '6', name: 'Islamic Geometric', thumbnail_url: 'https://images.unsplash.com/photo-1548685913-fe6678babe8d?w=600&q=80', tier: 'exclusive', preview_url: '/preview/modern-arch', slug: 'islamic-geo', created_at: new Date().toISOString() }
-                ];
-            }
-            setThemes(data);
-            setLoading(false);
-        };
-        fetch();
-    }, []);
-
-    // Simple client-side filtering logic based on tier or name just to mimic categories for now
-    // In a real app, you might have a dedicated category column
+    // Simple client-side filtering logic based on tier or name
     const filteredThemes = filter === 'all'
         ? themes
         : themes.filter(t => t.tier === filter || t.name.toLowerCase().includes(filter));
@@ -70,8 +52,8 @@ export default function ThemesPage() {
 
                 {/* Gallery Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-up delay-200">
-                    {loading ? (
-                        <p className="text-center col-span-3 text-gray-500">Memuat tema...</p>
+                    {filteredThemes.length === 0 ? (
+                        <p className="text-center col-span-3 text-gray-500">Belum ada tema untuk kategori ini.</p>
                     ) : (
                         filteredThemes.map(theme => (
                             <div key={theme.id} className="group relative bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition-all hover:-translate-y-2">
@@ -112,3 +94,26 @@ export default function ThemesPage() {
         </div>
     );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+    let data = await getAllThemes();
+
+    // Fallback content if empty
+    if (!data || data.length === 0) {
+        data = [
+            { id: '1', name: 'Pink Floral', thumbnail_url: 'https://images.unsplash.com/photo-1507915977619-6ccfe8003ae6?w=600&q=80', tier: 'premium', preview_url: '/preview/modern-arch', slug: 'floral-rustic', created_at: new Date().toISOString() },
+            { id: '2', name: 'Modern Minimalist', thumbnail_url: 'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&q=80', tier: 'basic', preview_url: '/preview/modern-arch', slug: 'clean-white', created_at: new Date().toISOString() },
+            { id: '3', name: 'Luxury Gold', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'exclusive', preview_url: '/preview/modern-arch', slug: 'golden-luxury', created_at: new Date().toISOString() },
+            { id: '4', name: 'Javanese Heritage', thumbnail_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&q=80', tier: 'premium', preview_url: '/preview/modern-arch', slug: 'javanese-heritage', created_at: new Date().toISOString() },
+            { id: '5', name: 'Rustic Wood', thumbnail_url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80', tier: 'basic', preview_url: '/preview/modern-arch', slug: 'rustic-wood', created_at: new Date().toISOString() },
+            { id: '6', name: 'Islamic Geometric', thumbnail_url: 'https://images.unsplash.com/photo-1548685913-fe6678babe8d?w=600&q=80', tier: 'exclusive', preview_url: '/preview/modern-arch', slug: 'islamic-geo', created_at: new Date().toISOString() }
+        ];
+    }
+
+    return {
+        props: {
+            themes: data
+        },
+        revalidate: 30, // ISR: Update every 30 seconds
+    };
+};
