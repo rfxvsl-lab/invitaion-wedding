@@ -341,8 +341,74 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                 {activeTab === 'design' && (
                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                         <SectionHeader icon={Palette} title="Tema & Musik" />
-                        {/* ... Theme grid ... */}
-                        {/* For brevity, assume theme grid is here as before */}
+                        <div className="grid grid-cols-2 gap-3 mb-6">
+                            {TEMPLATES.map((template) => {
+                                const isCurrent = data.metadata.theme_id === template.id;
+                                let isLocked = false;
+
+                                if (plan === 'free' && template.tier !== 'free') isLocked = true;
+                                if (plan === 'basic' && (template.tier === 'premium' || template.tier === 'exclusive')) isLocked = true;
+                                if (plan === 'premium' && template.tier === 'exclusive') isLocked = true;
+
+                                return (
+                                    <button
+                                        key={template.id}
+                                        onClick={() => handleThemeChange(template.id, template.tier as any)}
+                                        className={`relative group rounded-xl overflow-hidden text-left transition-all duration-300 border-2
+                                            ${isCurrent ? 'border-pink-500 ring-2 ring-pink-500/20 shadow-lg scale-[1.02]' : 'border-slate-100 hover:border-pink-300 hover:shadow-md'}
+                                        `}
+                                    >
+                                        <div className="aspect-[3/4] bg-slate-100 relative">
+                                            {/* Preview Image Mockup */}
+                                            <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-300 font-bold text-xs uppercase tracking-widest">
+                                                {template.thumbnail ? (
+                                                    <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <span>{template.name}</span>
+                                                )}
+                                            </div>
+
+                                            {/* Overlay Gradient */}
+                                            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
+
+                                            {/* Lock Overlay */}
+                                            {isLocked && (
+                                                <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] flex flex-col items-center justify-center text-white p-4 text-center">
+                                                    <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-2">
+                                                        <Gift size={14} />
+                                                    </div>
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">
+                                                        {template.tier} Plan
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            {/* Active Indicator */}
+                                            {isCurrent && (
+                                                <div className="absolute top-2 right-2 w-5 h-5 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                                                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="p-3 bg-white">
+                                            <h4 className={`text-xs font-bold leading-tight mb-1 ${isCurrent ? 'text-pink-600' : 'text-slate-700'}`}>
+                                                {template.name}
+                                            </h4>
+                                            <div className="flex items-center gap-1.5">
+                                                <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded
+                                                    ${template.tier === 'free' ? 'bg-slate-100 text-slate-500' :
+                                                        template.tier === 'basic' ? 'bg-blue-50 text-blue-600' :
+                                                            template.tier === 'premium' ? 'bg-purple-50 text-purple-600' : 'bg-amber-50 text-amber-600'}
+                                                `}>
+                                                    {template.tier}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </button>
+                                );
+                            })}
+                        </div>
                         {/* DIY Editor ... */}
                         {(plan === 'premium' || plan === 'exclusive') && (
                             <DIYEditor initialLayout={data.metadata.diy_layout} plan={plan} onLayoutChange={(layout) => onUpdate('metadata.diy_layout', layout)} />
