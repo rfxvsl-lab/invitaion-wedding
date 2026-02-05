@@ -39,8 +39,10 @@ export default function Editor() {
             router.push('/login');
             return;
         }
+        // Use a ref or check if we already have data? 
+        // Actually just relying on user.id is enough to stop loops on token refresh.
         fetchInvitation();
-    }, [user, authLoading]);
+    }, [user?.id, authLoading]);
 
     // SYNC DATA TO IFRAME (Handshake Version)
     useEffect(() => {

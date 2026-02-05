@@ -1,7 +1,8 @@
 // Path: /components/ImageUploader.tsx
 import React, { useState, useRef } from 'react';
 import { UploadCloud, Link as LinkIcon, Image as ImageIcon, Loader2 } from 'lucide-react';
-import { convertToDirectLink, compressImage } from '../utils/converter';
+import { convertToDirectLink } from '../utils/converter';
+import { supabase } from '@/lib/supabase';
 
 interface ImageUploaderProps {
     label: string;
@@ -18,17 +19,39 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ label, currentUrl, onUpda
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        // Validasi Ukuran (Max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Ukuran gambar maksimal 2MB!");
+            return;
+        }
+
         try {
-            setStatus('compressing');
-            await compressImage(file); // Mock compression
             setStatus('uploading');
-            // Mock upload delay
-            await new Promise(r => setTimeout(r, 1000));
-            const mockUrl = URL.createObjectURL(file);
-            onUpdate(mockUrl);
+
+            // Generate Path Unik
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+            const filePath = `uploads/${fileName}`;
+
+            // Upload ke Supabase 'images' bucket
+            // Import supabase instance? It is not imported in this file. 
+            // Need to add import.
+            const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file);
+
+            if (uploadError) {
+                // Jika bucket 'images' tidak ada, coba 'public'?
+                // Tapi kita asumsikan error user bisa baca.
+                throw uploadError;
+            }
+
+            const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(filePath);
+
+            onUpdate(publicUrl);
             setStatus('success');
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            console.error("Upload Error:", error);
+            alert(`Gagal upload: ${error.message}`);
             setStatus('error');
         }
     };
