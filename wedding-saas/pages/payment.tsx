@@ -271,7 +271,7 @@ export default function PaymentPage() {
                                         <label className="block text-sm font-bold text-gray-700 mb-2">Link Undangan (Slug)</label>
                                         <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-rose-500 transition-all bg-gray-50">
                                             <span className="px-4 py-3 text-gray-500 border-r border-gray-300 text-sm md:text-base flex items-center gap-1">
-                                                <LinkIcon size={14} /> undangankita.com/
+                                                <LinkIcon size={14} /> undangankita.web.id/
                                             </span>
                                             <input
                                                 type="text"
