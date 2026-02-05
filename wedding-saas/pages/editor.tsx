@@ -248,8 +248,11 @@ export default function Editor() {
             <div className="w-full lg:w-[400px] h-[50vh] lg:h-full flex-shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r border-slate-200 bg-white z-20 shadow-xl">
                 {/* Header Navbar in Sidebar */}
                 <div className="h-16 flex items-center px-6 border-b border-slate-100 justify-between bg-white shrink-0">
-                    <button onClick={() => router.push('/')} className="text-slate-500 hover:text-slate-800 transition flex items-center gap-2 text-sm font-bold">
-                        <ArrowLeft size={18} /> Home
+                    <button
+                        onClick={() => router.push(user?.email === 'mhmmadridho64@gmail.com' ? '/admin' : '/dashboard/user')}
+                        className="text-slate-500 hover:text-slate-800 transition flex items-center gap-2 text-sm font-bold"
+                    >
+                        <ArrowLeft size={18} /> Kembali
                     </button>
                     <button
                         type="button"

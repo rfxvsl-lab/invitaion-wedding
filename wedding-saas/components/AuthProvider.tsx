@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const isProtectedPage = protectedPrefixes.some(prefix => window.location.pathname.startsWith(prefix));
 
                 if (isProtectedPage && (!profileData || !profileData.full_name || !profileData.phone_number)) {
-                    window.location.href = '/onboarding';
+                    // window.location.href = '/onboarding'; // DISABLED: User requested to stop auto-redirects here
                 }
             } else {
                 setProfile(null);
