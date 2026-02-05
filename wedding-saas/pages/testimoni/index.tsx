@@ -40,35 +40,32 @@ export default function TestimonialSubmission() {
     const fetchOrders = async () => {
         if (!user) return;
         setLoading(true);
-        // Fetch valid paid/active orders to see which templates they used
-        // Assuming 'orders' has 'tier' and potentially 'invitation_id' -> 'invitations' -> 'template_id' -> 'themes'
-        // OR simply user might know their template name. But user asked for "Kategori/Templates UNDANGAN YANG HANYA DI BUAT OLEH USER"
-        // Meaning we need to verify they bought it.
-        // Let's assume 'orders' table has 'tier' field. User said "Templates Undangan".
-        // Actually, in Phase 17 I saw 'themes' table. 'invitations' table likely has 'theme_id' or 'details'.
-        // Let's fetch 'invitations' for this user to get their used templates.
 
-        const { data: invitations } = await supabase
-            .from('invitations')
-            .select('slug, type, theme:themes(name)') // Assuming relation
-            .eq('user_id', user.id);
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
 
-        // Fallback if relation not working or straightforward:
-        // Adjust based on actual schema:
-        // We really just want a list of strings "ModernArch", "DarkLuxury" etc.
-        // If the user hasn't made an invitation yet, maybe show warning.
+            if (!token) throw new Error("No session");
 
-        // FOR NOW: Mocking/Simplifying if complex relation fails
-        // But let's try to get distinct themes from their invitations
-        // If invitations table has 'type' column which stores theme name (e.g. 'modern-arch')
+            const res = await fetch('/api/my-themes', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
 
-        if (invitations) {
-            const uniqueThemes = Array.from(new Set(invitations.map((inv: any) => inv.type || inv.theme?.name || 'Unknown')));
-            setOrders(uniqueThemes.filter(t => t !== 'Unknown'));
-            if (uniqueThemes.length > 0) setFormData(prev => ({ ...prev, template_name: uniqueThemes[0] }));
+            if (!res.ok) throw new Error("Failed to fetch themes");
+
+            const data = await res.json();
+            const uniqueThemes = data.themes || [];
+
+            setOrders(uniqueThemes);
+            if (uniqueThemes.length > 0) {
+                setFormData(prev => ({ ...prev, template_name: uniqueThemes[0] }));
+            }
+        } catch (err) {
+            console.error("Error fetching themes:", err);
+            // Fallback empty, user can still type manually or see empty state
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
