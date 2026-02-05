@@ -131,8 +131,31 @@ export async function updateOrderStatus(orderId: string, status: 'paid' | 'rejec
     if (status === 'paid' && order) {
         // A. Update User Profile (Tier)
         if (order.user_id) {
+            // Define limits based on tier
+            let maxChanges = 0;
+            let slugSlots = 1;
+
+            switch (order.tier_selected) {
+                case 'basic':
+                    maxChanges = 2;
+                    break;
+                case 'premium':
+                    maxChanges = 5;
+                    break;
+                case 'exclusive':
+                    maxChanges = 5;
+                    slugSlots = 3; // 1 + 2
+                    break;
+                default:
+                    // Free or unknown
+                    maxChanges = 0;
+                    slugSlots = 1;
+            }
+
             await supabase.from('profiles').update({
-                tier: order.tier_selected
+                tier: order.tier_selected,
+                max_slug_changes: maxChanges,
+                slug_slots: slugSlots
             }).eq('id', order.user_id);
         }
 
@@ -204,6 +227,12 @@ export async function updateOrderStatus(orderId: string, status: 'paid' | 'rejec
     }
 
     return true;
+}
+
+export async function checkSlugAvailability(slug: string): Promise<boolean> {
+    if (!slug || slug.length < 3) return false;
+    const { data } = await supabase.from('invitations').select('id').eq('slug', slug).maybeSingle();
+    return !data;
 }
 
 // ===== STORAGE =====
