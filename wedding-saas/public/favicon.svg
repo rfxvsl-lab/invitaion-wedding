@@ -1,0 +1,10 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <path d="M50 40 C60 30 75 30 80 40 C85 50 75 65 50 80 C25 65 15 50 20 40 C25 30 40 30 50 40 Z" fill="#be185d" />
+  <g>
+    <rect x="10" y="30" width="80" height="50" rx="5" fill="#be185d" />
+    <path d="M10 30 L50 60 L90 30" fill="#9d174d" />
+    <path d="M10 80 L50 55 L90 80" fill="#db2777" opacity="0.5" />
+    <text x="50" y="65" font-size="16" fill="white" font-weight="bold" text-anchor="middle" font-family="sans-serif">SCC</text>
+    <path d="M10 30 L50 60 L90 30 L90 25 L10 25 Z" fill="#fbcfe8" />
+  </g>
+</svg>
