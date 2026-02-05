@@ -89,8 +89,10 @@ export default function Editor() {
                 setData(mergedData);
                 setLoading(false);
             } else {
-                console.log("No invitation found, creating new one...");
-                await createStarterInvitation();
+                // LOGIKA SLUG ACAK DIHAPUS - User harusnya sudah punya data dari Onboarding
+                console.warn("No invitation found for this user.");
+                alert("Data undangan tidak ditemukan. Pastikan Anda sudah menyelesaikan proses pendaftaran/onboarding.");
+                setLoading(false);
             }
         } catch (err: any) {
             console.error("Fetch Error:", err);
@@ -101,32 +103,7 @@ export default function Editor() {
         }
     };
 
-    const createStarterInvitation = async () => {
-        const defaultSlug = `undangan-${Math.random().toString(36).substring(7)}`;
-        console.log("Attempting to create invitation with slug:", defaultSlug);
-
-        const { data: newInv, error } = await supabase.from('invitations').insert({
-            user_id: user?.id,
-            slug: defaultSlug,
-            metadata: { theme_id: 'modern-arch', tier: 'free' },
-            content: {} // will trigger default merge
-        }).select().maybeSingle();
-
-        if (error) {
-            console.error('Error creating invitation:', error);
-            alert("Gagal membuat data awal: " + (error?.message || "Unknown Error"));
-            setLoading(false); // Ensure loading stops
-            return;
-        }
-
-        if (newInv) {
-            console.log("Created invitation:", newInv);
-            setInvitation(newInv);
-            const mergedData = mergeWithDefaults({}, { theme_id: 'modern-arch', tier: 'free' });
-            setData(mergedData);
-            setLoading(false);
-        }
-    };
+    // Removed createStarterInvitation as per request to avoid random slugs
 
     const mergeWithDefaults = (content: any, metadata: any): InvitationData => {
         // Fallback structure
