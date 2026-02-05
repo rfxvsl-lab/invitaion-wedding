@@ -39,7 +39,6 @@ const AdminOrdersPage = () => {
         const success = await updateOrderStatus(orderId, 'paid');
 
         if (success) {
-            // Send Email Notification Logic (Simplified for now)
             alert('Pembayaran diterima! Status diperbarui.');
             fetchOrders();
             setSelectedOrder(null);

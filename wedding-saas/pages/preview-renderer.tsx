@@ -16,8 +16,10 @@ export default function PreviewRenderer() {
 
         window.addEventListener('message', handleMessage);
 
-        // Notify parent we are ready
-        window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
+        // Notify parent we are ready (Handshake)
+        if (window.parent) {
+            window.parent.postMessage({ type: 'PREVIEW_READY' }, '*');
+        }
 
         return () => window.removeEventListener('message', handleMessage);
     }, []);

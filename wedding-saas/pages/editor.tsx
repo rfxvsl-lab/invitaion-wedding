@@ -11,6 +11,7 @@ import { Eye, Smartphone, Monitor, Save, ArrowLeft } from 'lucide-react';
 export default function Editor() {
     const { user, loading: authLoading } = useAuth();
     const router = useRouter();
+    // State
     const [loading, setLoading] = useState(true);
     const [invitation, setInvitation] = useState<any>(null);
     const [previewMode, setPreviewMode] = useState<'mobile' | 'desktop'>('mobile');
@@ -19,8 +20,11 @@ export default function Editor() {
     const [showSlugWarning, setShowSlugWarning] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+    // Profile Stats for restrictions
+    const [profileStats, setProfileStats] = useState<any>(null);
+
     const isDefaultSlug = (slug: string) => {
-        return slug.startsWith('undangan-') && slug.length > 15;
+        return slug && slug.startsWith('undangan-') && slug.length > 15;
     };
 
     useEffect(() => {
@@ -38,12 +42,23 @@ export default function Editor() {
         fetchInvitation();
     }, [user, authLoading]);
 
-    // SYNC DATA TO IFRAME
+    // SYNC DATA TO IFRAME (Handshake Version)
     useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+            if (event.data?.type === 'PREVIEW_READY' && data) {
+                const iframe = document.getElementById('preview-frame') as HTMLIFrameElement;
+                iframe?.contentWindow?.postMessage({ type: 'UPDATE_DATA', payload: data }, '*');
+            }
+        };
+        window.addEventListener('message', handleMessage);
+
+        // Also send immediately if data changes (for updates after handshake)
         const iframe = document.getElementById('preview-frame') as HTMLIFrameElement;
         if (iframe && iframe.contentWindow && data) {
             iframe.contentWindow.postMessage({ type: 'UPDATE_DATA', payload: data }, '*');
         }
+
+        return () => window.removeEventListener('message', handleMessage);
     }, [data]);
 
     const fetchInvitation = async () => {
@@ -51,29 +66,29 @@ export default function Editor() {
         const timeout = setTimeout(() => {
             if (loading) {
                 setLoading(false);
-                alert("Loading took too long. Please refresh.");
+                // Don't alert here to avoid annoyance, just log
+                console.warn("Loading timeout reached");
             }
-        }, 10000);
+        }, 15000);
 
         try {
-            console.log("Fetching invitation for user:", user?.id);
+            console.log("Fetching data for user:", user?.id);
+
+            // 0. Fetch Profile Stats (Tier, Limits)
+            const { data: profile } = await supabase.from('profiles').select('tier, max_slug_changes, slug_change_count').eq('id', user?.id).single();
+            setProfileStats(profile);
+
             // 1. Cek Invitation
             const { data: existing, error } = await supabase.from('invitations').select('*').eq('user_id', user?.id).limit(1).maybeSingle();
 
-            if (error) {
-                console.error("Supabase Error:", error);
-                throw error;
-            }
+            if (error) throw error;
 
             if (existing) {
-                console.log("Found existing invitation:", existing);
                 setInvitation(existing);
-                // Merge DB Data with Defaults to prevent Crash
                 const mergedData = mergeWithDefaults(existing.content, existing.metadata);
                 setData(mergedData);
                 setLoading(false);
             } else {
-                // 2. Create if not exists (Auto-create)
                 console.log("No invitation found, creating new one...");
                 await createStarterInvitation();
             }
@@ -171,7 +186,6 @@ export default function Editor() {
         if (!invitation || !data) return;
 
         // 1. Check for Default Slug
-        // 1. Check for Default Slug
         if (isDefaultSlug(data.metadata.slug)) {
             setShowSlugWarning(true);
             return;
@@ -179,14 +193,44 @@ export default function Editor() {
 
         setSaving(true);
         try {
+            // Slug Change Logic
+            let shouldIncrementCount = false;
+            if (data.metadata.slug !== invitation.slug) {
+                // Check if user allowed to change
+                if (profileStats?.tier === 'free') {
+                    // Free user cannot change slug (except if it was default, but logic handled in onboarding usually - here we assume strict)
+                    // Actually, if they are free, they should stick with what they have.
+                    // But if they just onboarded, they set it there.
+                    // If they are here, they are trying to change it AGAIN.
+                    // BLOCK IT.
+                    throw new Error("User Free tidak dapat mengganti link undangan. Upgrade ke Basic/Premium.");
+                }
+
+                const currentCount = profileStats?.slug_change_count || 0;
+                const maxChanges = profileStats?.max_slug_changes || 0;
+
+                if (currentCount >= maxChanges) {
+                    throw new Error(`Kuota ganti link habis (${maxChanges}x). Upgrade plan untuk menambah kuota.`);
+                }
+                shouldIncrementCount = true;
+            }
+
             const { error } = await supabase.from('invitations').update({
                 content: { ...data.content, engagement: data.engagement },
                 metadata: data.metadata,
-                // Update slug if changed in settings
                 slug: data.metadata.slug
             }).eq('id', invitation.id);
 
             if (error) throw error;
+
+            // Increment Count if success
+            if (shouldIncrementCount && user) {
+                await supabase.rpc('increment_slug_count', { p_user_id: user.id });
+                // Update local state
+                setProfileStats({ ...profileStats, slug_change_count: (profileStats?.slug_change_count || 0) + 1 });
+                // Update invitation state to reflect new slug as 'current'
+                setInvitation({ ...invitation, slug: data.metadata.slug });
+            }
 
             // Show Success Modal instead of Alert
             setShowSuccessModal(true);
@@ -241,7 +285,7 @@ export default function Editor() {
 
                 {/* EDITOR COMPONENT */}
                 <div className="flex-1 overflow-hidden relative">
-                    <EditorSidebar data={data} onUpdate={handleUpdate} />
+                    <EditorSidebar data={data} onUpdate={handleUpdate} userProfile={profileStats} />
                 </div>
             </div>
 
