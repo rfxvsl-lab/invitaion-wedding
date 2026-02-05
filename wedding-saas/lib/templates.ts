@@ -11,6 +11,7 @@ import RoyalGlass from '@/templates/RoyalGlass';
 import NetflixLuxury from '@/templates/NetflixLuxury';
 import GrandBallroom from '@/templates/GrandBallroom';
 import RoyalArabian from '@/templates/RoyalArabian';
+import LuxuryPink from '@/templates/LuxuryPink';
 
 export type TemplateTier = 'free' | 'basic' | 'premium' | 'exclusive';
 
@@ -45,5 +46,12 @@ export const TEMPLATES: TemplateConfig[] = [
         thumbnail: 'https://images.unsplash.com/photo-1542259148-5c40149d6389?w=600&q=80',
         tier: 'exclusive',
         component: RoyalArabian
+    },
+    {
+        id: 'luxury-pink',
+        name: 'Luxury Pink',
+        thumbnail: 'https://images.unsplash.com/photo-1596726615557-4b7261973007?w=600&q=80',
+        tier: 'exclusive',
+        component: LuxuryPink
     }
 ];

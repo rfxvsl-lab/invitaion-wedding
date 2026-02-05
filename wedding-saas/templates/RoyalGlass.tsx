@@ -94,9 +94,7 @@ const GlobalStyles = () => (
   `}</style>
 );
 
-/**
- * --- SVG ASSETS ---
- */
+
 const HugeFloral = ({ className, color = "#D4A5A5", style }: any) => (
     <svg viewBox="0 0 200 200" className={`absolute pointer-events-none opacity-40 ${className}`} style={style}>
         <path d="M100 0 C 130 50, 180 50, 200 100 C 180 150, 130 180, 100 200 C 70 150, 20 150, 0 100 C 20 50, 70 20, 100 0" fill="none" stroke={color} strokeWidth="1.5" />
