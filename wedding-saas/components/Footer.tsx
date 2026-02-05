@@ -35,7 +35,7 @@ export default function Footer() {
                 </div>
 
                 <div className="text-gray-600 text-sm border-t border-gray-800 pt-8">
-                    &copy; {new Date().getFullYear()} Undangkan Kita SCC. All rights reserved.
+                    &copy; {new Date().getFullYear()} undangkankita.web.id. All rights reserved.
                 </div>
             </div>
         </footer>
