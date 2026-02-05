@@ -121,14 +121,17 @@ export default function PaymentPage() {
         fetchConfig();
     }, []);
 
-    const priceDisplay = prices[String(tier)] || prices['premium'];
+    const priceDisplay = config[`payment_price_${tierName.toLowerCase()}`] || prices[tierName.toLowerCase()] || prices['premium'];
+    const originalPrice = config[`payment_original_price_${tierName.toLowerCase()}`] || '';
+    const featuresRaw = config[`payment_features_${tierName.toLowerCase()}`];
+    const featuresList = featuresRaw ? featuresRaw.split(',').map(f => f.trim()) : ["Undangan Digital", "Masa Aktif Sesuai Paket", "Fitur Premium (Sesuai Tier)", "Support Prioritas"];
 
     const selectedPlan = {
         name: `${tierName} Plan`,
         price: priceDisplay,
-        features: ["Undangan Digital", "Masa Aktif Sesuai Paket", "Fitur Premium (Sesuai Tier)", "Support Prioritas"],
-        originalPrice: "Rp 299.000",
-        discount: "Hemat!"
+        features: featuresList,
+        originalPrice: originalPrice,
+        discount: originalPrice ? "Hemat!" : ""
     };
 
     const handleNext = () => {
@@ -214,7 +217,7 @@ export default function PaymentPage() {
 
                     <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1.5 rounded-full text-xs font-bold border border-green-100">
                         <ShieldCheck size={14} />
-                        <span>Enkripsi SSL 256-bit</span>
+                        <span>Mudah & Aman</span>
                     </div>
                 </div>
             </header>
@@ -360,14 +363,17 @@ export default function PaymentPage() {
                                                 <QrCode className="text-gray-400" />
                                             </div>
 
-                                            {paymentMethod === 'qris' && (
-                                                <div className="mt-4 pl-10 fade-in">
-                                                    <div className="bg-white border border-gray-200 rounded-lg p-4 inline-block shadow-sm">
-                                                        <img src={config['payment_qris_image'] || "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Commons_QR_code.png/150px-Commons_QR_code.png"} alt="QRIS" className="w-32 h-32 opacity-80 mix-blend-multiply" />
-                                                    </div>
-                                                    <p className="text-xs text-gray-500 mt-2">Scan kode QR di atas untuk pembayaran otomatis.</p>
+                                            <div className="mt-4 pl-10 fade-in">
+                                                <div className="bg-white border border-gray-200 rounded-lg p-4 inline-block shadow-sm">
+                                                    <img
+                                                        src="/qris_default.jpg"
+                                                        alt="QRIS"
+                                                        className="w-64 h-auto max-w-full rounded-lg"
+                                                    />
                                                 </div>
-                                            )}
+                                                <p className="text-sm font-bold text-gray-700 mt-3">Scan kode QR di dapan aplikasi pembayaran Anda.</p>
+                                                <p className="text-xs text-gray-500 mt-1">Mendukung GoPay, OVO, Dana, ShopeePay, LinkAja, BCA Mobile, dll.</p>
+                                            </div>
                                         </div>
 
                                         {/* Transfer Bank */}
@@ -540,7 +546,7 @@ export default function PaymentPage() {
 
             {/* FOOTER SIMPLE */}
             <footer className="bg-white border-t border-gray-100 py-8 text-center text-sm text-gray-500">
-                <p>&copy; 2024 Undangkan Kita SCC. All rights reserved.</p>
+                <p>&copy; 2026 undangkankita.web.id. All rights reserved.</p>
                 <div className="flex justify-center gap-4 mt-2">
                     <Link href="/terms" className="hover:text-rose-600">Syarat & Ketentuan</Link>
                     <span>•</span>

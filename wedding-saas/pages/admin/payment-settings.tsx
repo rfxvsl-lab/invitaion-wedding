@@ -60,6 +60,43 @@ export default function AdminPaymentSettings() {
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
+    const [activeTab, setActiveTab] = useState('global');
+
+    const tiers = ['basic', 'premium', 'exclusive'];
+
+    const renderTierForm = (tier: string) => (
+        <div className="space-y-4 animate-fade-in">
+            <h3 className="text-lg font-bold text-slate-700 capitalize border-b border-slate-100 pb-2 mb-4">Konfigurasi {tier}</h3>
+            <div>
+                <label className="block text-sm font-bold text-slate-600 mb-1">Harga Diskon (Tampil)</label>
+                <input
+                    type="text"
+                    value={getVal(`payment_price_${tier}`)}
+                    onChange={(e) => handleChange(`payment_price_${tier}`, e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
+                />
+            </div>
+            <div>
+                <label className="block text-sm font-bold text-slate-600 mb-1">Harga Coret (Asli)</label>
+                <input
+                    type="text"
+                    value={getVal(`payment_original_price_${tier}`)}
+                    onChange={(e) => handleChange(`payment_original_price_${tier}`, e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-500 line-through outline-none focus:ring-2 focus:ring-rose-500"
+                />
+            </div>
+            <div>
+                <label className="block text-sm font-bold text-slate-600 mb-1">Fitur (Pisahkan dengan koma)</label>
+                <textarea
+                    value={getVal(`payment_features_${tier}`)}
+                    onChange={(e) => handleChange(`payment_features_${tier}`, e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500 min-h-[100px]"
+                />
+                <p className="text-xs text-slate-400 mt-1">Contoh: Fitur A, Fitur B, Fitur C</p>
+            </div>
+        </div>
+    );
+
     return (
         <AdminLayout title="Payment Settings - Admin Panel">
             {toast && (
@@ -71,7 +108,7 @@ export default function AdminPaymentSettings() {
             <div className="flex justify-between items-center mb-8">
                 <div>
                     <h1 className="text-3xl font-extrabold text-slate-900">Payment Configuration</h1>
-                    <p className="text-slate-500 mt-2">Atur harga, metode pembayaran, dan instruksi.</p>
+                    <p className="text-slate-500 mt-2">Atur harga, metode pembayaran, dan instruksi per tier.</p>
                 </div>
                 <button
                     onClick={handleSave}
@@ -82,102 +119,74 @@ export default function AdminPaymentSettings() {
                 </button>
             </div>
 
+            {/* TABS */}
+            <div className="flex gap-2 mb-8 border-b border-slate-200 pb-1 overflow-x-auto">
+                <button
+                    onClick={() => setActiveTab('global')}
+                    className={`px-6 py-2 rounded-t-lg font-bold transition whitespace-nowrap ${activeTab === 'global' ? 'bg-white border-x border-t border-slate-200 text-rose-600' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'}`}
+                >
+                    Global Settings
+                </button>
+                {tiers.map(tier => (
+                    <button
+                        key={tier}
+                        onClick={() => setActiveTab(tier)}
+                        className={`px-6 py-2 rounded-t-lg font-bold transition capitalize whitespace-nowrap ${activeTab === tier ? 'bg-white border-x border-t border-slate-200 text-rose-600' : 'text-slate-500 hover:text-slate-800 hover:bg-slate-50'}`}
+                    >
+                        {tier} Tier
+                    </button>
+                ))}
+            </div>
+
             <div className="grid lg:grid-cols-2 gap-8">
-                {/* PRICING SETTINGS */}
-                <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 h-fit">
-                    <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <CreditCard className="text-rose-600" /> Harga Paket
-                    </h2>
-                    <div className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1">Harga Basic</label>
-                            <input
-                                type="text"
-                                value={getVal('payment_price_basic')}
-                                onChange={(e) => handleChange('payment_price_basic', e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
-                            />
+                {/* DYNAMIC CONTENT BASED ON TAB */}
+                {activeTab === 'global' ? (
+                    <>
+                        {/* QRIS SETTINGS */}
+                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 h-fit">
+                            <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                                <CreditCard className="text-rose-600" /> QRIS Image
+                            </h2>
+                            <div className="space-y-4">
+                                <label className="block text-sm font-bold text-slate-600 mb-1">Upload Gambar QRIS</label>
+                                <AdminImageUploader
+                                    currentUrl={getVal('payment_qris_image')}
+                                    onUploadComplete={(url) => handleChange('payment_qris_image', url)}
+                                />
+                                <p className="text-xs text-slate-400 mt-2">Pastikan gambar QRIS jelas dan dapat dipindai.</p>
+                            </div>
                         </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1">Harga Premium</label>
-                            <input
-                                type="text"
-                                value={getVal('payment_price_premium')}
-                                onChange={(e) => handleChange('payment_price_premium', e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1">Harga Exclusive</label>
-                            <input
-                                type="text"
-                                value={getVal('payment_price_exclusive')}
-                                onChange={(e) => handleChange('payment_price_exclusive', e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-bold text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
-                            />
-                        </div>
-                    </div>
-                </div>
 
-                {/* QRIS SETTINGS */}
-                <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 h-fit">
-                    <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <CreditCard className="text-rose-600" /> QRIS Image
-                    </h2>
-                    <div className="space-y-4">
-                        <label className="block text-sm font-bold text-slate-600 mb-1">Upload Gambar QRIS</label>
-                        <AdminImageUploader
-                            currentUrl={getVal('payment_qris_image')}
-                            onUploadComplete={(url) => handleChange('payment_qris_image', url)}
-                        />
-                        <p className="text-xs text-slate-400 mt-2">Pastikan gambar QRIS jelas dan dapat dipindai.</p>
+                        {/* BANK ACCOUNTS */}
+                        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 h-fit">
+                            <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                                <CreditCard className="text-rose-600" /> Rekening Bank
+                            </h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-600 mb-1">BCA</label>
+                                    <input type="text" value={getVal('payment_bank_bca')} onChange={(e) => handleChange('payment_bank_bca', e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-600 mb-1">Mandiri</label>
+                                    <input type="text" value={getVal('payment_bank_mandiri')} onChange={(e) => handleChange('payment_bank_mandiri', e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-600 mb-1">BNI</label>
+                                    <input type="text" value={getVal('payment_bank_bni')} onChange={(e) => handleChange('payment_bank_bni', e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-600 mb-1">BRI</label>
+                                    <input type="text" value={getVal('payment_bank_bri')} onChange={(e) => handleChange('payment_bank_bri', e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500" />
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2">
+                        {renderTierForm(activeTab)}
                     </div>
-                </div>
-
-                {/* BANK ACCOUNTS */}
-                <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 lg:col-span-2">
-                    <h2 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
-                        <CreditCard className="text-rose-600" /> Rekening Bank (Virtual Account)
-                    </h2>
-                    <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1">BCA</label>
-                            <input
-                                type="text"
-                                value={getVal('payment_bank_bca')}
-                                onChange={(e) => handleChange('payment_bank_bca', e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1">Mandiri</label>
-                            <input
-                                type="text"
-                                value={getVal('payment_bank_mandiri')}
-                                onChange={(e) => handleChange('payment_bank_mandiri', e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1">BNI</label>
-                            <input
-                                type="text"
-                                value={getVal('payment_bank_bni')}
-                                onChange={(e) => handleChange('payment_bank_bni', e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-bold text-slate-600 mb-1">BRI</label>
-                            <input
-                                type="text"
-                                value={getVal('payment_bank_bri')}
-                                onChange={(e) => handleChange('payment_bank_bri', e.target.value)}
-                                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 font-medium text-slate-900 outline-none focus:ring-2 focus:ring-rose-500"
-                            />
-                        </div>
-                    </div>
-                </div>
+                )}
             </div>
         </AdminLayout>
     );
