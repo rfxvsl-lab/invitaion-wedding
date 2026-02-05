@@ -7,10 +7,12 @@ import AdminImageUploader from '@/components/AdminImageUploader';
 
 export default function AdminPaymentSettings() {
     const router = useRouter();
+    const [config, setConfig] = useState<Record<string, string>>({});
     const [settings, setSettings] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
+    const [activeTab, setActiveTab] = useState('global');
 
     useEffect(() => {
         checkAuth();
@@ -59,8 +61,6 @@ export default function AdminPaymentSettings() {
     const getVal = (key: string) => settings.find(s => s.key === key)?.value || '';
 
     if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="animate-spin" /></div>;
-
-    const [activeTab, setActiveTab] = useState('global');
 
     const tiers = ['basic', 'premium', 'exclusive'];
 
