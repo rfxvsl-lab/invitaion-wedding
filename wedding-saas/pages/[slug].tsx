@@ -20,6 +20,7 @@ import NetflixLuxury from '../templates/NetflixLuxury';
 import GrandBallroom from '../templates/GrandBallroom';
 import RoyalArabian from '../templates/RoyalArabian';
 import LuxuryPink from '../templates/LuxuryPink';
+import SpotiLove from '../templates/SpotiLove';
 
 interface InvitationPageProps {
     data: InvitationData | null;
@@ -87,6 +88,7 @@ export default function InvitationPage({ data, guestName, error }: InvitationPag
             case 'grand-ballroom': return <GrandBallroom data={data} guestName={guestName} />;
             case 'royal-arabian': return <RoyalArabian data={data} guestName={guestName} />;
             case 'luxury-pink': return <LuxuryPink data={data} guestName={guestName} />;
+            case 'spotilove': return <SpotiLove data={data} guestName={guestName} />;
             case 'modern-arch': default: return <ModernArch data={data} guestName={guestName} />;
         }
     };

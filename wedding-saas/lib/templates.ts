@@ -12,18 +12,31 @@ import NetflixLuxury from '@/templates/NetflixLuxury';
 import GrandBallroom from '@/templates/GrandBallroom';
 import RoyalArabian from '@/templates/RoyalArabian';
 import LuxuryPink from '@/templates/LuxuryPink';
+import SpotiLove from '@/templates/SpotiLove';
 
 export type TemplateTier = 'free' | 'basic' | 'premium' | 'exclusive';
 
-export interface TemplateConfig {
+export interface Template {
     id: string;
     name: string;
-    tier: TemplateTier;
-    thumbnail?: string;
+    thumbnail_url: string;
+    tier: 'free' | 'basic' | 'premium' | 'exclusive';
+    preview_url?: string;
+    slug: string;
+    created_at: string;
     component: React.ComponentType<any>;
 }
 
-export const TEMPLATES: TemplateConfig[] = [
+export const TEMPLATES: Template[] = [
+    {
+        id: 'spotilove',
+        name: 'SpotiLove Music',
+        tier: 'exclusive',
+        thumbnail_url: 'https://images.unsplash.com/photo-1614680376593-902f74cf0d41?w=800&q=80',
+        slug: 'spotilove',
+        created_at: new Date().toISOString(),
+        component: SpotiLove
+    },
     // FREE & BASIC
     { id: 'modern-arch', name: 'Modern Arch', tier: 'free', component: ModernArch },
     { id: 'classic-serif', name: 'Classic Serif', tier: 'free', component: ClassicSerif },

@@ -49,7 +49,7 @@ export interface DIYLayout {
 export interface InvitationData {
     metadata: {
         slug: string;
-        theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest' | 'maroon-vintage' | 'adat-bone' | 'elegant-vanilla' | 'royal-glass' | 'netflix-luxury' | 'grand-ballroom' | 'royal-arabian' | 'luxury-pink';
+        theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest' | 'maroon-vintage' | 'adat-bone' | 'elegant-vanilla' | 'royal-glass' | 'netflix-luxury' | 'grand-ballroom' | 'royal-arabian' | 'luxury-pink' | 'spotilove';
         music_url: string;
         custom_bg_url?: string; // Optional custom background
         diy_layout?: DIYLayout; // DIY customization data

@@ -519,6 +519,144 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         </div>
                     </div>
                 </div>
+            ) : themeId === 'spotilove' ? (
+                /* SPOTILOVE DESIGN */
+                <div className="w-full h-full relative flex flex-col items-center bg-[#121212] text-white font-sans pt-24 pb-32 px-12">
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap');
+                        .font-spoti { font-family: 'Montserrat', sans-serif; }
+                    `}</style>
+
+                    {/* Header */}
+                    <div className="flex flex-col items-center mb-12">
+                        <div className="flex items-center gap-3 mb-4">
+                            {/* Spotify Icon */}
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="#1DB954" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM16.2426 16.2426C15.8521 16.8284 15.0711 17.0237 14.4853 16.6332C11.9882 15.1111 8.82843 14.7574 5.17157 15.5858C4.50589 15.7421 3.84411 15.3289 3.68784 14.6632C3.53158 13.9975 3.94474 13.3358 4.61042 13.1795C8.80474 12.2222 12.3905 12.6332 15.2574 14.3668C15.8432 14.7574 16.0384 15.5384 15.6479 16.1242H16.2426ZM17.6569 13.1795C17.1882 13.8826 16.2511 14.1174 15.5479 13.6489C12.7226 11.9142 8.44421 11.3905 5.05368 12.4463C4.24211 12.6805 3.37684 12.2116 3.14263 11.4C2.90842 10.5884 3.37684 9.72316 4.18842 9.48895C8.16421 8.28579 13.0642 8.87158 16.3663 10.9032C17.0695 11.3716 17.3037 12.3089 16.8353 13.0121H17.6569ZM18.9 10.0232C15.0232 7.72632 8.78842 7.51421 5.11579 8.62895C4.18842 8.91105 3.20368 8.39526 2.92158 7.46789C2.63947 6.54053 3.15526 5.55579 4.08263 5.27368C8.36632 3.97421 15.3358 4.22316 19.8642 6.91105C20.6758 7.39526 20.9579 8.45105 20.4737 9.26263C19.9895 10.0742 18.9337 10.3563 18.1221 9.87211H18.9V10.0232Z" fill="#121212" />
+                            </svg>
+                            <span className="font-spoti text-3xl font-bold tracking-widest">SpotiLove</span>
+                        </div>
+                        <p className="font-spoti text-[#1DB954] text-lg font-bold uppercase tracking-[0.3em]">Exclusive Release</p>
+                    </div>
+
+                    {/* Cover Art */}
+                    <div className="w-[800px] h-[800px] bg-[#282828] shadow-2xl relative mb-16 group">
+                        <img src={bgImage} className="w-full h-full object-cover shadow-[0_20px_60px_rgba(0,0,0,0.6)]" alt="Cover" />
+                        <div className="absolute top-4 left-4">
+                            <div className="bg-[#1DB954] text-black font-bold px-3 py-1 rounded text-xl uppercase font-spoti">New Match</div>
+                        </div>
+                    </div>
+
+                    {/* Track Info */}
+                    <div className="w-full flex flex-col items-start px-8 mb-12">
+                        <p className="font-spoti text-6xl font-black mb-4 truncate w-full">{data.content.hero.nicknames}</p>
+                        <p className="font-spoti text-3xl text-[#B3B3B3] font-medium">{dateFormatted} • Wedding Celebration</p>
+                    </div>
+
+                    {/* Wish/Quote (Lyrics Style) */}
+                    <div className="w-full flex-1 bg-gradient-to-b from-[#282828] to-[#121212] rounded-3xl p-10 mb-12 border border-[#333] relative overflow-hidden">
+                        {wish ? (
+                            <>
+                                <p className="font-spoti text-4xl font-bold text-white leading-relaxed">"{wish}"</p>
+                                <p className="font-spoti text-2xl text-[#1DB954] mt-8 font-bold uppercase tracking-widest">- {guestName}</p>
+                            </>
+                        ) : (
+                            <p className="font-spoti text-4xl font-bold text-[#B3B3B3] leading-relaxed">
+                                "Two souls, one playlist. Join us as we start our greatest track yet. Save the date for our big day."
+                            </p>
+                        )}
+                        {/* Audio Wave Visual */}
+                        <div className="absolute bottom-0 left-0 right-0 h-32 flex items-end justify-center gap-2 pb-8 opacity-20">
+                            {Array.from({ length: 20 }).map((_, i) => (
+                                <div key={i} className="w-4 bg-[#1DB954] rounded-t-full" style={{ height: `${20 + Math.random() * 80}%` }}></div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Player Controls (Fake) */}
+                    <div className="w-full px-4">
+                        <div className="w-full h-2 bg-[#4D4D4D] rounded-full mb-4 relative">
+                            <div className="absolute left-0 top-0 h-full w-[35%] bg-[#1DB954] rounded-full"></div>
+                            <div className="absolute left-[35%] top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow"></div>
+                        </div>
+                        <div className="flex justify-between text-[#B3B3B3] font-spoti text-lg font-bold mb-8">
+                            <span>1:23</span>
+                            <span>4:20</span>
+                        </div>
+
+                        <div className="flex justify-center items-center gap-12">
+                            <Play size={40} className="text-white fill-current rotate-180" />
+                            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow hover:scale-105 transition">
+                                <Play size={40} className="text-black fill-black ml-2" />
+                            </div>
+                            <Play size={40} className="text-white fill-current" />
+                        </div>
+                    </div>
+                </div>
+            ) : themeId === 'luxury-pink' ? (
+                /* LUXURY PINK DESIGN */
+                <div className="w-full h-full relative flex flex-col items-center bg-[#fff1f2] text-[#be185d]">
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+                        .font-vibes { font-family: 'Great Vibes', cursive; }
+                        .font-playfair { font-family: 'Playfair Display', serif; }
+                        .font-nunito { font-family: 'Nunito Sans', sans-serif; }
+                    `}</style>
+
+                    {/* Background Texture */}
+                    <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none" style={{ backgroundImage: `url(https://www.transparenttextures.com/patterns/cream-paper.png)` }}></div>
+
+                    {/* Floral Corners */}
+                    <HugeFloral className="w-[800px] h-[800px] -top-32 -left-32 text-rose-300 opacity-60" style={{ transform: 'rotate(135deg)' }} />
+                    <HugeFloral className="w-[800px] h-[800px] -bottom-32 -right-32 text-rose-300 opacity-60" style={{ transform: 'rotate(-45deg)' }} />
+
+                    {/* Content */}
+                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-16">
+
+                        <p className="font-playfair text-3xl tracking-[0.4em] uppercase text-rose-800 mb-8">The Wedding Of</p>
+
+                        {/* Photo Frame */}
+                        <div className="relative w-[700px] h-[700px] mb-12">
+                            <div className="absolute inset-0 border-[3px] border-rose-300 rounded-full transform scale-105 opacity-50"></div>
+                            <div className="absolute inset-0 border-[1px] border-rose-400 rounded-full transform scale-110 opacity-30"></div>
+                            <div className="w-full h-full rounded-full border-[10px] border-white shadow-2xl overflow-hidden bg-white relative">
+                                <img src={bgImage} className="w-full h-full object-cover" alt="Couple" />
+                                {wish && <div className="absolute inset-0 bg-white/30 backdrop-blur-sm"></div>}
+                            </div>
+
+                            {/* Floating Heart Icon */}
+                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-24 h-24 bg-rose-600 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                                <svg width="40" height="40" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                            </div>
+                        </div>
+
+                        {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
+                            <h1 className="font-vibes text-[8rem] leading-none mb-4 drop-shadow-sm text-center">
+                                {data.content.couples.pria.name.split(' ')[0]} <span className="text-rose-400">&</span> {data.content.couples.wanita.name.split(' ')[0]}
+                            </h1>
+                        ) : (
+                            <h1 className="font-vibes text-[8rem] leading-none mb-4 drop-shadow-sm text-center">{data.content.hero.nicknames}</h1>
+                        )}
+
+                        <p className="font-playfair text-5xl text-rose-800 mb-12 italic">{dateFormatted}</p>
+
+                        {/* Wish Card */}
+                        {wish && (
+                            <div className="bg-white/80 backdrop-blur-md p-10 rounded-3xl border border-rose-200 shadow-xl max-w-3xl text-center relative">
+                                <div className="text-6xl text-rose-300 absolute -top-4 left-8">"</div>
+                                <p className="font-playfair text-4xl italic text-gray-700 leading-relaxed z-10 relative px-4">{wish}</p>
+                                <div className="text-6xl text-rose-300 absolute -bottom-16 right-8 rotate-180">"</div>
+                                <p className="font-nunito text-2xl font-bold text-rose-600 mt-8 uppercase tracking-widest">- {guestName} -</p>
+                            </div>
+                        )}
+
+                        <div className="mt-auto opacity-60">
+                            <p className="font-nunito text-xl tracking-widest uppercase">Save The Date</p>
+                        </div>
+                    </div>
+                </div>
             ) : (
                 /* GENERIC / STANDARD DESIGN */
                 <>
