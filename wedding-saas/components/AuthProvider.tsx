@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
                 // If profile incomplete, Force Redirect
                 if (!profileData || !profileData.full_name || !profileData.phone_number) {
-                    if (window.location.pathname !== '/onboarding') {
+                    if (window.location.pathname !== '/onboarding' && !window.location.pathname.startsWith('/preview')) {
                         window.location.href = '/onboarding';
                     }
                 }

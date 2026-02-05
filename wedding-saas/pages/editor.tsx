@@ -275,6 +275,7 @@ export default function Editor() {
                         <ArrowLeft size={18} /> Home
                     </button>
                     <button
+                        type="button"
                         onClick={saveChanges}
                         disabled={saving}
                         className="bg-pink-600 text-white px-5 py-2 rounded-full text-xs font-bold hover:bg-pink-700 transition flex items-center gap-2 shadow-lg shadow-pink-200"
@@ -395,7 +396,7 @@ export default function Editor() {
                                 onClick={() => setShowSuccessModal(false)}
                                 className="px-6 py-2 bg-slate-100 text-slate-700 font-bold rounded-full hover:bg-slate-200 transition"
                             >
-                                Tutup
+                                Edit Lagi
                             </button>
                             <a
                                 href={`/${data?.metadata.slug}`}

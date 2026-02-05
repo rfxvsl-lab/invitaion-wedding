@@ -214,6 +214,7 @@ interface PlayerBarProps {
 
 const PlayerBar: React.FC<PlayerBarProps> = ({ activeTab, setTab, isPlaying, togglePlay, cover, title, artist }) => {
     const [progress, setProgress] = useState(0);
+    const [showMenu, setShowMenu] = useState(false); // Mobile Menu State
 
     useEffect(() => {
         if (isPlaying) {
@@ -264,15 +265,40 @@ const PlayerBar: React.FC<PlayerBarProps> = ({ activeTab, setTab, isPlaying, tog
                     </div>
                 </div>
 
-                <div className="sm:hidden relative group">
-                    <LayoutList className="text-[#B3B3B3]" />
-                    <div className="absolute bottom-10 right-0 bg-[#282828] rounded-lg p-2 shadow-2xl w-40 hidden group-hover:block">
-                        {['home', 'event', 'gallery', 'rsvp'].map(t => (
-                            <button key={t} onClick={() => setTab(t)} className="block w-full text-left p-2 text-sm text-white hover:bg-[#3E3E3E] rounded capitalize">
-                                {t}
-                            </button>
-                        ))}
-                    </div>
+                {/* MOBILE MENU TOGGLE */}
+                <div className="sm:hidden relative">
+                    <button
+                        onClick={() => setShowMenu(!showMenu)}
+                        className={`p-2 rounded-full transition ${showMenu ? 'text-white bg-white/10' : 'text-[#B3B3B3]'}`}
+                    >
+                        <LayoutList size={24} />
+                    </button>
+
+                    {showMenu && (
+                        <>
+                            {/* Backdrop to close menu */}
+                            <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)}></div>
+
+                            {/* Menu Items */}
+                            <div className="absolute bottom-12 right-0 bg-[#282828] rounded-xl p-2 shadow-2xl w-48 border border-white/10 z-50 animate-fade-in-up">
+                                {['home', 'event', 'gallery', 'rsvp'].map(t => (
+                                    <button
+                                        key={t}
+                                        onClick={() => {
+                                            setTab(t);
+                                            setShowMenu(false);
+                                        }}
+                                        className={`block w-full text-left p-3 text-sm font-bold rounded-lg mb-1 capitalize transition flex items-center justify-between
+                                            ${activeTab === t ? 'bg-[#1DB954] text-black' : 'text-white hover:bg-[#3E3E3E]'}
+                                        `}
+                                    >
+                                        {t}
+                                        {activeTab === t && <span className="w-2 h-2 bg-black rounded-full"></span>}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
