@@ -1,26 +1,35 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import React from 'react';
+import dynamic from 'next/dynamic';
+import { Loader2 } from 'lucide-react'; // Make sure lucide-react is installed, user used it in other files
 import { DownloadControls } from '../components/DownloadControls';
 import { supabase } from '../lib/supabase';
 import { InvitationData } from '../types/invitation';
 
-// Templates
-import ModernArch from '../templates/ModernArch';
-import ClassicSerif from '../templates/ClassicSerif';
-import BotanicalLine from '../templates/BotanicalLine';
-import RusticWood from '../templates/RusticWood';
-import DarkLuxury from '../templates/DarkLuxury';
-import PremiumPeppy from '../templates/PremiumPeppy';
-import GamerQuest from '../templates/GamerQuest';
+// DYNAMIC IMPORTS
+const LoadingSpinner = () => (
+    <div className="min-h-screen flex items-center justify-center bg-pink-50">
+        <Loader2 className="animate-spin text-pink-600" size={40} />
+    </div>
+);
 
-import ElegantVanilla from '../templates/ElegantVanilla';
-import RoyalGlass from '../templates/RoyalGlass';
-import NetflixLuxury from '../templates/NetflixLuxury';
-import GrandBallroom from '../templates/GrandBallroom';
-import RoyalArabian from '../templates/RoyalArabian';
-import LuxuryPink from '../templates/LuxuryPink';
-import SpotiLove from '../templates/SpotiLove';
+const TEMPLATES: any = {
+    'modern-arch': dynamic(() => import('../templates/ModernArch'), { loading: () => <LoadingSpinner /> }),
+    'classic-serif': dynamic(() => import('../templates/ClassicSerif'), { loading: () => <LoadingSpinner /> }),
+    'botanical-line': dynamic(() => import('../templates/BotanicalLine'), { loading: () => <LoadingSpinner /> }),
+    'rustic-wood': dynamic(() => import('../templates/RusticWood'), { loading: () => <LoadingSpinner /> }),
+    'dark-luxury': dynamic(() => import('../templates/DarkLuxury'), { loading: () => <LoadingSpinner /> }),
+    'premium-peppy': dynamic(() => import('../templates/PremiumPeppy'), { loading: () => <LoadingSpinner /> }),
+    'gamer-quest': dynamic(() => import('../templates/GamerQuest'), { loading: () => <LoadingSpinner /> }),
+    'elegant-vanilla': dynamic(() => import('../templates/ElegantVanilla'), { loading: () => <LoadingSpinner /> }),
+    'royal-glass': dynamic(() => import('../templates/RoyalGlass'), { loading: () => <LoadingSpinner /> }),
+    'netflix-luxury': dynamic(() => import('../templates/NetflixLuxury'), { loading: () => <LoadingSpinner /> }),
+    'grand-ballroom': dynamic(() => import('../templates/GrandBallroom'), { loading: () => <LoadingSpinner /> }),
+    'royal-arabian': dynamic(() => import('../templates/RoyalArabian'), { loading: () => <LoadingSpinner /> }),
+    'luxury-pink': dynamic(() => import('../templates/LuxuryPink'), { loading: () => <LoadingSpinner /> }),
+    'spotilove': dynamic(() => import('../templates/SpotiLove'), { loading: () => <LoadingSpinner /> }),
+};
 
 interface InvitationPageProps {
     data: InvitationData | null;
@@ -74,23 +83,9 @@ export default function InvitationPage({ data, guestName, error }: InvitationPag
     }
 
     const renderTemplate = () => {
-        switch (data.metadata.theme_id) {
-            case 'classic-serif': return <ClassicSerif data={data} guestName={guestName} />;
-            case 'botanical-line': return <BotanicalLine data={data} guestName={guestName} />;
-            case 'rustic-wood': return <RusticWood data={data} guestName={guestName} />;
-            case 'dark-luxury': return <DarkLuxury data={data} guestName={guestName} />;
-            case 'premium-peppy': return <PremiumPeppy data={data} guestName={guestName} />;
-            case 'gamer-quest': return <GamerQuest data={data} guestName={guestName} />;
-
-            case 'elegant-vanilla': return <ElegantVanilla data={data} guestName={guestName} />;
-            case 'royal-glass': return <RoyalGlass data={data} guestName={guestName} />;
-            case 'netflix-luxury': return <NetflixLuxury data={data} guestName={guestName} />;
-            case 'grand-ballroom': return <GrandBallroom data={data} guestName={guestName} />;
-            case 'royal-arabian': return <RoyalArabian data={data} guestName={guestName} />;
-            case 'luxury-pink': return <LuxuryPink data={data} guestName={guestName} />;
-            case 'spotilove': return <SpotiLove data={data} guestName={guestName} />;
-            case 'modern-arch': default: return <ModernArch data={data} guestName={guestName} />;
-        }
+        // Fallback to modern-arch if theme_id not found
+        const ThemeComponent = TEMPLATES[data.metadata.theme_id] || TEMPLATES['modern-arch'];
+        return <ThemeComponent data={data} guestName={guestName} />;
     };
 
     const contentRef = React.useRef<HTMLDivElement>(null);

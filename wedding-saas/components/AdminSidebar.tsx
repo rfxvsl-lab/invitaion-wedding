@@ -15,8 +15,8 @@ export default function AdminSidebar() {
 
     useEffect(() => {
         const fetchStats = async () => {
-            const orders = await getPendingOrders();
-            setPendingCount(orders.length);
+            const { count } = await getPendingOrders(0, 10);
+            setPendingCount(count);
 
             if (user) {
                 const { data } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle();

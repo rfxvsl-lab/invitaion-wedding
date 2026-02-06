@@ -6,7 +6,7 @@ CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders(created_at);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 
 -- 2. Index untuk Profiles/Users (Mempercepat sorting)
-CREATE INDEX IF NOT EXISTS idx_users_created_at ON profiles(created_at);
+CREATE INDEX IF NOT EXISTS idx_users_updated_at ON profiles(updated_at);
 
 -- 3. Index untuk Invitations (Mempercepat load dashboard user)
 CREATE INDEX IF NOT EXISTS idx_invitations_user_id ON invitations(user_id);

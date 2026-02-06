@@ -1,18 +1,20 @@
 import React from 'react';
-import ModernArch from '@/templates/ModernArch';
-import ClassicSerif from '@/templates/ClassicSerif';
-import RusticWood from '@/templates/RusticWood';
-import BotanicalLine from '@/templates/BotanicalLine';
-import ElegantVanilla from '@/templates/ElegantVanilla';
-import DarkLuxury from '@/templates/DarkLuxury';
-import PremiumPeppy from '@/templates/PremiumPeppy';
-import GamerQuest from '@/templates/GamerQuest';
-import RoyalGlass from '@/templates/RoyalGlass';
-import NetflixLuxury from '@/templates/NetflixLuxury';
-import GrandBallroom from '@/templates/GrandBallroom';
-import RoyalArabian from '@/templates/RoyalArabian';
-import LuxuryPink from '@/templates/LuxuryPink';
-import SpotiLove from '@/templates/SpotiLove';
+import dynamic from 'next/dynamic';
+
+const ModernArch = dynamic(() => import('@/templates/ModernArch'));
+const ClassicSerif = dynamic(() => import('@/templates/ClassicSerif'));
+const RusticWood = dynamic(() => import('@/templates/RusticWood'));
+const BotanicalLine = dynamic(() => import('@/templates/BotanicalLine'));
+const ElegantVanilla = dynamic(() => import('@/templates/ElegantVanilla'));
+const DarkLuxury = dynamic(() => import('@/templates/DarkLuxury'));
+const PremiumPeppy = dynamic(() => import('@/templates/PremiumPeppy'));
+const GamerQuest = dynamic(() => import('@/templates/GamerQuest'));
+const RoyalGlass = dynamic(() => import('@/templates/RoyalGlass'));
+const NetflixLuxury = dynamic(() => import('@/templates/NetflixLuxury'));
+const GrandBallroom = dynamic(() => import('@/templates/GrandBallroom'));
+const RoyalArabian = dynamic(() => import('@/templates/RoyalArabian'));
+const LuxuryPink = dynamic(() => import('@/templates/LuxuryPink'));
+const SpotiLove = dynamic(() => import('@/templates/SpotiLove'));
 
 export type TemplateTier = 'free' | 'basic' | 'premium' | 'exclusive';
 
@@ -56,14 +58,14 @@ export const TEMPLATES: Template[] = [
     {
         id: 'royal-arabian',
         name: 'Royal Arabian (Exclusive)',
-        thumbnail: 'https://images.unsplash.com/photo-1542259148-5c40149d6389?w=600&q=80',
+        thumbnail_url: 'https://images.unsplash.com/photo-1542259148-5c40149d6389?w=600&q=80',
         tier: 'exclusive',
         component: RoyalArabian
     },
     {
         id: 'luxury-pink',
         name: 'Luxury Pink',
-        thumbnail: 'https://images.unsplash.com/photo-1596726615557-4b7261973007?w=600&q=80',
+        thumbnail_url: 'https://images.unsplash.com/photo-1596726615557-4b7261973007?w=600&q=80',
         tier: 'exclusive',
         component: LuxuryPink
     }

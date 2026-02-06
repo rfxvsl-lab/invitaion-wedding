@@ -86,31 +86,39 @@ export async function createOrder(orderData: CreateOrderInput): Promise<{ succes
     return { success: true, orderId: data.id };
 }
 
-export async function getAllOrders(): Promise<Order[]> {
-    const { data, error } = await supabase
+export async function getAllOrders(page: number = 0, limit: number = 20): Promise<{ data: Order[]; count: number }> {
+    const from = page * limit;
+    const to = from + limit - 1;
+
+    const { data, count, error } = await supabase
         .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*', { count: 'exact' })
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
     if (error) {
         console.error('Error fetching orders:', error);
-        return [];
+        return { data: [], count: 0 };
     }
-    return data || [];
+    return { data: data || [], count: count || 0 };
 }
 
-export async function getPendingOrders(): Promise<Order[]> {
-    const { data, error } = await supabase
+export async function getPendingOrders(page: number = 0, limit: number = 20): Promise<{ data: Order[]; count: number }> {
+    const from = page * limit;
+    const to = from + limit - 1;
+
+    const { data, count, error } = await supabase
         .from('orders')
-        .select('*')
+        .select('*', { count: 'exact' })
         .eq('status', 'pending')
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(from, to);
 
     if (error) {
         console.error('Error fetching pending orders:', error);
-        return [];
+        return { data: [], count: 0 };
     }
-    return data || [];
+    return { data: data || [], count: count || 0 };
 }
 
 export async function updateOrderStatus(orderId: string, status: 'paid' | 'rejected'): Promise<boolean> {

@@ -35,7 +35,7 @@ export default function AdminDashboard() {
     const fetchStats = async () => {
         setLoading(true);
         // Fetch Pending Orders
-        const pending = await getPendingOrders();
+        const { count: pendingCount } = await getPendingOrders(0, 50);
 
         // Fetch Total Users
         const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
         const { count: themeCount } = await supabase.from('themes').select('*', { count: 'exact', head: true });
 
         setStats({
-            pendingOrders: pending.length,
+            pendingOrders: pendingCount || 0,
             totalUsers: userCount || 0,
             totalThemes: themeCount || 0
         });
