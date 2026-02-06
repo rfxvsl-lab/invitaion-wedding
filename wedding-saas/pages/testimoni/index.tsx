@@ -68,43 +68,44 @@ export default function TestimonialSubmission() {
         }
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Auto Compress Logic
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target?.result as string;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
+        // Validasi ukuran (misal max 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert("Ukuran file terlalu besar (Maks 2MB)");
+            return;
+        }
 
-                // Resize if too big (max 800px width)
-                const MAX_WIDTH = 800;
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
+        setLoading(true); // Tampilkan loading saat upload
 
-                canvas.width = width;
-                canvas.height = height;
-                const ctx = canvas.getContext('2d');
-                ctx?.drawImage(img, 0, 0, width, height);
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `testi-${Date.now()}.${fileExt}`;
+            const filePath = `${fileName}`;
 
-                // Compress Quality (0.7)
-                const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+            // 1. Upload ke Supabase Storage (Pastikan bucket 'site-assets' atau 'testimonials' sudah ada dan public)
+            const { error: uploadError } = await supabase.storage
+                .from('site-assets') // Menggunakan 'site-assets' sesuai instruksi user
+                .upload(filePath, file);
 
-                // Check size (Base64 length * 0.75 ~= bytes)
-                // If still > 500KB, warn or truncate? 
-                // 500KB = 500000 bytes. Base64 len ~ 666666
+            if (uploadError) throw uploadError;
 
-                setFormData(prev => ({ ...prev, image_base64: compressedBase64 }));
-            };
-        };
+            // 2. Ambil Public URL
+            const { data } = supabase.storage
+                .from('site-assets')
+                .getPublicUrl(filePath);
+
+            // 3. Simpan URL pendek ke state (Bukan Base64 panjang!)
+            setFormData(prev => ({ ...prev, image_base64: data.publicUrl }));
+
+        } catch (error: any) {
+            console.error("Upload error:", error);
+            alert("Gagal upload gambar: " + error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
