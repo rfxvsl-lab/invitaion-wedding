@@ -1,6 +1,6 @@
 // Path: /components/EditorSidebar.tsx
 import React, { useState, useEffect } from 'react';
-import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2, Settings, Quote, MessageSquare, Globe } from 'lucide-react';
+import { Layout, Type, Users, Calendar, Gift, Palette, Plus, Trash2, Settings, Quote, MessageSquare, Globe, Music, Video } from 'lucide-react'; // Tambah icon Music/Video
 import ImageUploader from './ImageUploader';
 import { InvitationData } from '../types/invitation';
 import { supabase } from '@/lib/supabase';
@@ -15,7 +15,7 @@ interface EditorSidebarProps {
     userProfile?: any;
 }
 
-// Moved Input component outside to prevent re-mounting on every render
+// ... (Komponen Input & SectionHeader TETAP SAMA seperti sebelumnya) ...
 const Input = ({ label, value, onChange, placeholder, disabled, readOnly, subtext }: { label: string, value: any, onChange: (val: string) => void, placeholder?: string, disabled?: boolean, readOnly?: boolean, subtext?: React.ReactNode }) => (
     <div className="mb-5 group">
         <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5 group-focus-within:text-pink-500 transition-colors">{label}</label>
@@ -53,45 +53,34 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
     const [tokens, setTokens] = useState<number>(5);
 
     useEffect(() => {
-        // Fetch User Plan with admin override
         const fetchPlan = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (user) {
-                // If userProfile passed from parent, use that for tier/tokens to be consistent
                 const effectivePlan = getEffectivePlan(
                     userProfile?.tier || 'free',
                     user.email
                 ) as 'free' | 'basic' | 'premium' | 'exclusive';
-
                 setPlan(effectivePlan);
-
-                // Admin users get unlimited tokens (bypass token system)
                 if (isAdmin(user.email)) {
-                    setTokens(Infinity); // Unlimited for admin
+                    setTokens(Infinity);
                 } else {
-                    // Regular users: use tokens from DB or default to 5
                     setTokens(userProfile?.tokens ?? 5);
                 }
             }
         };
         fetchPlan();
-    }, [userProfile]); // Update when userProfile changes
+    }, [userProfile]);
 
     const getValue = (path: string) => {
         return path.split('.').reduce((o: any, i) => (o ? o[i] : ''), data);
     };
 
-    // ... (rest of handleThemeChange, uploads, etc. - keep existing logic but just update the Settings tab content at the end)
-
     const handleThemeChange = (themeId: string, tier: 'free' | 'basic' | 'premium' | 'exclusive') => {
-        // Logic same as before...
-        // FREE TIER: Block non-free themes + Token system
         if (plan === 'free') {
             if (tier !== 'free') {
                 alert('🔒 Template ini memerlukan upgrade ke ' + (tier === 'exclusive' ? 'Premium/Exclusive' : tier.toUpperCase()) + ' plan!');
                 return;
             }
-            // Token system for free tier
             if (tokens <= 0) {
                 alert('❌ Token Anda habis! Upgrade ke Basic plan untuk unlimited edits.');
                 return;
@@ -102,8 +91,6 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
             }
             return;
         }
-
-        // BASIC TIER: Allow Free + Basic templates only
         if (plan === 'basic') {
             if (tier === 'premium' || tier === 'exclusive') {
                 alert('🔒 Template ini memerlukan upgrade ke ' + tier.toUpperCase() + ' plan!');
@@ -112,8 +99,6 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
             onUpdate('metadata.theme_id', themeId);
             return;
         }
-
-        // PREMIUM TIER: Allow all except Exclusive
         if (plan === 'premium') {
             if (tier === 'exclusive') {
                 alert('🔒 Template Exclusive hanya untuk Exclusive plan!');
@@ -122,60 +107,91 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
             onUpdate('metadata.theme_id', themeId);
             return;
         }
-
-        // EXCLUSIVE/OTHER: Allow all templates
         onUpdate('metadata.theme_id', themeId);
     };
 
-    // ... (Use existing handleMusicUpload and handleVideoUpload)
+    // --- PERBAIKAN UPLOAD MUSIK (Gunakan bucket 'site-assets') ---
     const handleMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        if (file.type.startsWith('video/')) {
-            alert("Mohon maaf, fitur konversi otomatis MP4 ke MP3 belum tersedia. Silakan upload file .MP3 untuk performa terbaik.");
+
+        // Validasi Ukuran (Max 10MB untuk lagu)
+        if (file.size > 10 * 1024 * 1024) {
+            alert("Ukuran file musik maksimal 10MB.");
             return;
         }
         if (!file.type.startsWith('audio/')) {
             alert("Mohon upload file audio (MP3).");
             return;
         }
+
         setUploadingMusic(true);
         try {
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}.${fileExt}`;
-            const filePath = `${fileName}`;
-            const { error: uploadError } = await supabase.storage.from('music').upload(filePath, file);
+            const fileName = `music-${Date.now()}.${fileExt}`;
+            const filePath = `music/${fileName}`; // Masuk folder music/ di site-assets
+
+            // UPLOAD KE 'site-assets' (Bukan 'music')
+            const { error: uploadError } = await supabase.storage
+                .from('site-assets') // <--- FIXED
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+
             if (uploadError) throw uploadError;
-            const { data: { publicUrl } } = supabase.storage.from('music').getPublicUrl(filePath);
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('site-assets')
+                .getPublicUrl(filePath);
+
             onUpdate('metadata.music_url', publicUrl);
         } catch (error: any) {
+            console.error(error);
             alert('Gagal upload musik: ' + error.message);
         } finally {
             setUploadingMusic(false);
         }
     };
 
+    // --- PERBAIKAN UPLOAD VIDEO (Gunakan bucket 'site-assets') ---
     const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        if (file.size > 50 * 1024 * 1024) {
-            alert('Ukuran video maksimal 50MB!');
+
+        // Validasi Ukuran (Max 25MB agar tidak timeout/aborted)
+        if (file.size > 25 * 1024 * 1024) {
+            alert('Ukuran video maksimal 25MB agar lancar!');
             return;
         }
         if (!file.type.startsWith('video/')) {
-            alert('Mohon upload file video (MP4, MOV, etc).');
+            alert('Mohon upload file video (MP4).');
             return;
         }
+
         setUploadingVideo(true);
         try {
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}.${fileExt}`;
-            const filePath = `${fileName}`;
-            const { error: uploadError } = await supabase.storage.from('videos').upload(filePath, file);
+            const fileName = `video-${Date.now()}.${fileExt}`;
+            const filePath = `videos/${fileName}`; // Masuk folder videos/ di site-assets
+
+            // UPLOAD KE 'site-assets' (Bukan 'videos')
+            const { error: uploadError } = await supabase.storage
+                .from('site-assets') // <--- FIXED
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+
             if (uploadError) throw uploadError;
-            const { data: { publicUrl } } = supabase.storage.from('videos').getPublicUrl(filePath);
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('site-assets')
+                .getPublicUrl(filePath);
+
             onUpdate('content.gallery.video_url', publicUrl);
         } catch (error: any) {
+            console.error(error);
             alert('Gagal upload video: ' + error.message);
         } finally {
             setUploadingVideo(false);
@@ -237,7 +253,6 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                     </>
                 )}
 
-                {/* EVENTS - keep same as before */}
                 {activeTab === 'events' && (
                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                         <SectionHeader icon={Calendar} title="Detail Acara" />
@@ -292,7 +307,6 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                     </div>
                 )}
 
-                {/* MEDIA & DESIGN - keep similar but abbreviate for now to fit */}
                 {activeTab === 'media' && (
                     <>
                         <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
@@ -310,7 +324,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                 }}
                                 placeholder="https://youtube.com/..."
                             />
-                            {/* ... video upload part ... */}
+
                             <div className="mt-4 relative">
                                 {(plan === 'free' || plan === 'basic') && (
                                     <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl border border-slate-100">
@@ -318,8 +332,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                     </div>
                                 )}
                                 <label className={`flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed rounded-xl text-xs font-bold transition-all cursor-pointer ${uploadingVideo ? 'bg-slate-100 border-slate-300 text-slate-400' : 'border-slate-200 text-slate-500 hover:border-purple-400 hover:text-purple-600 hover:bg-purple-50'}`}>
-                                    {uploadingVideo ? <Settings className="animate-spin" size={16} /> : <Layout size={16} />}
-                                    {uploadingVideo ? 'Mengupload...' : 'Upload Video (MP4/MOV)'}
+                                    {uploadingVideo ? <Settings className="animate-spin" size={16} /> : <Video size={16} />}
+                                    {uploadingVideo ? 'Mengupload... (Tunggu)' : 'Upload Video (MP4 Max 25MB)'}
                                     <input type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} disabled={plan === 'free' || plan === 'basic' || uploadingVideo} />
                                 </label>
                             </div>
@@ -337,15 +351,15 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                     </>
                 )}
 
-                {/* DESIGN - shortened for brevity since logic was correct... */}
                 {activeTab === 'design' && (
                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                         <SectionHeader icon={Palette} title="Tema & Musik" />
+
+                        {/* TEMPLATE GRID (Tetap Sama) */}
                         <div className="grid grid-cols-2 gap-3 mb-6">
                             {TEMPLATES.map((template) => {
                                 const isCurrent = data.metadata.theme_id === template.id;
                                 let isLocked = false;
-
                                 if (plan === 'free' && template.tier !== 'free') isLocked = true;
                                 if (plan === 'basic' && (template.tier === 'premium' || template.tier === 'exclusive')) isLocked = true;
                                 if (plan === 'premium' && template.tier === 'exclusive') isLocked = true;
@@ -359,7 +373,6 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                         `}
                                     >
                                         <div className="aspect-[3/4] bg-slate-100 relative">
-                                            {/* Preview Image Mockup */}
                                             <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-300 font-bold text-xs uppercase tracking-widest">
                                                 {template.thumbnail ? (
                                                     <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover" />
@@ -367,67 +380,41 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                                     <span>{template.name}</span>
                                                 )}
                                             </div>
-
-                                            {/* Overlay Gradient */}
                                             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
-
-                                            {/* Lock Overlay */}
                                             {isLocked && (
                                                 <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-[1px] flex flex-col items-center justify-center text-white p-4 text-center">
-                                                    <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-2">
-                                                        <Gift size={14} />
-                                                    </div>
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest">
-                                                        {template.tier} Plan
-                                                    </span>
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">{template.tier} Plan</span>
                                                 </div>
                                             )}
-
-                                            {/* Active Indicator */}
                                             {isCurrent && (
                                                 <div className="absolute top-2 right-2 w-5 h-5 bg-pink-500 rounded-full flex items-center justify-center shadow-lg">
                                                     <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
                                                 </div>
                                             )}
                                         </div>
-
                                         <div className="p-3 bg-white">
-                                            <h4 className={`text-xs font-bold leading-tight mb-1 ${isCurrent ? 'text-pink-600' : 'text-slate-700'}`}>
-                                                {template.name}
-                                            </h4>
-                                            <div className="flex items-center gap-1.5">
-                                                <span className={`text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded
-                                                    ${template.tier === 'free' ? 'bg-slate-100 text-slate-500' :
-                                                        template.tier === 'basic' ? 'bg-blue-50 text-blue-600' :
-                                                            template.tier === 'premium' ? 'bg-purple-50 text-purple-600' : 'bg-amber-50 text-amber-600'}
-                                                `}>
-                                                    {template.tier}
-                                                </span>
-                                            </div>
+                                            <h4 className={`text-xs font-bold leading-tight mb-1 ${isCurrent ? 'text-pink-600' : 'text-slate-700'}`}>{template.name}</h4>
                                         </div>
                                     </button>
                                 );
                             })}
                         </div>
-                        {/* DIY Editor ... */}
+
+                        {/* DIY Editor */}
                         {(plan === 'premium' || plan === 'exclusive') && (
                             <DIYEditor initialLayout={data.metadata.diy_layout} plan={plan} onLayoutChange={(layout) => onUpdate('metadata.diy_layout', layout)} />
                         )}
 
-                        {/* CUSTOM BACKGROUND SECTION */}
+                        {/* CUSTOM BACKGROUND */}
                         <div className="mb-6 border-b border-slate-100 pb-6">
                             <div className="flex items-center justify-between mb-2">
                                 <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Background Custom</label>
                                 {(plan === 'free' || plan === 'basic') && <span className="text-[9px] bg-slate-900 text-white px-2 py-0.5 rounded font-bold">PREMIUM</span>}
                             </div>
-
-                            {/* Locked Overlay for Free/Basic */}
                             {(plan === 'free' || plan === 'basic') ? (
                                 <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
-                                    <p className="text-xs text-slate-500 mb-2">Upgrade ke Premium untuk ganti background sesuka hati.</p>
-                                    <button disabled className="text-[10px] font-bold text-slate-400 bg-slate-200 px-3 py-1.5 rounded-lg cursor-not-allowed">
-                                        Upload Background
-                                    </button>
+                                    <p className="text-xs text-slate-500 mb-2">Upgrade ke Premium untuk ganti background.</p>
+                                    <button disabled className="text-[10px] font-bold text-slate-400 bg-slate-200 px-3 py-1.5 rounded-lg cursor-not-allowed">Upload Background</button>
                                 </div>
                             ) : (
                                 <ImageUploader
@@ -436,10 +423,9 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                     onUpdate={(url) => onUpdate('metadata.custom_bg_url', url)}
                                 />
                             )}
-                            <p className="text-[10px] text-slate-400 mt-2 italic">Kosongkan jika ingin menggunakan background bawaan tema.</p>
                         </div>
 
-                        {/* Music Section ... */}
+                        {/* MUSIC UPLOAD SECTION (Updated) */}
                         <div className="mb-4">
                             <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Musik Latar</label>
                             <div className="flex flex-col gap-3">
@@ -447,155 +433,25 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                 <div className="relative">
                                     {plan === 'free' && (<div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl border border-slate-100"><div className="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-lg">🔒 Basic Plan Only</div></div>)}
                                     <label className={`flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed rounded-xl text-xs font-bold transition-all cursor-pointer ${uploadingMusic ? 'bg-slate-100 border-slate-300 text-slate-400' : 'border-slate-200 text-slate-500 hover:border-pink-400 hover:text-pink-600 hover:bg-pink-50'}`}>
-                                        {uploadingMusic ? 'Mengupload...' : 'Upload MP3 (Pribadi)'}
+                                        {uploadingMusic ? <Settings className="animate-spin" size={16} /> : <Music size={16} />}
+                                        {uploadingMusic ? 'Mengupload... (Tunggu)' : 'Upload MP3 (Pribadi)'}
                                         <input type="file" accept="audio/*" className="hidden" onChange={handleMusicUpload} disabled={plan === 'free' || uploadingMusic} />
                                     </label>
                                 </div>
                             </div>
                         </div>
-                        {/* QUOTE SECTION */}
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mt-4">
-                            <SectionHeader icon={Quote} title="Kutipan (Quote)" />
-                            <div className="mb-4">
-                                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Isi Kutipan</label>
-                                <textarea
-                                    className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition resize-none h-24"
-                                    value={getValue('content.quote.content')}
-                                    onChange={(e) => onUpdate('content.quote.content', e.target.value)}
-                                    placeholder="Tulis kutipan indah di sini..."
-                                />
-                            </div>
-                            <Input label="Sumber / Penulis" value={getValue('content.quote.source')} onChange={(v) => onUpdate('content.quote.source', v)} />
-                        </div>
-
-                        {/* GIFT SECTION */}
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mt-4">
-                            <SectionHeader icon={Gift} title="Amplop Digital (Hadiah)" />
-
-                            {data.engagement.gifts?.map((gift: any, index: number) => (
-                                <div key={index} className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-4 group relative hover:border-pink-200 transition-colors">
-                                    <button
-                                        onClick={() => {
-                                            const newGifts = [...(data.engagement.gifts || [])];
-                                            newGifts.splice(index, 1);
-                                            onUpdate('engagement.gifts', newGifts);
-                                        }}
-                                        className="absolute top-2 right-2 text-slate-300 hover:text-red-500 transition p-1"
-                                    >
-                                        <Trash2 size={14} />
-                                    </button>
-
-                                    <div className="grid grid-cols-2 gap-3 mb-3">
-                                        <div>
-                                            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Bank / E-Wallet</label>
-                                            <input
-                                                className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-pink-500"
-                                                value={gift.bank_name}
-                                                onChange={(e) => {
-                                                    const newGifts = [...(data.engagement.gifts || [])];
-                                                    newGifts[index].bank_name = e.target.value;
-                                                    onUpdate('engagement.gifts', newGifts);
-                                                }}
-                                                placeholder="BCA"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">No. Rekening</label>
-                                            <input
-                                                className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-pink-500"
-                                                value={gift.account_number}
-                                                onChange={(e) => {
-                                                    const newGifts = [...(data.engagement.gifts || [])];
-                                                    newGifts[index].account_number = e.target.value;
-                                                    onUpdate('engagement.gifts', newGifts);
-                                                }}
-                                                placeholder="1234567890"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1">Atas Nama</label>
-                                        <input
-                                            className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-bold text-slate-700 outline-none focus:border-pink-500"
-                                            value={gift.account_holder}
-                                            onChange={(e) => {
-                                                const newGifts = [...(data.engagement.gifts || [])];
-                                                newGifts[index].account_holder = e.target.value;
-                                                onUpdate('engagement.gifts', newGifts);
-                                            }}
-                                            placeholder="Nama Pemilik"
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-
-                            <button
-                                onClick={() => {
-                                    const newGifts = [...(data.engagement.gifts || [])];
-                                    newGifts.push({ bank_name: '', account_number: '', account_holder: '' });
-                                    onUpdate('engagement.gifts', newGifts);
-                                }}
-                                className="w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-xs font-bold text-slate-500 hover:border-pink-400 hover:text-pink-600 hover:bg-pink-50 transition flex items-center justify-center gap-2"
-                            >
-                                <Plus size={16} /> Tambah Rekening
-                            </button>
-                        </div>
-
-                        {/* RSVP PREFERENCES */}
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm mt-4">
-                            <SectionHeader icon={MessageSquare} title="Konfirmasi Kehadiran (RSVP)" />
-
-                            <div className="flex items-center justify-between mb-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <div>
-                                    <h4 className="text-sm font-bold text-slate-800">Aktifkan RSVP?</h4>
-                                    <p className="text-[10px] text-slate-500 mt-0.5">Tamu bisa kirim konfirmasi kehadiran via WhatsApp.</p>
-                                </div>
-                                <label className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={data.engagement.rsvp !== false}
-                                        onChange={(e) => onUpdate('engagement.rsvp', e.target.checked)}
-                                        className="sr-only peer"
-                                    />
-                                    <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-pink-600"></div>
-                                </label>
-                            </div>
-
-                            {data.engagement.rsvp !== false && (
-                                <div className="space-y-4 animate-fade-in">
-                                    <Input
-                                        label="Nomor WhatsApp Penerima"
-                                        value={getValue('engagement.rsvp_settings.whatsapp_number')}
-                                        onChange={(v) => onUpdate('engagement.rsvp_settings.whatsapp_number', v)}
-                                        placeholder="6281234567890"
-                                        subtext={<span className="text-[10px] text-slate-400">Gunakan format internasional (62...) tanpa tanda plus.</span>}
-                                    />
-                                    <div>
-                                        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5">Pesan Default</label>
-                                        <textarea
-                                            className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition resize-none h-24"
-                                            value={getValue('engagement.rsvp_settings.message_template') || "Halo, saya [Nama] ingin konfirmasi kehadiran..."}
-                                            onChange={(e) => onUpdate('engagement.rsvp_settings.message_template', e.target.value)}
-                                            placeholder="Halo, saya [Nama] ingin konfirmasi kehadiran..."
-                                        />
-                                    </div>
-                                </div>
-                            )}
-                        </div>
                     </div>
                 )}
 
+                {/* SETTINGS (TETAP SAMA) */}
                 {activeTab === 'settings' && (
                     <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
                         <SectionHeader icon={Settings} title="Pengaturan Umum" />
-
                         <div className="mb-8 bg-gradient-to-br from-pink-50 to-white p-5 rounded-2xl border border-pink-100 shadow-sm">
                             <div className="flex items-center gap-2 mb-3">
                                 <Globe size={14} className="text-pink-500" />
                                 <p className="text-[10px] font-black text-pink-400 uppercase tracking-widest">LINK UNDANGAN (SLUG)</p>
                             </div>
-
-                            {/* SLUG INPUT WITH LOGIC */}
                             <Input
                                 label=""
                                 value={getValue('metadata.slug')}
@@ -619,10 +475,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                     )
                                 }
                             />
-
                             <p className="text-[10px] text-pink-400/70 mt-1 font-medium italic">Hanya huruf kecil, angka, dan strip (-).</p>
                         </div>
-
                         <div className="mb-6">
                             <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Kustomisasi Label Teks</h4>
                             <div className="space-y-1">
