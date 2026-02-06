@@ -30,9 +30,17 @@ export default function UserDashboard() {
 
     const fetchInvitations = async () => {
         if (!user) return;
+
+        // Optimize: Select specific columns only
         const { data, error } = await supabase
             .from('invitations')
-            .select('*')
+            .select(`
+                id, 
+                slug, 
+                metadata, 
+                created_at,
+                content
+            `)
             .eq('user_id', user.id)
             .order('created_at', { ascending: false });
 

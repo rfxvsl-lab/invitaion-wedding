@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { CheckCircle, XCircle, Eye } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { getPendingOrders, updateOrderStatus } from '../../lib/database';
+import { updateOrderStatus } from '../../lib/database';
 import { Order } from '../../types/database';
 import AdminLayout from '@/components/AdminLayout';
 
 const AdminOrdersPage = () => {
     const router = useRouter();
+    const [page, setPage] = useState(0);
+    const PAGE_SIZE = 10;
+    const [hasMore, setHasMore] = useState(true);
+
     const [orders, setOrders] = useState<Order[]>([]);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);
@@ -15,8 +19,11 @@ const AdminOrdersPage = () => {
 
     useEffect(() => {
         checkAuth();
-        fetchOrders();
     }, []);
+
+    useEffect(() => {
+        fetchOrders();
+    }, [page]);
 
     const checkAuth = async () => {
         const { data: { user } } = await supabase.auth.getUser();
@@ -27,8 +34,24 @@ const AdminOrdersPage = () => {
 
     const fetchOrders = async () => {
         setLoading(true);
-        const data = await getPendingOrders();
-        setOrders(data);
+
+        const from = page * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
+
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*', { count: 'exact' })
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false })
+            .range(from, to);
+
+        if (error) {
+            console.error('Error fetching orders:', error);
+            alert('Gagal mengambil data order.');
+        } else {
+            setOrders(data || []);
+            setHasMore(data && data.length === PAGE_SIZE);
+        }
         setLoading(false);
     };
 
@@ -116,6 +139,25 @@ const AdminOrdersPage = () => {
                             </div>
                         </div>
                     ))}
+
+                    {/* Pagination Controls */}
+                    <div className="flex justify-between items-center mt-6 p-4 bg-white rounded-xl border border-slate-100">
+                        <button
+                            disabled={page === 0 || loading}
+                            onClick={() => setPage(p => p - 1)}
+                            className="px-4 py-2 bg-slate-100 text-slate-600 font-bold rounded-lg disabled:opacity-50 hover:bg-slate-200 transition"
+                        >
+                            ← Previous
+                        </button>
+                        <span className="font-bold text-slate-700">Halaman {page + 1}</span>
+                        <button
+                            disabled={!hasMore || loading}
+                            onClick={() => setPage(p => p + 1)}
+                            className="px-4 py-2 bg-slate-900 text-white font-bold rounded-lg disabled:opacity-50 hover:bg-slate-800 transition"
+                        >
+                            Next →
+                        </button>
+                    </div>
                 </div>
             )}
 

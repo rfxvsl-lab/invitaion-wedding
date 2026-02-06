@@ -7,6 +7,7 @@ import EditorSidebar from '@/components/EditorSidebar';
 import { TEMPLATES } from '@/lib/templates';
 import { InvitationData } from '@/types/invitation';
 import { Eye, Smartphone, Monitor, Save, ArrowLeft } from 'lucide-react';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function Editor() {
     const { user, loading: authLoading } = useAuth();
@@ -44,24 +45,36 @@ export default function Editor() {
         fetchInvitation();
     }, [user?.id, authLoading]);
 
+    // Send to Iframe with Debounce (Optimized Frame Rate)
+    const sendToIframe = useDebouncedCallback((payload) => {
+        const iframe = document.getElementById('preview-frame') as HTMLIFrameElement;
+        if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'UPDATE_DATA', payload }, '*');
+        }
+    }, 500);
+
     // SYNC DATA TO IFRAME (Handshake Version)
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             if (event.data?.type === 'PREVIEW_READY' && data) {
+                // Initial load: Send immediately
+                sendToIframe.flush();
                 const iframe = document.getElementById('preview-frame') as HTMLIFrameElement;
                 iframe?.contentWindow?.postMessage({ type: 'UPDATE_DATA', payload: data }, '*');
             }
         };
         window.addEventListener('message', handleMessage);
 
-        // Also send immediately if data changes (for updates after handshake)
-        const iframe = document.getElementById('preview-frame') as HTMLIFrameElement;
-        if (iframe && iframe.contentWindow && data) {
-            iframe.contentWindow.postMessage({ type: 'UPDATE_DATA', payload: data }, '*');
+        // When data changes, use Debounce!
+        if (data) {
+            sendToIframe(data);
         }
 
-        return () => window.removeEventListener('message', handleMessage);
-    }, [data]);
+        return () => {
+            window.removeEventListener('message', handleMessage);
+            sendToIframe.cancel(); // Cleanup pending debounce
+        };
+    }, [data, sendToIframe]);
 
     const fetchInvitation = async () => {
         // Safety Timeout

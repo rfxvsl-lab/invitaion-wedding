@@ -57,9 +57,17 @@ export function useDIYEditor(
     const [historyIndex, setHistoryIndex] = useState(0);
 
     // Save to history
+    const MAX_HISTORY_STEPS = 50;
+
     const saveToHistory = useCallback((newElements: DIYElement[]) => {
-        const newHistory = history.slice(0, historyIndex + 1);
+        let newHistory = history.slice(0, historyIndex + 1);
         newHistory.push(newElements);
+
+        // LIMIT HISTORY SIZE (Prevent Memory Leak)
+        if (newHistory.length > MAX_HISTORY_STEPS) {
+            newHistory = newHistory.slice(newHistory.length - MAX_HISTORY_STEPS);
+        }
+
         setHistory(newHistory);
         setHistoryIndex(newHistory.length - 1);
     }, [history, historyIndex]);

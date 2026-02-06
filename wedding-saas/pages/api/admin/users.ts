@@ -36,15 +36,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(403).json({ error: 'Forbidden: Admin access only' });
         }
 
-        // 3. Fetch All Profiles using ADMIN Client (Service Role)
-        const { data: profiles, error: dbError } = await supabaseAdmin
+        // 3. Get Pagination Params
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 20;
+        const from = (page - 1) * limit;
+        const to = from + limit - 1;
+
+        // 4. Fetch Profiles with Pagination using ADMIN Client
+        const { data: profiles, error: dbError, count } = await supabaseAdmin
             .from('profiles')
-            .select('*')
-            .order('updated_at', { ascending: false });
+            .select('*', { count: 'exact' })
+            .order('updated_at', { ascending: false })
+            .range(from, to);
 
         if (dbError) throw dbError;
 
-        return res.status(200).json(profiles);
+        return res.status(200).json({ data: profiles, count });
 
     } catch (error: any) {
         console.error('Admin API Error:', error);

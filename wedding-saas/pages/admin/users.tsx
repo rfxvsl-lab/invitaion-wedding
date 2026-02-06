@@ -16,10 +16,22 @@ const AdminUsersPage = () => {
     const [users, setUsers] = useState<UserProfile[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const LIMIT = 20;
+
+    useEffect(() => {
+        if (loading) return; // Prevent double fetch on strict mode mount if handled inside
+        // But to keep simple: just standard effect
+    }, []);
+
     useEffect(() => {
         checkAuth();
-        fetchUsers();
     }, []);
+
+    useEffect(() => {
+        fetchUsers();
+    }, [page]);
 
     const checkAuth = async () => {
         const { data: { user } } = await supabase.auth.getUser();
@@ -31,7 +43,6 @@ const AdminUsersPage = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            // Get current session token for API authorization
             const { data: { session } } = await supabase.auth.getSession();
             const token = session?.access_token;
 
@@ -41,8 +52,8 @@ const AdminUsersPage = () => {
                 return;
             }
 
-            // Fetch from Server-Side API (Bypasses RLS)
-            const response = await fetch('/api/admin/users', {
+            // Fetch with Pagination Params
+            const response = await fetch(`/api/admin/users?page=${page}&limit=${LIMIT}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -53,8 +64,9 @@ const AdminUsersPage = () => {
                 throw new Error(errorData.error || `HTTP Error ${response.status}`);
             }
 
-            const profiles = await response.json();
-            const mappedUsers = profiles?.map(p => ({
+            const { data: profiles, count } = await response.json();
+
+            const mappedUsers = profiles?.map((p: any) => ({
                 id: p.id,
                 email: p.email || '-',
                 name: p.full_name || 'No Name',
@@ -63,7 +75,8 @@ const AdminUsersPage = () => {
                 joined_at: p.created_at || new Date().toISOString()
             })) || [];
 
-            setUsers(mappedUsers as any);
+            setUsers(mappedUsers);
+            setTotalPages(Math.ceil((count || 0) / LIMIT));
             setLoading(false);
         } catch (error: any) {
             console.error("Fetch error:", error);
