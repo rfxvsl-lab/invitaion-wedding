@@ -34,18 +34,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ label, currentUrl, onUpda
             const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
             const filePath = `uploads/${fileName}`;
 
-            // Upload ke Supabase 'images' bucket
-            // Import supabase instance? It is not imported in this file. 
-            // Need to add import.
-            const { error: uploadError } = await supabase.storage.from('images').upload(filePath, file);
+            // Upload ke Supabase 'site-assets' bucket (Konsisten dengan Testimoni)
+            const { error: uploadError } = await supabase.storage.from('site-assets').upload(filePath, file);
 
             if (uploadError) {
-                // Jika bucket 'images' tidak ada, coba 'public'?
-                // Tapi kita asumsikan error user bisa baca.
                 throw uploadError;
             }
 
-            const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(filePath);
+            const { data: { publicUrl } } = supabase.storage.from('site-assets').getPublicUrl(filePath);
 
             onUpdate(publicUrl);
             setStatus('success');
