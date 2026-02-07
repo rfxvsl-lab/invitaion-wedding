@@ -171,6 +171,76 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         ))}
                     </div>
                 </div>
+            ) : themeId === 'dark-luxury' ? (
+                /* DARK LUXURY (PREMIUM - STATIC 70%) */
+                <div className="w-full h-full relative flex flex-col items-center bg-[#121212] text-[#E2E8F0] overflow-hidden">
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC:wght@400;700&family=Source+Sans+Pro:wght@300;400;600&display=swap');
+                        .font-luxury { font-family: 'Playfair Display SC', serif; }
+                        .font-body { font-family: 'Source Sans Pro', sans-serif; }
+                        
+                        .text-gradient-gold {
+                            background: linear-gradient(to right, #BF953F, #FCF6BA, #B38728);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
+                    `}</style>
+
+                    {/* Background Overlay */}
+                    <div className="absolute inset-0 z-0">
+                        <img src={bgImage} className="w-full h-full object-cover opacity-20 grayscale" alt="Background" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-[#121212] via-transparent to-[#121212]"></div>
+                    </div>
+
+                    {/* Frame Border */}
+                    <div className="absolute inset-6 border border-[#333] z-10 pointer-events-none flex flex-col justify-between p-2">
+                        <div className="flex justify-between">
+                            <div className="w-4 h-4 border-t border-l border-[#BF953F]"></div>
+                            <div className="w-4 h-4 border-t border-r border-[#BF953F]"></div>
+                        </div>
+                        <div className="flex justify-between">
+                            <div className="w-4 h-4 border-b border-l border-[#BF953F]"></div>
+                            <div className="w-4 h-4 border-b border-r border-[#BF953F]"></div>
+                        </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="relative z-20 w-full h-full flex flex-col items-center justify-center p-12 text-center">
+                        <p className="font-body tracking-[0.4em] text-[#666] text-sm uppercase mb-8">The Wedding Of</p>
+
+                        <div className="mb-12">
+                            {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
+                                <h1 className="font-luxury text-6xl leading-tight text-gradient-gold">
+                                    {data.content.couples.pria.name.split(' ')[0]} <br /> <span className="text-4xl text-[#666]">&</span> <br /> {data.content.couples.wanita.name.split(' ')[0]}
+                                </h1>
+                            ) : (
+                                <h1 className="font-luxury text-7xl mb-4 text-gradient-gold">{data.content.hero.nicknames}</h1>
+                            )}
+                        </div>
+
+                        {/* Gold Divider */}
+                        <div className="flex items-center justify-center gap-4 py-8 opacity-80 mb-8">
+                            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#BF953F]"></div>
+                            <div className="rotate-45 w-2 h-2 border border-[#BF953F] bg-[#121212]"></div>
+                            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#BF953F]"></div>
+                        </div>
+
+                        <p className="font-luxury text-3xl text-[#E2E8F0] mb-12">{dateFormatted}</p>
+
+                        {/* Wish Card */}
+                        {wish && (
+                            <div className="bg-[#1A1A1A] border border-[#333] p-10 max-w-2xl relative shadow-2xl">
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#BF953F] to-transparent opacity-50"></div>
+                                <p className="font-luxury text-2xl italic leading-relaxed text-[#CCC]">"{wish}"</p>
+                                <p className="font-body text-xs font-bold mt-8 uppercase tracking-widest text-[#BF953F]">— {guestName}</p>
+                            </div>
+                        )}
+
+                        <div className="mt-16 opacity-50">
+                            <p className="font-body text-[10px] tracking-[0.2em] text-[#666]">INVITATION</p>
+                        </div>
+                    </div>
+                </div>
             ) : themeId === 'premium-peppy' ? (
                 <div className="w-full h-full relative" style={{ backgroundColor: '#FFF8F0' }}>
                     {/* Blob Background */}
@@ -283,10 +353,10 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                     </div>
                 </div>
             ) : themeId === 'royal-arabian' ? (
-                /* ROYAL ARABIAN (EXCLUSIVE) */
+                /* ROYAL ARABIAN (EXCLUSIVE - IMPROVED) */
                 <div className="w-full h-full relative flex flex-col items-center justify-center overflow-hidden"
                     style={{
-                        background: 'linear-gradient(to bottom, #020508, #051410, #0a1f18)',
+                        background: 'radial-gradient(circle at 50% 120%, #1a3c34 0%, #051410 40%, #020508 100%)',
                         color: '#F5E6CA',
                         fontFamily: "'Amiri', serif"
                     }}>
@@ -295,65 +365,95 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         .font-arabic-title { font-family: 'Cinzel', serif; }
                         .font-arabic-body { font-family: 'Amiri', serif; }
                         
-                        /* Background Animations */
                         @keyframes twinkle {
                             0%, 100% { opacity: 0.3; transform: scale(0.8); }
                             50% { opacity: 1; transform: scale(1.2); }
                         }
-                        .animate-twinkle { animation: twinkle 4s ease-in-out infinite; }
-                        
-                        @keyframes sway {
-                            0%, 100% { transform: rotate(-3deg); }
-                            50% { transform: rotate(3deg); }
+                        @keyframes float-lantern {
+                            0% { transform: translateY(0) rotate(-2deg); }
+                            50% { transform: translateY(-20px) rotate(2deg); }
+                            100% { transform: translateY(0) rotate(-2deg); }
                         }
-                        .animate-sway { animation: sway 6s ease-in-out infinite; transform-origin: top; }
+                        @keyframes shimmer-gold {
+                            0% { background-position: -200% center; }
+                            100% { background-position: 200% center; }
+                        }
+                        .animate-twinkle { animation: twinkle 4s ease-in-out infinite; }
+                        .animate-float-slow { animation: float-lantern 8s ease-in-out infinite; }
+                        .animate-float-fast { animation: float-lantern 6s ease-in-out infinite reverse; }
+                        
+                        .text-shimmer {
+                            background: linear-gradient(90deg, #D4AF37 0%, #FFF 50%, #D4AF37 100%);
+                            background-size: 200% auto;
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            animation: shimmer-gold 3s linear infinite;
+                        }
                     `}</style>
 
                     {/* Background Pattern */}
-                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url(https://www.transparenttextures.com/patterns/black-scales.png)` }}></div>
+                    <div className="absolute inset-0 opacity-20" style={{ backgroundImage: `url(https://www.transparenttextures.com/patterns/black-scales.png)` }}></div>
 
-                    {/* Stars */}
-                    {Array.from({ length: 20 }).map((_, i) => (
-                        <div key={i} className="absolute bg-white rounded-full animate-twinkle"
-                            style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 60}%`, width: `${Math.random() * 3}px`, height: `${Math.random() * 3}px`, animationDelay: `${Math.random() * 5}s` }}>
+                    {/* Animated Stars */}
+                    {Array.from({ length: 30 }).map((_, i) => (
+                        <div key={i} className="absolute bg-[#F5E6CA] rounded-full animate-twinkle"
+                            style={{
+                                left: `${Math.random() * 100}%`,
+                                top: `${Math.random() * 70}%`,
+                                width: `${Math.random() * 3}px`,
+                                height: `${Math.random() * 3}px`,
+                                animationDelay: `${Math.random() * 5}s`,
+                                opacity: Math.random()
+                            }}>
                         </div>
                     ))}
 
+                    {/* Floating Lanterns (CSS Shapes) */}
+                    <div className="absolute top-10 left-10 opacity-60 animate-float-slow">
+                        <div className="w-16 h-24 bg-gradient-to-b from-[#D4AF37] to-[#8a7024] rounded-t-lg rounded-b-xl relative shadow-[0_0_30px_#D4AF37]">
+                            <div className="absolute top-0 left-1/2 -ml-[1px] -mt-10 w-[2px] h-10 bg-[#D4AF37]/50"></div>
+                        </div>
+                    </div>
+                    <div className="absolute top-32 right-16 opacity-40 animate-float-fast" style={{ animationDelay: '1s' }}>
+                        <div className="w-12 h-16 bg-gradient-to-b from-[#D4AF37] to-[#8a7024] rounded-t-lg rounded-b-xl relative shadow-[0_0_20px_#D4AF37]">
+                            <div className="absolute top-0 left-1/2 -ml-[1px] -mt-10 w-[2px] h-10 bg-[#D4AF37]/50"></div>
+                        </div>
+                    </div>
+
                     {/* Content */}
-                    <div className="z-10 text-center p-8 border-y-2 border-[#D4AF37] relative w-[80%] max-w-2xl bg-[#0f261f]/30 backdrop-blur-sm shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-                        <h3 className="font-arabic-title text-2xl tracking-[0.3em] text-[#D4AF37] mb-8 uppercase">The Wedding Of</h3>
+                    <div className="z-10 text-center p-10 border-y-[3px] border-double border-[#D4AF37] relative w-[85%] max-w-2xl bg-[#0f261f]/60 backdrop-blur-md shadow-[0_0_70px_rgba(0,0,0,0.6)]">
+                        <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-[#0f261f] border border-[#D4AF37] rotate-45 flex items-center justify-center shadow-lg">
+                            <div className="w-8 h-8 border border-[#D4AF37] bg-[#D4AF37]/20"></div>
+                        </div>
+
+                        <h3 className="font-arabic-title text-3xl tracking-[0.4em] text-[#D4AF37] mb-10 mt-4 uppercase">The Wedding Of</h3>
 
                         {/* Hero Image */}
-                        <div className="relative w-48 h-64 mx-auto mb-8 rounded-t-full p-1 border border-[#D4AF37]/50 overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0f261f] to-transparent z-10 opacity-30"></div>
+                        <div className="relative w-56 h-72 mx-auto mb-10 rounded-t-full p-1.5 border-2 border-[#D4AF37] overflow-hidden shadow-2xl">
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0f261f] to-transparent z-10 opacity-40"></div>
                             <img src={bgImage} className="w-full h-full object-cover rounded-t-full" alt="Couple" />
                         </div>
 
                         {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
                             <>
                                 <h1 className="font-arabic-title text-7xl mb-4 text-[#F5E6CA] drop-shadow-md">{data.content.couples.pria.name.split(' ')[0]}</h1>
-                                <span className="text-4xl text-[#D4AF37] font-serif">&</span>
+                                <span className="text-5xl text-shimmer font-serif">&</span>
                                 <h1 className="font-arabic-title text-7xl mt-4 mb-8 text-[#F5E6CA] drop-shadow-md">{data.content.couples.wanita.name.split(' ')[0]}</h1>
                             </>
                         ) : (
-                            <h1 className="font-arabic-title text-8xl mb-6 text-[#F5E6CA]">{data.content.hero.nicknames}</h1>
+                            <h1 className="font-arabic-title text-8xl mb-6 text-[#F5E6CA] leading-tight">{data.content.hero.nicknames}</h1>
                         )}
 
-                        <div className="w-24 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-8"></div>
-                        <p className="font-arabic-body text-3xl text-[#D4AF37]">{dateFormatted}</p>
+                        <div className="w-32 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-8 opacity-80"></div>
+                        <p className="font-arabic-body text-4xl text-[#D4AF37] drop-shadow-sm">{dateFormatted}</p>
 
                         {/* Wish */}
                         {wish && (
-                            <div className="mt-12 pt-8 border-t border-[#D4AF37]/30">
-                                <p className="font-arabic-body text-2xl italic leading-relaxed text-[#F5E6CA]">"{wish}"</p>
+                            <div className="mt-12 pt-8 border-t border-[#D4AF37]/30 relative">
+                                <p className="font-arabic-body text-2xl italic leading-relaxed text-[#F5E6CA] opacity-90">"{wish}"</p>
                                 <p className="font-arabic-title text-xl mt-6 text-[#D4AF37] uppercase tracking-widest">- {guestName} -</p>
                             </div>
                         )}
-                    </div>
-
-                    {/* Decorative Moon */}
-                    <div className="absolute top-20 right-20 w-32 h-32 opacity-80 drop-shadow-[0_0_30px_#FFD700]">
-                        <svg viewBox="0 0 100 100" fill="#FCF6BA"><path d="M50 10 Q 90 50 50 90 Q 70 50 50 10" /></svg>
                     </div>
                 </div>
             ) : themeId === 'grand-ballroom' ? (
@@ -594,30 +694,59 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                     </div>
                 </div>
             ) : themeId === 'luxury-pink' ? (
-                /* LUXURY PINK DESIGN */
-                <div className="w-full h-full relative flex flex-col items-center bg-[#fff1f2] text-[#be185d]">
+                /* LUXURY PINK DESIGN (EXCLUSIVE - ANIMATED) */
+                <div className="w-full h-full relative flex flex-col items-center bg-[#fff1f2] text-[#be185d] overflow-hidden">
                     <style>{`
                         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito+Sans:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
                         .font-vibes { font-family: 'Great Vibes', cursive; }
                         .font-playfair { font-family: 'Playfair Display', serif; }
                         .font-nunito { font-family: 'Nunito Sans', sans-serif; }
+
+                        @keyframes float-heart {
+                            0%, 100% { transform: translateY(0) scale(1); opacity: 0.6; }
+                            50% { transform: translateY(-20px) scale(1.1); opacity: 1; }
+                        }
+                        .animate-float-heart { animation: float-heart 6s ease-in-out infinite; }
+
+                        @keyframes rotate-floral {
+                            0% { transform: rotate(0deg); }
+                            100% { transform: rotate(360deg); }
+                        }
+                        .animate-spin-slow { animation: rotate-floral 60s linear infinite; }
                     `}</style>
 
                     {/* Background Texture */}
                     <div className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none" style={{ backgroundImage: `url(https://www.transparenttextures.com/patterns/cream-paper.png)` }}></div>
 
-                    {/* Floral Corners */}
-                    <HugeFloral className="w-[800px] h-[800px] -top-32 -left-32 text-rose-300 opacity-60" style={{ transform: 'rotate(135deg)' }} />
-                    <HugeFloral className="w-[800px] h-[800px] -bottom-32 -right-32 text-rose-300 opacity-60" style={{ transform: 'rotate(-45deg)' }} />
+                    {/* Animated Floral Corners */}
+                    <div className="absolute -top-32 -left-32 w-[800px] h-[800px] opacity-60 animate-spin-slow" style={{ animationDuration: '80s' }}>
+                        <HugeFloral className="w-full h-full text-rose-300" />
+                    </div>
+                    <div className="absolute -bottom-32 -right-32 w-[800px] h-[800px] opacity-60 animate-spin-slow" style={{ animationDuration: '90s', animationDirection: 'reverse' }}>
+                        <HugeFloral className="w-full h-full text-rose-300" />
+                    </div>
+
+                    {/* Floating Particles/Hearts */}
+                    {Array.from({ length: 15 }).map((_, i) => (
+                        <div key={i} className="absolute text-rose-300/40 animate-float-heart"
+                            style={{
+                                left: `${Math.random() * 100}%`,
+                                top: `${Math.random() * 100}%`,
+                                fontSize: `${20 + Math.random() * 40}px`,
+                                animationDelay: `${Math.random() * 5}s`
+                            }}>
+                            ♥
+                        </div>
+                    ))}
 
                     {/* Content */}
                     <div className="relative z-10 w-full h-full flex flex-col items-center justify-center p-16">
 
-                        <p className="font-playfair text-3xl tracking-[0.4em] uppercase text-rose-800 mb-8">The Wedding Of</p>
+                        <p className="font-playfair text-3xl tracking-[0.4em] uppercase text-rose-800 mb-8 animate-[pulse_3s_infinite]">The Wedding Of</p>
 
                         {/* Photo Frame */}
-                        <div className="relative w-[700px] h-[700px] mb-12">
-                            <div className="absolute inset-0 border-[3px] border-rose-300 rounded-full transform scale-105 opacity-50"></div>
+                        <div className="relative w-[700px] h-[700px] mb-12 group">
+                            <div className="absolute inset-0 border-[3px] border-rose-300 rounded-full transform scale-105 opacity-50 animate-pulse"></div>
                             <div className="absolute inset-0 border-[1px] border-rose-400 rounded-full transform scale-110 opacity-30"></div>
                             <div className="w-full h-full rounded-full border-[10px] border-white shadow-2xl overflow-hidden bg-white relative">
                                 <img src={bgImage} className="w-full h-full object-cover" alt="Couple" />
@@ -625,7 +754,7 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                             </div>
 
                             {/* Floating Heart Icon */}
-                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-24 h-24 bg-rose-600 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+                            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-24 h-24 bg-rose-600 rounded-full flex items-center justify-center shadow-lg border-4 border-white animate-bounce" style={{ animationDuration: '3s' }}>
                                 <svg width="40" height="40" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                                 </svg>
@@ -644,7 +773,7 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
 
                         {/* Wish Card */}
                         {wish && (
-                            <div className="bg-white/80 backdrop-blur-md p-10 rounded-3xl border border-rose-200 shadow-xl max-w-3xl text-center relative">
+                            <div className="bg-white/80 backdrop-blur-md p-10 rounded-3xl border border-rose-200 shadow-xl max-w-3xl text-center relative animate-in slide-in-from-bottom-10 fade-in duration-1000">
                                 <div className="text-6xl text-rose-300 absolute -top-4 left-8">"</div>
                                 <p className="font-playfair text-4xl italic text-gray-700 leading-relaxed z-10 relative px-4">{wish}</p>
                                 <div className="text-6xl text-rose-300 absolute -bottom-16 right-8 rotate-180">"</div>
@@ -655,6 +784,95 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
                         <div className="mt-auto opacity-60">
                             <p className="font-nunito text-xl tracking-widest uppercase">Save The Date</p>
                         </div>
+                    </div>
+                </div>
+            ) : themeId === 'luxury-javanese' ? (
+                /* LUXURY JAVANESE (EXCLUSIVE - NEW) */
+                <div className="w-full h-full relative flex flex-col items-center bg-[#2c1e1a] text-[#d4af37] overflow-hidden">
+                    <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+                        .font-jawa { font-family: 'Cinzel', serif; }
+                        .font-krama { font-family: 'Playfair Display', serif; }
+
+                        @keyframes sway-gunungan {
+                            0% { transform: translateX(-50%) rotate(-2deg); }
+                            50% { transform: translateX(-50%) rotate(2deg); }
+                            100% { transform: translateX(-50%) rotate(-2deg); }
+                        }
+                        .animate-gunungan { animation: sway-gunungan 8s ease-in-out infinite transform-origin-bottom; }
+                        
+                        @keyframes pattern-slide {
+                            0% { background-position: 0 0; }
+                            100% { background-position: 50px 50px; }
+                        }
+                        .animate-batik { animation: pattern-slide 20s linear infinite; }
+                    `}</style>
+
+                    {/* Batik Pattern Background */}
+                    <div className="absolute inset-0 opacity-20 animate-batik" style={{
+                        backgroundImage: `url("https://www.transparenttextures.com/patterns/batik.png")`,
+                        backgroundSize: '100px 100px'
+                    }}></div>
+
+                    {/* Gunungan Animation (Simulated using SVG path or Image if available) */}
+                    <div className="absolute bottom-[-100px] left-1/2 w-[800px] z-0 opacity-40 animate-gunungan origin-bottom">
+                        {/* Fallback to simple shape or image if available in assets */}
+                        <img src="/assets/luxury-javanese/gunungan.png"
+                            onError={(e) => {
+                                // Fallback SVG if image missing
+                                e.currentTarget.style.display = 'none';
+                            }}
+                            className="w-full drop-shadow-[0_0_20px_#d4af37]"
+                            alt="Gunungan"
+                        />
+                        {/* SVG Fallback */}
+                        <svg viewBox="0 0 100 100" className="w-[800px] h-[800px] text-[#d4af37] fill-current" style={{ display: 'none' }}>
+                            <path d="M50 0 C 20 50, 0 80, 0 100 L 100 100 C 100 80, 80 50, 50 0 Z" />
+                        </svg>
+                    </div>
+
+                    {/* Frame Border */}
+                    <div className="absolute inset-8 border-[2px] border-[#d4af37]/50 rounded-[50px] pointer-events-none z-20 flex flex-col justify-between p-4">
+                        <div className="flex justify-between">
+                            <span className="text-4xl">ꦮ</span>
+                            <span className="text-4xl">ꦮ</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-4xl">ꦮ</span>
+                            <span className="text-4xl">ꦮ</span>
+                        </div>
+                    </div>
+
+                    <div className="relative z-10 w-full h-full flex flex-col items-center p-20 pt-32">
+                        <p className="font-jawa text-3xl tracking-[0.4em] uppercase text-[#d4af37] mb-12">Paugeran Wiwahan</p>
+
+                        {/* Photo in Javanese Arch shape */}
+                        <div className="relative w-[600px] h-[800px] mb-12">
+                            <div className="absolute inset-0 bg-[#d4af37] rounded-t-[300px] rounded-b-[50px] transform translate-x-4 translate-y-4 opacity-30"></div>
+                            <div className="w-full h-full bg-[#1a100e] border-4 border-[#d4af37] rounded-t-[300px] rounded-b-[50px] overflow-hidden shadow-2xl relative">
+                                <img src={bgImage} className="w-full h-full object-cover sepia-[0.3]" alt="Couple" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#2c1e1a] via-transparent to-transparent opacity-80"></div>
+                            </div>
+                        </div>
+
+                        {data.content.couples.pria?.name && data.content.couples.wanita?.name ? (
+                            <h1 className="font-krama text-8xl text-[#f5e6ca] mb-6 drop-shadow-md text-center">
+                                {data.content.couples.pria.name.split(' ')[0]} <span className="text-[#d4af37] mx-2 text-6xl">&</span> {data.content.couples.wanita.name.split(' ')[0]}
+                            </h1>
+                        ) : (
+                            <h1 className="font-krama text-8xl text-[#f5e6ca] mb-6 drop-shadow-md text-center">{data.content.hero.nicknames}</h1>
+                        )}
+
+                        <p className="font-jawa text-4xl text-[#d4af37] mb-12">{dateFormatted}</p>
+
+                        {/* Wish Card */}
+                        {wish && (
+                            <div className="bg-[#1a100e]/90 border border-[#d4af37] p-10 rounded-xl shadow-lg max-w-3xl text-center relative mt-auto mb-20">
+                                <p className="font-krama text-3xl italic text-[#f5e6ca] leading-relaxed">"{wish}"</p>
+                                <div className="h-[1px] w-32 bg-[#d4af37] mx-auto my-6"></div>
+                                <p className="font-jawa text-xl font-bold text-[#d4af37] uppercase tracking-widest">{guestName}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : (

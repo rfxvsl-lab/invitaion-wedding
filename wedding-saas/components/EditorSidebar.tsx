@@ -9,6 +9,8 @@ import { getEffectivePlan, isAdmin } from '../lib/admin';
 import DIYEditor from './DIYEditor';
 import { BrandLogo } from './Logo';
 import { uploadResumable } from '@/lib/tusUpload';
+import GuestModal from './GuestModal';
+import { getGuestLimit } from '@/lib/limits';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -79,11 +81,33 @@ const SectionHeader = ({ icon: Icon, title }: { icon: any, title: string }) => (
 );
 
 const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfile }) => {
-    const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design' | 'settings'>('content');
+    const [activeTab, setActiveTab] = useState<'content' | 'events' | 'media' | 'design' | 'settings' | 'guest'>('content');
     const [plan, setPlan] = useState<'free' | 'basic' | 'premium' | 'exclusive'>('free');
     const [uploadingMusic, setUploadingMusic] = useState(false);
     const [uploadingVideo, setUploadingVideo] = useState(false);
     const [tokens, setTokens] = useState<number>(5);
+
+    // --- MUSIC SEARCH STATE ---
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [showGuestModal, setShowGuestModal] = useState(false);
+
+    const searchMusic = async () => {
+        if (!searchQuery) return;
+        setIsSearching(true);
+        try {
+            // Limit 5 results, entity song
+            const res = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(searchQuery)}&media=music&entity=song&limit=5`);
+            const data = await res.json();
+            setSearchResults(data.results);
+        } catch (err) {
+            console.error(err);
+            alert("Gagal mencari lagu");
+        } finally {
+            setIsSearching(false);
+        }
+    };
 
     useEffect(() => {
         const fetchPlan = async () => {
@@ -207,7 +231,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
 
             {/* Navigation Tabs */}
             <div className="flex border-b border-gray-100 bg-white sticky top-0 z-10 overflow-x-auto scrollbar-hide shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)]">
-                {['content', 'events', 'media', 'design', 'settings'].map(tab => {
+                {['content', 'events', 'media', 'design', 'guest', 'settings'].map(tab => {
                     const isActive = activeTab === tab;
                     return (
                         <button
@@ -458,6 +482,87 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                 </div>
                             </div>
                         </div>
+
+                        {/* MUSIC SEARCH (ITUNES) */}
+                        <div className="mb-6 border-t border-slate-100 pt-6">
+                            <div className="flex items-center justify-between mb-3">
+                                <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Cari Lagu (iTunes Preview)</label>
+                                <span className="text-[9px] bg-green-100 text-green-600 px-2 py-0.5 rounded font-bold border border-green-200">FREE</span>
+                            </div>
+
+                            <div className="flex gap-2 mb-3">
+                                <input
+                                    className="flex-1 border text-sm px-3 py-2 rounded-xl bg-slate-50 focus:bg-white focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition"
+                                    placeholder="Judul lagu / Penyanyi..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && searchMusic()}
+                                />
+                                <button
+                                    onClick={searchMusic}
+                                    disabled={isSearching}
+                                    className="bg-slate-800 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-slate-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isSearching ? '...' : 'Cari'}
+                                </button>
+                            </div>
+
+                            {/* Hasil Pencarian */}
+                            {searchResults.length > 0 && (
+                                <div className="space-y-2 bg-white border border-slate-100 rounded-xl p-2 shadow-sm max-h-60 overflow-y-auto custom-scroll">
+                                    {searchResults.map((track) => (
+                                        <div key={track.trackId} className="flex items-center gap-3 p-2 hover:bg-pink-50 rounded-lg cursor-pointer transition group relative">
+                                            <img src={track.artworkUrl60} className="w-10 h-10 rounded-lg shadow-sm bg-slate-200" alt="cover" />
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-xs font-bold text-slate-800 truncate leading-tight mb-0.5">{track.trackName}</p>
+                                                <p className="text-[10px] text-slate-500 truncate">{track.artistName}</p>
+                                            </div>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    onUpdate('metadata.music_url', track.previewUrl);
+                                                }}
+                                                className="text-[10px] bg-white border border-pink-200 text-pink-600 px-3 py-1.5 rounded-lg font-bold hover:bg-pink-600 hover:text-white transition shadow-sm"
+                                            >
+                                                Pilih
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'guest' && (
+                    <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+                        <SectionHeader icon={Users} title="Tamu Undangan" />
+
+                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center">
+                            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-slate-100">
+                                <Users size={32} className="text-pink-500" />
+                            </div>
+                            <h3 className="font-bold text-slate-800 mb-2">Kelola Daftar Tamu</h3>
+                            <p className="text-xs text-slate-500 mb-6">
+                                Buat link unik untuk setiap tamu undangan Anda agar terasa lebih personal.
+                            </p>
+
+                            <div className="flex justify-center gap-4 text-xs font-bold text-slate-600 mb-6">
+                                <div className="px-4 py-2 bg-white rounded-lg border border-slate-200">
+                                    Total Tamu: <span className="text-pink-600">{data.engagement?.guests?.length || 0}</span>
+                                </div>
+                                <div className="px-4 py-2 bg-white rounded-lg border border-slate-200">
+                                    Limit Tier: <span className="text-pink-600">{getGuestLimit(plan)}</span>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => setShowGuestModal(true)}
+                                className="w-full py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition flex items-center justify-center gap-2"
+                            >
+                                <Settings size={16} /> Kelola Tamu
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -647,6 +752,25 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                     </div>
                 )}
             </div>
+            {/* Guest Modal */}
+            <GuestModal
+                isOpen={showGuestModal}
+                onClose={() => setShowGuestModal(false)}
+                guestCount={data.engagement?.guests?.length || 0}
+                maxGuests={getGuestLimit(plan)}
+                baseUrl={`${typeof window !== 'undefined' ? window.location.origin : ''}/${data.metadata.slug}`}
+                guests={data.engagement?.guests || []}
+                onAddGuest={(name) => {
+                    const newGuests = [...(data.engagement?.guests || [])];
+                    newGuests.push(name);
+                    onUpdate('engagement.guests', newGuests);
+                }}
+                onRemoveGuest={(index) => {
+                    const newGuests = [...(data.engagement?.guests || [])];
+                    newGuests.splice(index, 1);
+                    onUpdate('engagement.guests', newGuests);
+                }}
+            />
         </aside>
     );
 };

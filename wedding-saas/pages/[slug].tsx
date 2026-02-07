@@ -90,7 +90,7 @@ export default function InvitationPage({ data, guestName, error }: InvitationPag
     return (
         <>
             <Head>
-                <title>{data.content.hero.nicknames} | Wedding Invitation</title>
+                <title>{`${data.content.hero.nicknames} | Wedding Invitation`}</title>
                 <meta name="description" content={`Undangan pernikahan ${data.content.hero.nicknames}`} />
             </Head>
             <DownloadControls targetRef={contentRef} slug={data.metadata.slug} data={data} />

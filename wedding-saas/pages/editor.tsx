@@ -147,9 +147,10 @@ export default function Editor() {
             },
             engagement: {
                 rsvp: true,
+                guests: [], // Initialize guests list
                 rsvp_settings: { whatsapp_number: '', message_template: '' },
                 gifts: [],
-                ...content?.engagement // Corrected: spread at root of engagement not inside gifts
+                ...content?.engagement // Spread last to override defaults if exists
             }
         };
     };

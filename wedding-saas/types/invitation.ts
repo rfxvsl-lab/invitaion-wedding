@@ -102,6 +102,7 @@ export interface InvitationData {
         };
         rsvp: boolean;
         wishes: any[];
+        guests: string[]; // List of guest names
         gifts: GiftAccount[];
         qris_url?: string; // TUS Uploaded QRIS Image
     };

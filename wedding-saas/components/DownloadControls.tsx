@@ -47,12 +47,31 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
         if (!storyRef.current) return;
         setIsDownloading(true);
         try {
-            const dataUrl = await toJpeg(storyRef.current, {
-                quality: 0.95,
-                backgroundColor: '#ffffff'
-            });
-            download(dataUrl, `story-${slug}-${guestName.replace(/\s+/g, '-') || 'guest'}.jpg`);
-            setShowModal(false);
+            try {
+                // First try with fonts
+                const dataUrl = await toJpeg(storyRef.current, {
+                    quality: 0.95,
+                    backgroundColor: '#ffffff',
+                    // Attempt to fix CORS issues with images/fonts
+                    // cacheBust: true, 
+                });
+                download(dataUrl, `story-${slug}-${guestName.replace(/\s+/g, '-') || 'guest'}.jpg`);
+                setShowModal(false);
+            } catch (err1: any) {
+                console.warn('First download attempt failed, trying without fonts...', err1);
+                try {
+                    // Fallback: skip fonts if CORS/CSS error
+                    const dataUrl = await toJpeg(storyRef.current, {
+                        quality: 0.95,
+                        backgroundColor: '#ffffff',
+                        skipFonts: true
+                    });
+                    download(dataUrl, `story-${slug}-nofonts.jpg`);
+                    setShowModal(false);
+                } catch (err2) {
+                    throw err1; // Throw original error
+                }
+            }
         } catch (error) {
             console.error('Story download failed', error);
             alert('Gagal membuat story. Coba lagi.');
@@ -171,9 +190,9 @@ export const DownloadControls: React.FC<DownloadProps> = ({ targetRef, slug, dat
 
     return (
         <>
-            <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2 exclude-from-capture">
+            <div className="fixed bottom-6 right-6 z-[999] flex flex-col gap-2 exclude-from-capture">
                 {/* Floating Action Button */}
-                <div className={`bg-white/90 backdrop-blur shadow-lg rounded-full p-2 border border-gray-200 cursor-pointer group relative transition-all duration-300 opacity-40 hover:opacity-100 hover:scale-105 ${isDownloading ? 'opacity-100' : ''}`}>
+                <div className={`bg-white/90 backdrop-blur shadow-lg rounded-full p-2 border border-gray-200 cursor-pointer group relative transition-all duration-300 opacity-40 hover:opacity-80 hover:scale-105 ${isDownloading ? '!opacity-80' : ''}`}>
                     <button
                         onClick={() => setShowModal(true)}
                         disabled={isDownloading}
