@@ -4,18 +4,11 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 
 // Templates
+// Templates
 import ClassicSerif from '../../templates/ClassicSerif';
-import RusticWood from '../../templates/RusticWood';
 import DarkLuxury from '../../templates/DarkLuxury';
 import BotanicalLine from '../../templates/BotanicalLine';
-import ModernArch from '../../templates/ModernArch';
-
-import ElegantVanilla from '../../templates/ElegantVanilla';
-
 import GamerQuest from '../../templates/GamerQuest';
-
-
-import PremiumPeppy from '../../templates/PremiumPeppy';
 import RoyalGlass from '../../templates/RoyalGlass';
 
 // Types
@@ -110,15 +103,9 @@ const DUMMY_DATA: InvitationData = {
 
 const THEMES: Record<string, any> = {
     'classic-serif': ClassicSerif,
-    'rustic-wood': RusticWood,
     'dark-luxury': DarkLuxury,
     'botanical-line': BotanicalLine,
-    'modern-arch': ModernArch,
-
-    'elegant-vanilla': ElegantVanilla,
-
     'gamer-quest': GamerQuest,
-    'premium-peppy': PremiumPeppy,
     'royal-glass': RoyalGlass,
 };
 

@@ -15,20 +15,17 @@ const LoadingSpinner = () => (
 );
 
 const TEMPLATES: any = {
-    'modern-arch': dynamic(() => import('../templates/ModernArch'), { loading: () => <LoadingSpinner /> }),
     'classic-serif': dynamic(() => import('../templates/ClassicSerif'), { loading: () => <LoadingSpinner /> }),
     'botanical-line': dynamic(() => import('../templates/BotanicalLine'), { loading: () => <LoadingSpinner /> }),
-    'rustic-wood': dynamic(() => import('../templates/RusticWood'), { loading: () => <LoadingSpinner /> }),
     'dark-luxury': dynamic(() => import('../templates/DarkLuxury'), { loading: () => <LoadingSpinner /> }),
-    'premium-peppy': dynamic(() => import('../templates/PremiumPeppy'), { loading: () => <LoadingSpinner /> }),
     'gamer-quest': dynamic(() => import('../templates/GamerQuest'), { loading: () => <LoadingSpinner /> }),
-    'elegant-vanilla': dynamic(() => import('../templates/ElegantVanilla'), { loading: () => <LoadingSpinner /> }),
     'royal-glass': dynamic(() => import('../templates/RoyalGlass'), { loading: () => <LoadingSpinner /> }),
     'netflix-luxury': dynamic(() => import('../templates/NetflixLuxury'), { loading: () => <LoadingSpinner /> }),
     'grand-ballroom': dynamic(() => import('../templates/GrandBallroom'), { loading: () => <LoadingSpinner /> }),
     'royal-arabian': dynamic(() => import('../templates/RoyalArabian'), { loading: () => <LoadingSpinner /> }),
     'luxury-pink': dynamic(() => import('../templates/LuxuryPink'), { loading: () => <LoadingSpinner /> }),
     'spotilove': dynamic(() => import('../templates/SpotiLove'), { loading: () => <LoadingSpinner /> }),
+    'luxury-javanese': dynamic(() => import('../templates/LuxuryJavanese'), { loading: () => <LoadingSpinner /> }),
 };
 
 interface InvitationPageProps {
@@ -83,8 +80,8 @@ export default function InvitationPage({ data, guestName, error }: InvitationPag
     }
 
     const renderTemplate = () => {
-        // Fallback to modern-arch if theme_id not found
-        const ThemeComponent = TEMPLATES[data.metadata.theme_id] || TEMPLATES['modern-arch'];
+        // Fallback to classic-serif if theme_id not found
+        const ThemeComponent = TEMPLATES[data.metadata.theme_id] || TEMPLATES['classic-serif'];
         return <ThemeComponent data={data} guestName={guestName} />;
     };
 

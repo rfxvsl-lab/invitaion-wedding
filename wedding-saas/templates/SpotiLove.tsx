@@ -4,7 +4,6 @@ import {
     Calendar, MapPin, Clock,
     Disc, Mic2, LayoutList, Gift, CheckCircle, MoreHorizontal
 } from 'lucide-react';
-import { TemplateProps } from '../lib/templates';
 import { InvitationData } from '../types/invitation';
 
 /**
@@ -281,19 +280,26 @@ const PlayerBar: React.FC<PlayerBarProps> = ({ activeTab, setTab, isPlaying, tog
 
                             {/* Menu Items */}
                             <div className="absolute bottom-12 right-0 bg-[#282828] rounded-xl p-2 shadow-2xl w-48 border border-white/10 z-50 animate-fade-in-up">
-                                {['home', 'event', 'gallery', 'rsvp'].map(t => (
+                                {[
+                                    { id: 'home', label: 'Home' },
+                                    { id: 'couple', label: 'Artist' },
+                                    { id: 'event', label: 'Tour Dates' },
+                                    { id: 'gallery', label: 'Discography' },
+                                    { id: 'gift', label: 'Merch' },
+                                    { id: 'rsvp', label: 'Fan Club' }
+                                ].map((item) => (
                                     <button
-                                        key={t}
+                                        key={item.id}
                                         onClick={() => {
-                                            setTab(t);
+                                            setTab(item.id);
                                             setShowMenu(false);
                                         }}
                                         className={`block w-full text-left p-3 text-sm font-bold rounded-lg mb-1 capitalize transition flex items-center justify-between
-                                            ${activeTab === t ? 'bg-[#1DB954] text-black' : 'text-white hover:bg-[#3E3E3E]'}
+                                            ${activeTab === item.id ? 'bg-[#1DB954] text-black' : 'text-white hover:bg-[#3E3E3E]'}
                                         `}
                                     >
-                                        {t}
-                                        {activeTab === t && <span className="w-2 h-2 bg-black rounded-full"></span>}
+                                        {item.label}
+                                        {activeTab === item.id && <span className="w-2 h-2 bg-black rounded-full"></span>}
                                     </button>
                                 ))}
                             </div>
@@ -472,7 +478,7 @@ const CouplePage = ({ couple, cover }: { couple: InvitationData['content']['coup
     </div>
 );
 
-const GiftPage = ({ gifts }: { gifts: InvitationData['engagement']['gifts'] }) => (
+const GiftPage = ({ gifts, qrisUrl }: { gifts: InvitationData['engagement']['gifts'], qrisUrl?: string }) => (
     <div className="page-enter p-6 md:p-8 pb-24 pt-20">
         <h2 className="text-2xl font-bold mb-6">Merch (Wedding Gift)</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -494,22 +500,47 @@ const GiftPage = ({ gifts }: { gifts: InvitationData['engagement']['gifts'] }) =
                 </div>
             ))}
 
+            {/* QRIS Display */}
             <div className="bg-[#181818] p-4 rounded-lg group hover:bg-[#282828] transition">
-                <div className="aspect-video bg-[#222] rounded mb-4 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-white opacity-90"></div>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Commons_QR_code.png/150px-Commons_QR_code.png" className="relative z-10 w-24 h-24 mix-blend-multiply" />
+                <div className="aspect-square bg-[#white] rounded mb-4 flex items-center justify-center relative overflow-hidden bg-white">
+                    <img
+                        src={qrisUrl || "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Commons_QR_code.png/150px-Commons_QR_code.png"}
+                        className="w-full h-full object-contain mix-blend-multiply p-2"
+                        alt="QRIS Code"
+                    />
                 </div>
                 <h3 className="font-bold text-lg mb-1">QRIS / E-Wallet</h3>
                 <p className="text-[#B3B3B3] text-sm mb-4">Scan for instant gift</p>
-                <button className="w-full py-2 border border-[#B3B3B3] rounded-full text-sm font-bold hover:border-white hover:scale-105 transition">DOWNLOAD QR</button>
+                {qrisUrl && (
+                    <a
+                        href={qrisUrl}
+                        download="qris.png"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block text-center w-full py-2 border border-[#B3B3B3] rounded-full text-sm font-bold hover:border-white hover:scale-105 transition text-white"
+                    >
+                        DOWNLOAD QR
+                    </a>
+                )}
             </div>
         </div>
     </div>
 );
 
-const GalleryPage = ({ images }: { images: string[] }) => (
+const GalleryPage = ({ images, videoUrl }: { images: string[], videoUrl?: string }) => (
     <div className="page-enter p-6 md:p-8 pb-24 pt-20">
         <h2 className="text-2xl font-bold mb-6">Discography</h2>
+
+        {/* Video Prewedding */}
+        {videoUrl && (
+            <div className="mb-8 bg-[#181818] p-4 rounded-md group hover:bg-[#282828] transition">
+                <div className="aspect-video w-full bg-[#121212] rounded overflow-hidden shadow-lg relative">
+                    <iframe src={`${videoUrl}${videoUrl.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`} className="w-full h-full" allowFullScreen allow="autoplay; encrypted-media" title="Prewedding Video"></iframe>
+                </div>
+                <h3 className="font-bold text-sm mt-3 flex items-center gap-2"><Play size={14} className="text-[#1DB954]" /> Official Music Video</h3>
+            </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {images.map((img, i) => (
                 <div key={i} className="bg-[#181818] p-4 rounded-md hover:bg-[#282828] transition group cursor-pointer">
@@ -520,7 +551,7 @@ const GalleryPage = ({ images }: { images: string[] }) => (
                         </div>
                     </div>
                     <h3 className="font-bold text-sm truncate">Our Moment #{i + 1}</h3>
-                    <p className="text-xs text-[#B3B3B3]">2024 • Photo</p>
+                    <p className="text-xs text-[#B3B3B3]">Romantic • Photo</p>
                 </div>
             ))}
         </div>
@@ -574,7 +605,7 @@ const RSVPPage = ({ rsvp }: { rsvp: boolean }) => (
 /**
  * --- MAIN APP ORCHESTRATOR ---
  */
-const SpotiLove: React.FC<TemplateProps> = ({ data }) => {
+const SpotiLove: React.FC<{ data: InvitationData }> = ({ data }) => {
     const [showOpening, setShowOpening] = useState(true);
     const [activeTab, setActiveTab] = useState('home');
     const [isPlaying, setIsPlaying] = useState(false);
@@ -641,8 +672,8 @@ const SpotiLove: React.FC<TemplateProps> = ({ data }) => {
                     {activeTab === 'home' && <HomePage DATA={DATA} />}
                     {activeTab === 'event' && <EventPage events={data.content.events} />}
                     {activeTab === 'couple' && <CouplePage couple={data.content.couples} cover={DATA.cover} />}
-                    {activeTab === 'gallery' && <GalleryPage images={data.content.gallery.images} />}
-                    {activeTab === 'gift' && <GiftPage gifts={data.engagement.gifts} />}
+                    {activeTab === 'gallery' && <GalleryPage images={data.content.gallery.images} videoUrl={data.content.gallery.video_url} />}
+                    {activeTab === 'gift' && <GiftPage gifts={data.engagement.gifts} qrisUrl={data.engagement.qris_url} />}
                     {activeTab === 'rsvp' && <RSVPPage rsvp={data.engagement.rsvp} />}
                 </div>
 

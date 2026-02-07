@@ -15,7 +15,8 @@ export const mapToTemplateData = (data: InvitationData) => {
         metadata: {
             title: "The Wedding",
             theme_color: "#A48874", // Default, could be dynamic
-            music_url: metadata?.music_url || ""
+            music_url: metadata?.music_url || "",
+            custom_bg_url: metadata?.custom_bg_url
         },
         hero: {
             // Try to split the nicknames field first (e.g. "Romeo & Juliet")
@@ -63,10 +64,6 @@ export const mapToTemplateData = (data: InvitationData) => {
             akad: {
                 enabled: content.events?.akad?.enabled !== false, // Pass enabled flag
                 date: content.events?.akad?.date, // Keep original string for display if template permits, but template uses new Date() sometimes.
-                // Wait, ModernArch uses: new Date(invitation.events.akad.date) ? No, ModernArch uses it as string in one place: 
-                // <p ...>{invitation.events.akad.date}</p>
-                // So passing the string is fine.
-                // EXCEPT in `hero.wedding_date_time` where it does `new Date(...)`.
 
                 time: content.events?.akad?.time,
                 location_name: content.events?.akad?.venue,
@@ -92,7 +89,8 @@ export const mapToTemplateData = (data: InvitationData) => {
                 account_number: g.acc_number,
                 holder_name: g.holder
             })) || [],
-            address_for_gifts: ""
+            address_for_gifts: "",
+            qris_url: engagement?.qris_url || ""
         },
         texts: {
             open_button: content.texts?.open_button || "Buka Undangan",

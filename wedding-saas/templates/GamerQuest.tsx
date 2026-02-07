@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
     Play, Pause, MapPin, Calendar, Clock, Heart,
-    Copy, Instagram, Music, Gift, Gamepad2, Trophy, Swords
+    Copy, Instagram, Music, Gift, Gamepad2, Trophy, Swords, Image as ImageIcon
 } from 'lucide-react';
 import { InvitationData } from '../types/invitation';
 import RsvpForm from '../components/RsvpForm';
@@ -349,6 +349,54 @@ const GamerQuest: React.FC<{ data: InvitationData; guestName?: string }> = ({ da
                     </div>
                 </section>
 
+                {/* GALLERY SECTION (New Implementation) */}
+                <section className="py-20 px-6 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] border-b border-[#333]">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="text-center mb-12">
+                            <ImageIcon className="mx-auto text-[#00f3ff] mb-4" size={40} />
+                            <h3 className="font-orbitron text-3xl text-white neon-text-blue">UNLOCKABLES: MEMORIES</h3>
+                            <p className="font-rajdhani text-[#00f3ff] max-w-lg mx-auto mt-2">Highlights from previous levels.</p>
+                        </div>
+
+                        {/* Video Player */}
+                        {content.gallery?.video_url && (
+                            <div className="mb-12 relative group rounded overflow-hidden border-2 border-[#bc13fe]">
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-[#bc13fe] shadow-[0_0_10px_#bc13fe]"></div>
+                                <div className="aspect-video w-full bg-black">
+                                    <iframe
+                                        src={`${content.gallery.video_url}${content.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                                        className="w-full h-full"
+                                        title="Prewedding Video"
+                                        allow="autoplay; encrypted-media"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                                <div className="p-4 bg-black/80 backdrop-blur flex justify-between items-center border-t border-[#bc13fe]/30">
+                                    <span className="font-orbitron text-xs text-[#bc13fe]">VIDEO_LOG_01.MP4</span>
+                                    <span className="font-mono text-[10px] text-gray-400">PLAYBACK_SPEED: 1.0X</span>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Photo Grid */}
+                        {content.gallery?.images && content.gallery.images.length > 0 && (
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {content.gallery.images.map((img: string, i: number) => (
+                                    <div key={i} className="relative group overflow-hidden border border-[#333] hover:border-[#00f3ff] transition-colors rounded">
+                                        <div className="aspect-square relative">
+                                            <img src={img} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 group-hover:grayscale-0 grayscale-[0.8]" alt={`Memory ${i}`} />
+                                            <div className="absolute inset-0 bg-[#00f3ff]/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                        </div>
+                                        <div className="absolute bottom-0 left-0 w-full p-2 bg-black/80 translate-y-full group-hover:translate-y-0 transition-transform">
+                                            <p className="font-mono text-[9px] text-[#00f3ff]">IMG_{1000 + i}.JPG</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </section>
+
                 {/* RSVP FORM SECTION (New Integration) */}
                 {engagement.rsvp && (
                     <section className="py-20 px-6 bg-[#050505]">
@@ -389,6 +437,25 @@ const GamerQuest: React.FC<{ data: InvitationData; guestName?: string }> = ({ da
                                     </div>
                                 </div>
                             ))}
+
+                            {engagement.qris_url && (
+                                <div className="bg-gradient-to-r from-[#1a1a1a] to-[#0a0a0a] p-6 rounded border border-[#333] relative overflow-hidden group text-center">
+                                    <div className="absolute inset-0 bg-[#00f3ff]/10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                                    <h4 className="font-orbitron text-xl text-[#00f3ff] mb-4 relative z-10">QRIS ACCESS</h4>
+                                    <div className="w-40 h-40 mx-auto bg-white p-2 mb-4 relative z-10">
+                                        <img src={engagement.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                                    </div>
+                                    <a
+                                        href={engagement.qris_url}
+                                        download="qris-loot.png"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="relative z-10 inline-block px-6 py-2 border border-[#00f3ff] text-[#00f3ff] font-orbitron text-xs hover:bg-[#00f3ff] hover:text-black transition-all"
+                                    >
+                                        DOWNLOAD DATA
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     </section>
                 )}

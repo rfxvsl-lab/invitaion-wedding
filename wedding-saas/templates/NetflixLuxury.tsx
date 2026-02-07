@@ -362,6 +362,23 @@ const EventPage = ({ data }: { data: InvitationData }) => {
 const GalleryPage = ({ data }: { data: InvitationData }) => (
     <div className="h-full overflow-y-auto custom-scroll p-6 pt-10 pb-24 page-enter">
         <h2 className="text-white font-body font-bold text-2xl mb-2">Trailers & More</h2>
+
+        {/* Video Prewedding */}
+        {data.content.gallery.video_url && (
+            <div className="mb-6 relative aspect-video group bg-gray-900 rounded-lg overflow-hidden cursor-pointer border border-gray-800 shadow-2xl">
+                <iframe
+                    src={`${data.content.gallery.video_url}${data.content.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                    className="w-full h-full"
+                    allowFullScreen
+                    allow="autoplay; encrypted-media"
+                    title="Official Trailer"
+                ></iframe>
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                    <p className="text-white font-bold text-lg"><Play fill="white" className="inline mr-2" /> Play Trailer</p>
+                </div>
+            </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {[...(data.content.gallery?.images || []), ...Array(6)].slice(0, 6).map((img, i) => (
                 <div key={i} className="relative aspect-video group bg-gray-900 rounded overflow-hidden cursor-pointer">
@@ -409,8 +426,44 @@ const GiftPage = ({ data }: { data: InvitationData }) => (
                 </div>
             ))}
 
-            {(!data.engagement.gifts || data.engagement.gifts.length === 0) && (
-                <p className="text-gray-500 text-sm">No payment details provided.</p>
+            {data.engagement.gifts && data.engagement.gifts.length > 0 && data.engagement.qris_url && (
+                <div className="bg-[#1f1f1f] rounded-lg p-6 border border-gray-800 shadow-xl text-center relative overflow-hidden group">
+                    {/* Visa Logo Effect */}
+                    <div className="absolute top-6 right-6 text-[#E50914] font-netflix text-xl opacity-80">QRIS</div>
+
+                    <div className="w-48 h-48 mx-auto bg-white p-2 mb-4 rounded relative z-10">
+                        <img src={data.engagement.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                    </div>
+
+                    <a
+                        href={data.engagement.qris_url}
+                        download="qris-netflix.png"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 w-full py-2 netflix-btn rounded font-bold text-xs flex items-center justify-center gap-2 relative z-10"
+                    >
+                        <Gift size={12} /> Download Code
+                    </a>
+                </div>
+            )}
+
+            {/* If no gifts but QRIS exists (edge case) */}
+            {(!data.engagement.gifts || data.engagement.gifts.length === 0) && data.engagement.qris_url && (
+                <div className="bg-[#1f1f1f] rounded-lg p-6 border border-gray-800 shadow-xl text-center relative overflow-hidden group">
+                    <div className="absolute top-6 right-6 text-[#E50914] font-netflix text-xl opacity-80">QRIS</div>
+                    <div className="w-48 h-48 mx-auto bg-white p-2 mb-4 rounded relative z-10">
+                        <img src={data.engagement.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                    </div>
+                    <a
+                        href={data.engagement.qris_url}
+                        download="qris-netflix.png"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 w-full py-2 netflix-btn rounded font-bold text-xs flex items-center justify-center gap-2 relative z-10"
+                    >
+                        <Gift size={12} /> Download Code
+                    </a>
+                </div>
             )}
         </div>
         <p className="text-gray-500 text-xs mt-4 max-w-xs">{data.content.texts.gift_text}</p>

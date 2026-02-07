@@ -75,7 +75,10 @@ const BotanicalTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invita
     );
 
     return (
-        <div className="min-h-screen bg-white text-[#555555] font-sans selection:bg-[#BCAAA4] selection:text-white overflow-x-hidden">
+        <div
+            className="min-h-screen bg-white text-[#555555] font-sans selection:bg-[#BCAAA4] selection:text-white overflow-x-hidden bg-cover bg-center bg-fixed"
+            style={invitation.metadata.custom_bg_url ? { backgroundImage: `url(${invitation.metadata.custom_bg_url})` } : {}}
+        >
             {/* FONTS */}
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
@@ -94,7 +97,7 @@ const BotanicalTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invita
             <audio ref={audioRef} src={invitation.metadata.music_url} loop />
 
             {/* === COVER SECTION === */}
-            <div className={`fixed inset-0 z-50 bg-white transition-all duration-1000 ease-in-out flex flex-col items-center justify-center p-6 ${isOpen ? '-translate-y-full opacity-0 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
+            <div className={`fixed inset-0 z-50 transition-all duration-1000 ease-in-out flex flex-col items-center justify-center p-6 ${invitation.metadata.custom_bg_url ? 'bg-white/90 backdrop-blur-sm' : 'bg-white'} ${isOpen ? '-translate-y-full opacity-0 pointer-events-none' : 'opacity-100 translate-y-0'}`}>
                 {/* Corner Ornaments */}
                 <FloralCorner className="absolute top-0 left-0" />
                 <FloralCorner className="absolute bottom-0 right-0 rotate-180" />
@@ -128,8 +131,9 @@ const BotanicalTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invita
                 </div>
             </div>
 
+
             {/* === MAIN CONTENT === */}
-            <div ref={contentRef} className="relative bg-white pb-32">
+            <div ref={contentRef} className={`relative pb-32 ${invitation.metadata.custom_bg_url ? 'bg-white/90 backdrop-blur-sm' : 'bg-white'}`}>
 
                 {/* 1. HERO HEADER */}
                 <header className="pt-24 pb-12 px-6 text-center relative overflow-hidden">
@@ -189,7 +193,7 @@ const BotanicalTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invita
                 <FloralDivider />
 
                 {/* 4. EVENTS */}
-                <section className="px-6 bg-[#FAFAFA] py-16 relative">
+                <section className={`px-6 py-16 relative ${invitation.metadata.custom_bg_url ? 'bg-white/50' : 'bg-[#FAFAFA]'}`}>
                     <FloralCorner className="absolute top-0 right-0 opacity-30" />
                     <div className="text-center mb-12">
                         <h2 className="font-script text-5xl mb-2">{invitation.texts.events_title}</h2>
@@ -232,6 +236,24 @@ const BotanicalTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invita
                     <section className="py-16 px-4">
                         <FloralDivider />
                         <h2 className="text-center font-script text-4xl mb-8">{invitation.texts.gallery_title}</h2>
+
+                        {/* Video Prewedding */}
+                        {invitation.gallery.video_url && (
+                            <div className="max-w-4xl mx-auto mb-12 relative">
+                                <FloralCorner className="absolute -top-10 -left-10 w-24 h-24 rotate-180 opacity-40" />
+                                <div className="aspect-video w-full bg-[#FAFAFA] rounded-xl overflow-hidden shadow-sm border border-[#EAEAEA]">
+                                    <iframe
+                                        src={`${invitation.gallery.video_url}${invitation.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                                        className="w-full h-full"
+                                        allowFullScreen
+                                        allow="autoplay; encrypted-media"
+                                        title="Prewedding Video"
+                                    ></iframe>
+                                </div>
+                                <FloralCorner className="absolute -bottom-10 -right-10 w-24 h-24 opacity-40" />
+                            </div>
+                        )}
+
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 max-w-5xl mx-auto">
                             {invitation.gallery.images.map((img, i) => (
                                 <div key={i} className="aspect-square overflow-hidden rounded-lg bg-[#F5F5F5] group">
@@ -269,6 +291,24 @@ const BotanicalTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invita
                                     </button>
                                 </div>
                             ))}
+
+                            {invitation.gifts.qris_url && (
+                                <div className="bg-white p-6 rounded-lg border border-[#EAEAEA] text-center shadow-sm">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#BCAAA4] block mb-4">Scan QRIS</span>
+                                    <div className="w-40 h-40 mx-auto bg-[#FAFAFA] mb-4 p-2 border border-[#EAEAEA]">
+                                        <img src={invitation.gifts.qris_url} alt="QRIS" className="w-full h-full object-contain mix-blend-multiply" />
+                                    </div>
+                                    <a
+                                        href={invitation.gifts.qris_url}
+                                        download="qris.png"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="inline-block text-[10px] font-bold border border-[#BCAAA4] text-[#BCAAA4] px-6 py-2 rounded-full uppercase tracking-widest hover:bg-[#BCAAA4] hover:text-white transition-all"
+                                    >
+                                        Download QR
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>

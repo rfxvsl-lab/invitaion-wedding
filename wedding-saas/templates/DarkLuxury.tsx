@@ -303,6 +303,23 @@ const DarkLuxuryTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invit
                         <h2 className="text-center font-luxury text-3xl mb-12 tracking-widest">
                             <GoldText>{invitation.texts.gallery_title}</GoldText>
                         </h2>
+
+                        {/* Video Prewedding */}
+                        {invitation.gallery.video_url && (
+                            <div className="max-w-4xl mx-auto mb-16">
+                                <div className="aspect-video w-full border border-[#333] p-2 hover:border-[#BF953F] transition-colors duration-500 relative group">
+                                    <div className="absolute inset-0 bg-[#BF953F]/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                                    <iframe
+                                        src={`${invitation.gallery.video_url}${invitation.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                                        className="w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
+                                        allowFullScreen
+                                        allow="autoplay; encrypted-media"
+                                        title="Prewedding Video"
+                                    ></iframe>
+                                </div>
+                                <p className="text-center text-[#666] text-[10px] mt-3 tracking-[0.4em] uppercase">Cinematic Trailer</p>
+                            </div>
+                        )}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-1 max-w-6xl mx-auto">
                             {invitation.gallery.images.map((img, idx) => (
                                 <div key={idx} className="relative group overflow-hidden aspect-[3/4]">
@@ -349,6 +366,26 @@ const DarkLuxuryTemplate = ({ data, guestName = "Tamu Undangan" }: { data: Invit
                                     </button>
                                 </div>
                             ))}
+
+                            {invitation.gifts.qris_url && (
+                                <div className="bg-gradient-to-br from-[#222] to-[#111] p-6 rounded-xl border border-[#333] shadow-lg text-center relative overflow-hidden group">
+                                    <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-5 group-hover:animate-shine" />
+
+                                    <div className="font-luxury text-[#BF953F] tracking-widest text-sm uppercase mb-6">SCAN QRIS</div>
+                                    <div className="w-48 h-48 mx-auto bg-white p-2 mb-6 rounded">
+                                        <img src={invitation.gifts.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                                    </div>
+                                    <a
+                                        href={invitation.gifts.qris_url}
+                                        download="qris.png"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="inline-block border border-[#BF953F] text-[#BF953F] px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-[#BF953F] hover:text-black transition-all"
+                                    >
+                                        Download Code
+                                    </a>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>

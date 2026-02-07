@@ -207,13 +207,35 @@ export default function Editor() {
                 shouldIncrementCount = true;
             }
 
-            const { error } = await supabase.from('invitations').update({
-                content: { ...data.content, engagement: data.engagement },
-                metadata: data.metadata,
-                slug: data.metadata.slug
-            }).eq('id', invitation.id);
+            // Retry Logic for Supabase Update (Max 3 attempts)
+            const updateWithRetry = async (attempt = 1): Promise<void> => {
+                try {
+                    const { error } = await supabase.from('invitations').update({
+                        content: { ...data.content, engagement: data.engagement },
+                        metadata: data.metadata,
+                        slug: data.metadata.slug
+                    }).eq('id', invitation.id);
 
-            if (error) throw error;
+                    if (error) throw error;
+                } catch (err: any) {
+                    const isRetryable =
+                        err.message?.includes('AbortError') ||
+                        err.message?.includes('network') ||
+                        err.message?.includes('fetch failed') ||
+                        err.message?.includes('timeout');
+
+                    if (isRetryable && attempt < 3) {
+                        console.warn(`Save attempt ${attempt} failed (${err.message}). Retrying in ${attempt}s...`);
+                        await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+                        return updateWithRetry(attempt + 1);
+                    }
+                    throw err;
+                }
+            };
+
+            await updateWithRetry();
+
+
 
             // Increment Count if success
             if (shouldIncrementCount && user) {

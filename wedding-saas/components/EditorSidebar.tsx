@@ -8,12 +8,45 @@ import { TEMPLATES } from '../lib/templates';
 import { getEffectivePlan, isAdmin } from '../lib/admin';
 import DIYEditor from './DIYEditor';
 import { BrandLogo } from './Logo';
+import { uploadResumable } from '@/lib/tusUpload';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 interface EditorSidebarProps {
     data: InvitationData;
     onUpdate: (path: string, value: any) => void;
     userProfile?: any;
 }
+
+// Helper: Upload Direct via Native Fetch (Bypass Supabase Client Timeout)
+const uploadDirect = async (file: File, path: string) => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const bucketName = 'site-assets'; // Pastikan nama bucket benar
+
+    if (!supabaseUrl || !supabaseKey) throw new Error("Missing Supabase Config");
+
+    // Gunakan Fetch Native agar tidak kena "Signal Aborted" dari library
+    const response = await fetch(`${supabaseUrl}/storage/v1/object/${bucketName}/${path}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${supabaseKey}`,
+            'x-upsert': 'true', // Timpa file jika ada
+        },
+        body: file // Kirim file mentah
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Upload Failed: ${response.status} - ${errorText}`);
+    }
+
+    // Return Public URL
+    return `${supabaseUrl}/storage/v1/object/public/${bucketName}/${path}`;
+};
+
+// 2. FUNGSI UPLOAD dipindahkan ke lib/tusUpload.ts
 
 // ... (Komponen Input & SectionHeader TETAP SAMA seperti sebelumnya) ...
 const Input = ({ label, value, onChange, placeholder, disabled, readOnly, subtext }: { label: string, value: any, onChange: (val: string) => void, placeholder?: string, disabled?: boolean, readOnly?: boolean, subtext?: React.ReactNode }) => (
@@ -110,88 +143,54 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
         onUpdate('metadata.theme_id', themeId);
     };
 
-    // --- PERBAIKAN UPLOAD MUSIK (Gunakan bucket 'site-assets') ---
+    // --- PERBAIKAN UPLOAD MUSIK (Gunakan Native Fetch) ---
+    // --- PERBAIKAN UPLOAD MUSIK (Gunakan Native Fetch) ---
     const handleMusicUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validasi Ukuran (Max 10MB untuk lagu)
-        if (file.size > 10 * 1024 * 1024) {
-            alert("Ukuran file musik maksimal 10MB.");
-            return;
-        }
-        if (!file.type.startsWith('audio/')) {
-            alert("Mohon upload file audio (MP3).");
+        // Validasi
+        if (file.size > 20 * 1024 * 1024) { // Naikkan limit ke 20MB karena TUS kuat
+            alert("File musik maksimal 20MB.");
             return;
         }
 
         setUploadingMusic(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `music-${Date.now()}.${fileExt}`;
-            const filePath = `music/${fileName}`; // Masuk folder music/ di site-assets
-
-            // UPLOAD KE 'site-assets' (Bukan 'music')
-            const { error: uploadError } = await supabase.storage
-                .from('site-assets') // <--- FIXED
-                .upload(filePath, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data: { publicUrl } } = supabase.storage
-                .from('site-assets')
-                .getPublicUrl(filePath);
+            // Panggil fungsi Resumable tadi
+            // Pastikan bucket 'site-assets' sudah ada
+            const publicUrl = await uploadResumable(file, 'site-assets', 'music');
 
             onUpdate('metadata.music_url', publicUrl);
+            alert("Berhasil upload musik! (Resumable Upload)");
         } catch (error: any) {
-            console.error(error);
+            console.error("Music Upload Error:", error);
             alert('Gagal upload musik: ' + error.message);
         } finally {
             setUploadingMusic(false);
         }
     };
 
-    // --- PERBAIKAN UPLOAD VIDEO (Gunakan bucket 'site-assets') ---
+    // --- PERBAIKAN UPLOAD VIDEO (Gunakan Native Fetch) ---
+    // --- PERBAIKAN UPLOAD VIDEO (Gunakan Native Fetch) ---
     const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Validasi Ukuran (Max 25MB agar tidak timeout/aborted)
-        if (file.size > 25 * 1024 * 1024) {
-            alert('Ukuran video maksimal 25MB agar lancar!');
-            return;
-        }
-        if (!file.type.startsWith('video/')) {
-            alert('Mohon upload file video (MP4).');
+        if (file.size > 50 * 1024 * 1024) { // Naikkan limit ke 50MB karena TUS kuat
+            alert('File video maksimal 50MB.');
             return;
         }
 
         setUploadingVideo(true);
         try {
-            const fileExt = file.name.split('.').pop();
-            const fileName = `video-${Date.now()}.${fileExt}`;
-            const filePath = `videos/${fileName}`; // Masuk folder videos/ di site-assets
-
-            // UPLOAD KE 'site-assets' (Bukan 'videos')
-            const { error: uploadError } = await supabase.storage
-                .from('site-assets') // <--- FIXED
-                .upload(filePath, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
-
-            if (uploadError) throw uploadError;
-
-            const { data: { publicUrl } } = supabase.storage
-                .from('site-assets')
-                .getPublicUrl(filePath);
+            // Panggil fungsi Resumable tadi
+            const publicUrl = await uploadResumable(file, 'site-assets', 'videos');
 
             onUpdate('content.gallery.video_url', publicUrl);
+            alert("Berhasil upload video! (Resumable Upload)");
         } catch (error: any) {
-            console.error(error);
+            console.error("Video Upload Error:", error);
             alert('Gagal upload video: ' + error.message);
         } finally {
             setUploadingVideo(false);
@@ -324,6 +323,14 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                 }}
                                 placeholder="https://youtube.com/..."
                             />
+                            {getValue('content.gallery.video_url') && (
+                                <button
+                                    onClick={() => onUpdate('content.gallery.video_url', '')}
+                                    className="mt-2 text-[10px] text-red-500 flex items-center gap-1 font-bold hover:bg-red-50 px-2 py-1 rounded"
+                                >
+                                    <Trash2 size={12} /> Hapus Video
+                                </button>
+                            )}
 
                             <div className="mt-4 relative">
                                 {(plan === 'free' || plan === 'basic') && (
@@ -374,8 +381,8 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                     >
                                         <div className="aspect-[3/4] bg-slate-100 relative">
                                             <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-300 font-bold text-xs uppercase tracking-widest">
-                                                {template.thumbnail ? (
-                                                    <img src={template.thumbnail} alt={template.name} className="w-full h-full object-cover" />
+                                                {template.thumbnail_url ? (
+                                                    <img src={template.thumbnail_url} alt={template.name} className="w-full h-full object-cover" />
                                                 ) : (
                                                     <span>{template.name}</span>
                                                 )}
@@ -419,7 +426,7 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                             ) : (
                                 <ImageUploader
                                     label="Upload Background Image"
-                                    currentUrl={data.metadata.custom_bg_url}
+                                    currentUrl={data.metadata.custom_bg_url || ''}
                                     onUpdate={(url) => onUpdate('metadata.custom_bg_url', url)}
                                 />
                             )}
@@ -429,7 +436,18 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                         <div className="mb-4">
                             <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Musik Latar</label>
                             <div className="flex flex-col gap-3">
-                                <input type="text" placeholder="https://..." className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition" value={getValue('metadata.music_url')} onChange={(e) => onUpdate('metadata.music_url', e.target.value)} />
+                                <div className="flex items-center gap-2">
+                                    <input type="text" placeholder="https://..." className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500 outline-none transition" value={getValue('metadata.music_url')} onChange={(e) => onUpdate('metadata.music_url', e.target.value)} />
+                                    {getValue('metadata.music_url') && (
+                                        <button
+                                            onClick={() => onUpdate('metadata.music_url', '')}
+                                            className="p-2.5 bg-red-50 text-red-500 rounded-xl hover:bg-red-100 transition-colors"
+                                            title="Hapus Musik"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    )}
+                                </div>
                                 <div className="relative">
                                     {plan === 'free' && (<div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex items-center justify-center rounded-xl border border-slate-100"><div className="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-lg">🔒 Basic Plan Only</div></div>)}
                                     <label className={`flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed rounded-xl text-xs font-bold transition-all cursor-pointer ${uploadingMusic ? 'bg-slate-100 border-slate-300 text-slate-400' : 'border-slate-200 text-slate-500 hover:border-pink-400 hover:text-pink-600 hover:bg-pink-50'}`}>
@@ -492,6 +510,140 @@ const EditorSidebar: React.FC<EditorSidebarProps> = ({ data, onUpdate, userProfi
                                 <Input label="Teks Footer" value={getValue('content.texts.footer_text') || 'Thank you'} onChange={(v) => onUpdate('content.texts.footer_text', v)} />
                             </div>
                         </div>
+
+                        {/* RSVP CONFIGURATION */}
+                        <div className="mb-6 bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                    <MessageSquare size={12} />
+                                    Konfigurasi RSVP (WhatsApp)
+                                </h4>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={data.engagement?.rsvp !== false}
+                                        onChange={(e) => onUpdate('engagement.rsvp', e.target.checked)}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-pink-600"></div>
+                                </label>
+                            </div>
+
+                            {/* Conditional Rendering based on toggle */}
+                            {data.engagement?.rsvp !== false && (
+                                <div className="space-y-4">
+                                    <Input
+                                        label="Nomor WhatsApp Penerima"
+                                        value={getValue('engagement.rsvp_settings.whatsapp_number') || ''}
+                                        onChange={(v) => onUpdate('engagement.rsvp_settings.whatsapp_number', v)}
+                                        placeholder="628123456789 (Tanpa + atau -)"
+                                        subtext={<span className="text-[10px] text-slate-400">Gunakan format 62... (Contoh: 628123456789)</span>}
+                                    />
+                                    <div className="group">
+                                        <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-1.5 group-focus-within:text-pink-500 transition-colors">Template Pesan WhatsApp</label>
+                                        <textarea
+                                            value={getValue('engagement.rsvp_settings.message_template') || "Halo, saya {name} ingin konfirmasi kehadiran untuk {pax} orang.\nStatus: {status}\nPesan: {message}"}
+                                            onChange={(e) => onUpdate('engagement.rsvp_settings.message_template', e.target.value)}
+                                            className="w-full border bg-white border-slate-200 text-slate-700 rounded-xl px-4 py-2.5 text-sm font-medium placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-pink-500/10 focus:border-pink-500 transition-all min-h-[100px]"
+                                        />
+                                        <div className="mt-1.5 text-[10px] text-slate-400">
+                                            Gunakan variabel: <code className="bg-slate-200 px-1 rounded text-slate-600">{`{name}`}</code>, <code className="bg-slate-200 px-1 rounded text-slate-600">{`{pax}`}</code>, <code className="bg-slate-200 px-1 rounded text-slate-600">{`{status}`}</code>, <code className="bg-slate-200 px-1 rounded text-slate-600">{`{message}`}</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* DIGITAL GIFT / AMPLOP CONFIGURATION */}
+                        <div className="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6">
+                            <div className="flex items-center gap-2 mb-4">
+                                <Gift size={14} className="text-pink-500" />
+                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                    Amplop Digital & QRIS
+                                </h4>
+                            </div>
+
+                            {/* BANK ACCOUNTS */}
+                            <div className="space-y-3 mb-6">
+                                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">Rekening Bank / E-Wallet</label>
+                                {(data.engagement?.gifts || []).map((gift, idx) => (
+                                    <div key={idx} className="bg-white p-3 rounded-xl border border-slate-200 relative group transition-all hover:border-pink-200 hover:shadow-sm">
+                                        <button
+                                            onClick={() => {
+                                                const newGifts = [...(data.engagement?.gifts || [])];
+                                                newGifts.splice(idx, 1);
+                                                onUpdate('engagement.gifts', newGifts);
+                                            }}
+                                            className="absolute top-2 right-2 text-slate-300 hover:text-red-500 p-1"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                        <div className="grid grid-cols-1 gap-2 pr-6">
+                                            <input
+                                                type="text"
+                                                placeholder="Nama Bank (mis: BCA)"
+                                                value={gift.bank}
+                                                onChange={(e) => {
+                                                    const newGifts = [...(data.engagement?.gifts || [])];
+                                                    newGifts[idx].bank = e.target.value;
+                                                    onUpdate('engagement.gifts', newGifts);
+                                                }}
+                                                className="text-xs font-bold text-slate-700 bg-transparent border-b border-slate-100 focus:border-pink-500 outline-none w-full py-1 placeholder:font-normal"
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="No. Rekening"
+                                                value={gift.acc_number}
+                                                onChange={(e) => {
+                                                    const newGifts = [...(data.engagement?.gifts || [])];
+                                                    newGifts[idx].acc_number = e.target.value;
+                                                    onUpdate('engagement.gifts', newGifts);
+                                                }}
+                                                className="text-xs text-slate-600 bg-transparent border-b border-slate-100 focus:border-pink-500 outline-none w-full py-1 font-mono"
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Atas Nama"
+                                                value={gift.holder}
+                                                onChange={(e) => {
+                                                    const newGifts = [...(data.engagement?.gifts || [])];
+                                                    newGifts[idx].holder = e.target.value;
+                                                    onUpdate('engagement.gifts', newGifts);
+                                                }}
+                                                className="text-xs text-slate-500 bg-transparent border-b border-slate-100 focus:border-pink-500 outline-none w-full py-1"
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+
+                                {(data.engagement?.gifts?.length || 0) < 3 && (
+                                    <button
+                                        onClick={() => {
+                                            const newGifts = [...(data.engagement?.gifts || [])];
+                                            newGifts.push({ bank: '', acc_number: '', holder: '' });
+                                            onUpdate('engagement.gifts', newGifts);
+                                        }}
+                                        className="w-full py-2 border border-dashed border-slate-300 rounded-xl text-xs font-bold text-slate-400 hover:border-pink-400 hover:text-pink-500 hover:bg-pink-50 transition flex items-center justify-center gap-2"
+                                    >
+                                        <Plus size={14} /> Tambah Rekening
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* QRIS UPLOAD */}
+                            <div className="pt-4 border-t border-slate-200">
+                                <label className="block text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-3">QRIS Image (Scan)</label>
+                                <ImageUploader
+                                    label="Upload QRIS"
+                                    currentUrl={data.engagement?.qris_url || ''}
+                                    onUpdate={(url) => onUpdate('engagement.qris_url', url)}
+                                />
+                                <p className="text-[9px] text-slate-400 mt-2 text-center">
+                                    Upload gambar kode QRIS untuk memudahkan tamu memberikan hadiah.
+                                </p>
+                            </div>
+                        </div>
+
                     </div>
                 )}
             </div>

@@ -49,7 +49,7 @@ export interface DIYLayout {
 export interface InvitationData {
     metadata: {
         slug: string;
-        theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest' | 'maroon-vintage' | 'adat-bone' | 'elegant-vanilla' | 'royal-glass' | 'netflix-luxury' | 'grand-ballroom' | 'royal-arabian' | 'luxury-pink' | 'spotilove';
+        theme_id: 'modern-arch' | 'classic-serif' | 'botanical-line' | 'rustic-wood' | 'dark-luxury' | 'premium-peppy' | 'gamer-quest' | 'maroon-vintage' | 'adat-bone' | 'elegant-vanilla' | 'royal-glass' | 'netflix-luxury' | 'grand-ballroom' | 'royal-arabian' | 'luxury-pink' | 'spotilove' | 'luxury-javanese';
         music_url: string;
         custom_bg_url?: string; // Optional custom background
         diy_layout?: DIYLayout; // DIY customization data
@@ -60,6 +60,8 @@ export interface InvitationData {
     content: {
         hero: {
             nicknames: string;
+            groom_nickname?: string;
+            bride_nickname?: string;
             date: string;
             main_image: string;
         };
@@ -101,5 +103,6 @@ export interface InvitationData {
         rsvp: boolean;
         wishes: any[];
         gifts: GiftAccount[];
+        qris_url?: string; // TUS Uploaded QRIS Image
     };
 }

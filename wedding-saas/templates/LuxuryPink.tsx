@@ -196,7 +196,7 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab, setTab, data }) => {
         { id: 'couple', icon: User, label: 'Couple', visible: true },
         { id: 'event', icon: Calendar, label: 'Event', visible: (data.content.events.akad?.enabled !== false || data.content.events.resepsi?.enabled !== false) },
         { id: 'gallery', icon: ImageIcon, label: 'Gallery', visible: true },
-        { id: 'gift', icon: Gift, label: 'Gift', visible: (data.engagement.gifts && data.engagement.gifts.length > 0) },
+        { id: 'gift', icon: Gift, label: 'Gift', visible: (data.engagement.gifts?.length > 0 || !!data.engagement.qris_url) },
         { id: 'rsvp', icon: MessageCircle, label: 'RSVP', visible: !!data.engagement.rsvp },
     ].filter(item => item.visible);
 
@@ -381,6 +381,23 @@ const EventPage = ({ data }: { data: InvitationData }) => {
 const GalleryPage = ({ data }: { data: InvitationData }) => (
     <div className="pt-10 pb-24 px-4 page-enter">
         <h2 className="font-script text-5xl text-rose-600 mb-8 text-center">Galeri Foto</h2>
+
+        {/* Video Prewedding */}
+        {data.content.gallery.video_url && (
+            <div className="mb-8 w-full max-w-2xl mx-auto">
+                <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-rose-100">
+                    <iframe
+                        src={`${data.content.gallery.video_url}${data.content.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                        className="w-full h-full"
+                        allowFullScreen
+                        allow="autoplay; encrypted-media"
+                        title="Prewedding Video"
+                    ></iframe>
+                </div>
+                <p className="text-center font-serif text-rose-400 mt-2 italic text-sm">Our Love Story</p>
+            </div>
+        )}
+
         <div className="columns-2 md:columns-3 gap-4 space-y-4">
             {[...(data.content.gallery?.images || []), ...Array(6)].slice(0, 6).map((img, i) => (
                 <div key={i} className="break-inside-avoid rounded-xl overflow-hidden shadow-md group relative">
@@ -439,6 +456,25 @@ const GiftPage = ({ data }: { data: InvitationData }) => {
                         </div>
                     </div>
                 ))}
+
+                {data.engagement.qris_url && (
+                    <div className="bg-gradient-to-r from-gray-800 to-gray-900 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden text-center">
+                        <div className="absolute top-0 right-0 p-4 opacity-20"><CreditCard size={64} /></div>
+                        <h4 className="font-bold tracking-widest text-lg mb-4">QRIS PAYMENT</h4>
+                        <div className="w-48 h-48 mx-auto bg-white p-2 rounded mb-4">
+                            <img src={data.engagement.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                        </div>
+                        <a
+                            href={data.engagement.qris_url}
+                            download="qris-payment.png"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 text-rose-400 border border-rose-400 px-4 py-2 rounded-full hover:bg-rose-400 hover:text-white transition-all text-xs font-bold uppercase tracking-wider"
+                        >
+                            <Gift size={16} /> Download QR
+                        </a>
+                    </div>
+                )}
             </div>
 
             {(!data.engagement.gifts || data.engagement.gifts.length === 0) && <p className="text-center text-gray-400 italic">Tidak ada informasi rekening.</p>}

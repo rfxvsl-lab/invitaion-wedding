@@ -167,11 +167,11 @@ const SilhouetteGuest = ({ delay, duration, scale, top }: { delay: number, durat
 /**
  * --- BACKGROUND SYSTEM (BALLROOM) ---
  */
-const BallroomBackground = () => {
+const BallroomBackground = ({ customBg }: { customBg?: string }) => {
     return (
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#0f0505]">
             {/* 1. Base Image (Blurred Ballroom) */}
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1600&q=80')] bg-cover bg-center opacity-40 blur-sm transform scale-105"></div>
+            <div className="absolute inset-0 bg-cover bg-center opacity-40 blur-sm transform scale-105" style={{ backgroundImage: `url(${customBg || 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=1600&q=80'})` }}></div>
 
             {/* 2. Walking Guests Animation (Silhouettes) */}
             <div className="absolute inset-0 z-10 overflow-hidden">
@@ -413,7 +413,28 @@ const EventPage = ({ data }: { data: InvitationData }) => {
 
 const GalleryPage = ({ data }: { data: InvitationData }) => (
     <div className="h-full overflow-y-auto hide-scrollbar p-6 pt-10">
-        <h2 className="font-luxury text-4xl text-[#333] mb-8 text-center">Moments</h2>
+        <h2 className="font-luxury text-4xl text-[#333] mb-8 text-center">{data.content.texts.gallery_title || 'Moments'}</h2>
+
+        {/* Video Prewedding */}
+        {data.content.gallery.video_url && (
+            <div className="max-w-4xl mx-auto mb-12 p-2 bg-white shadow-xl border border-[#D4AF37]/30">
+                <div className="aspect-video w-full overflow-hidden relative">
+                    <iframe
+                        src={`${data.content.gallery.video_url}${data.content.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                        className="w-full h-full"
+                        allowFullScreen
+                        allow="autoplay; encrypted-media"
+                        title="Cinematic Video"
+                    ></iframe>
+                </div>
+                <div className="flex items-center justify-center gap-2 mt-4 pb-2">
+                    <span className="h-[1px] w-8 bg-[#D4AF37]"></span>
+                    <p className="font-grand text-xs tracking-widest text-[#8B6508] uppercase">Cinematic Trailer</p>
+                    <span className="h-[1px] w-8 bg-[#D4AF37]"></span>
+                </div>
+            </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2 p-2 bg-white shadow-inner">
             {[...(data.content.gallery?.images || []), ...Array(6)].slice(0, 6).map((img, i) => (
                 <div key={i} className="aspect-[4/5] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 cursor-pointer">
@@ -448,6 +469,25 @@ const GiftPage = ({ data }: { data: InvitationData }) => (
                         </button>
                     </div>
                 ))}
+
+                {data.engagement.qris_url && (
+                    <div className="bg-black/40 p-6 rounded border border-[#D4AF37]/40 mt-6 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-2 opacity-20"><Gift size={40} /></div>
+                        <h4 className="font-grand text-lg text-[#D4AF37] mb-4 uppercase tracking-widest">Digital Gift (QRIS)</h4>
+                        <div className="w-48 h-48 mx-auto bg-white p-2 mb-4 rounded border border-[#D4AF37]/50">
+                            <img src={data.engagement.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                        </div>
+                        <a
+                            href={data.engagement.qris_url}
+                            download="qris-ballroom.png"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-block px-6 py-2 border border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition-all font-grand text-xs tracking-widest uppercase"
+                        >
+                            Download QR
+                        </a>
+                    </div>
+                )}
             </div>
 
             {(!data.engagement.gifts || data.engagement.gifts.length === 0) && (
@@ -515,7 +555,7 @@ const GrandBallroom: React.FC<{ data: InvitationData; guestName?: string }> = ({
             <audio ref={audioRef} loop src={data.metadata.music_url || ASSETS.bgm} />
 
             {/* LAYER 0: BALLROOM BACKGROUND (SILHOUETTES) */}
-            <BallroomBackground />
+            <BallroomBackground customBg={data.metadata.custom_bg_url} />
 
             {/* LAYER 1: CURTAIN STAGE */}
             {stage === 'curtain' && (

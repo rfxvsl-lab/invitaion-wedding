@@ -395,45 +395,47 @@ const HomePage = ({ onEnter, data, guestName }: { onEnter: () => void, data: Inv
     const dateStr = `${dateObj.getDate()} ${dateObj.toLocaleString('default', { month: 'long' })} ${dateObj.getFullYear()}`;
 
     return (
-        <div className="flex flex-col h-full relative page-enter items-center justify-center text-center p-6">
-            {/* Ornamental Border */}
-            <div className="absolute inset-4 border border-[#D4AF37] opacity-30 rounded-t-[100px] pointer-events-none"></div>
-            <div className="absolute inset-6 border border-[#D4AF37] opacity-20 rounded-t-[90px] pointer-events-none"></div>
+        <div className="h-full overflow-y-auto hide-scrollbar relative page-enter">
+            <div className="min-h-full flex flex-col items-center justify-center text-center p-6 pb-24">
+                {/* Ornamental Border */}
+                <div className="absolute inset-4 border border-[#D4AF37] opacity-30 rounded-t-[100px] pointer-events-none sticky top-4"></div>
+                <div className="absolute inset-6 border border-[#D4AF37] opacity-20 rounded-t-[90px] pointer-events-none sticky top-6"></div>
 
-            <div className="relative z-10">
-                <h3 className="font-arabic-title text-sm tracking-[0.3em] text-[#D4AF37] mb-6 animate-pulse">THE SACRED UNION OF</h3>
+                <div className="relative z-10 w-full">
+                    <h3 className="font-arabic-title text-sm tracking-[0.3em] text-[#D4AF37] mb-6 animate-pulse mt-8">THE SACRED UNION OF</h3>
 
-                <h1 className="font-arabic-title text-5xl md:text-7xl text-gold-gradient drop-shadow-lg mb-4 leading-tight">
-                    {groomName} <br /> <span className="text-3xl text-white/50">&</span> <br /> {brideName}
-                </h1>
+                    <h1 className="font-arabic-title text-5xl md:text-7xl text-gold-gradient drop-shadow-lg mb-4 leading-tight">
+                        {groomName} <br /> <span className="text-3xl text-white/50">&</span> <br /> {brideName}
+                    </h1>
 
-                {/* Hero Image - Added */}
-                <div className="relative w-48 h-48 mx-auto mb-6 rounded-full border-2 border-[#D4AF37] p-2">
-                    <div className="w-full h-full rounded-full overflow-hidden border border-[#D4AF37]/50 relative">
-                        <img
-                            src={data.content.hero.main_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=500&q=80"}
-                            alt="Couple"
-                            className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0f261f]/50 to-transparent"></div>
+                    {/* Hero Image - Added */}
+                    <div className="relative w-48 h-48 mx-auto mb-6 rounded-full border-2 border-[#D4AF37] p-2">
+                        <div className="w-full h-full rounded-full overflow-hidden border border-[#D4AF37]/50 relative">
+                            <img
+                                src={data.content.hero.main_image || "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=500&q=80"}
+                                alt="Couple"
+                                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0f261f]/50 to-transparent"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div className="flex items-center justify-center gap-4 my-8">
-                    <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#D4AF37]"></div>
-                    <span className="font-arabic-body text-xl text-gray-300">{dateStr}</span>
-                    <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#D4AF37]"></div>
-                </div>
+                    <div className="flex items-center justify-center gap-4 my-8">
+                        <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#D4AF37]"></div>
+                        <span className="font-arabic-body text-xl text-gray-300">{dateStr}</span>
+                        <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#D4AF37]"></div>
+                    </div>
 
-                {/* Guest Name */}
-                <div className="mb-6">
-                    <p className="font-arabic-title text-xs text-[#D4AF37]/70 tracking-widest uppercase mb-2">Kepada Yth,</p>
-                    <p className="font-arabic-title text-2xl text-gold-gradient">{guestName}</p>
-                </div>
+                    {/* Guest Name */}
+                    <div className="mb-6">
+                        <p className="font-arabic-title text-xs text-[#D4AF37]/70 tracking-widest uppercase mb-2">Kepada Yth,</p>
+                        <p className="font-arabic-title text-2xl text-gold-gradient">{guestName}</p>
+                    </div>
 
-                <button onClick={onEnter} className="mt-4 px-8 py-3 bg-gradient-to-r from-[#B8860B] to-[#FFD700] text-[#0f261f] font-bold font-arabic-title tracking-widest rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-                    BISMILLAH
-                </button>
+                    <button onClick={onEnter} className="mt-4 mb-8 px-8 py-3 bg-gradient-to-r from-[#B8860B] to-[#FFD700] text-[#0f261f] font-bold font-arabic-title tracking-widest rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                        BISMILLAH
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -541,7 +543,29 @@ const GalleryPage = ({ data }: { data: InvitationData }) => (
                     </div>
                 </div>
             ))}
+
         </div>
+
+        {/* Video Prewedding */}
+        {data.content.gallery.video_url && (
+            <div className="mt-10 w-full max-w-4xl mx-auto page-enter">
+                <div className="text-center mb-6">
+                    <h3 className="font-arabic-title text-2xl text-[#FFD700]">The Cinematic Love</h3>
+                    <div className="h-[1px] w-24 bg-[#D4AF37] mx-auto mt-2"></div>
+                </div>
+                <div className="bg-[#0f261f]/80 p-2 rounded-xl border border-[#D4AF37]/50 shadow-[0_0_30px_rgba(212,175,55,0.1)]">
+                    <div className="aspect-video w-full rounded-lg overflow-hidden relative">
+                        <iframe
+                            src={`${data.content.gallery.video_url}${data.content.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                            className="w-full h-full"
+                            allowFullScreen
+                            allow="autoplay; encrypted-media"
+                            title="Cinematic Video"
+                        ></iframe>
+                    </div>
+                </div>
+            </div>
+        )}
     </div>
 );
 
@@ -573,20 +597,40 @@ const GiftPage = ({ data }: { data: InvitationData }) => (
                         </div>
                     ))
                 ) : <p className="text-gray-400 text-sm">Belum ada informasi gift.</p>}
+
+                {data.engagement.qris_url && (
+                    <div className="mt-8 pt-6 border-t border-[#D4AF37]/30">
+                        <h4 className="font-arabic-title text-xl text-[#FFD700] mb-4">Tanda Kasih Digital (QRIS)</h4>
+                        <div className="w-[180px] h-[180px] mx-auto bg-white p-2 mb-4 rounded border border-[#D4AF37]">
+                            <img src={data.engagement.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                        </div>
+                        <a
+                            href={data.engagement.qris_url}
+                            download="qris-arabian.png"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-2 px-6 py-2 border border-[#D4AF37] text-[#F5E6CA] hover:bg-[#D4AF37] hover:text-[#0f261f] transition-all font-arabic-title rounded-full text-sm"
+                        >
+                            <Gift size={16} /> Unduh QR Code
+                        </a>
+                    </div>
+                )}
             </div>
         </div>
     </div>
 );
 
 const RSVPPage = ({ data }: { data: InvitationData }) => (
-    <div className="flex flex-col items-center justify-center h-full p-6 page-enter text-center">
-        <h2 className="font-arabic-title text-3xl text-[#FFD700] mb-8">Konfirmasi Kehadiran</h2>
-        <div className='w-full max-w-sm'>
-            <RsvpForm
-                whatsappNumber={data.engagement.rsvp_settings.whatsapp_number}
-                messageTemplate={data.engagement.rsvp_settings.message_template}
-                themeColor="#FFD700"
-            />
+    <div className="h-full overflow-y-auto hide-scrollbar p-6 page-enter text-center">
+        <div className="min-h-full flex flex-col items-center justify-center pb-24">
+            <h2 className="font-arabic-title text-3xl text-[#FFD700] mb-8 mt-12">Konfirmasi Kehadiran</h2>
+            <div className='w-full max-w-sm'>
+                <RsvpForm
+                    whatsappNumber={data.engagement.rsvp_settings.whatsapp_number}
+                    messageTemplate={data.engagement.rsvp_settings.message_template}
+                    themeColor="#FFD700"
+                />
+            </div>
         </div>
     </div>
 );

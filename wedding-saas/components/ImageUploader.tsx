@@ -1,8 +1,8 @@
 // Path: /components/ImageUploader.tsx
 import React, { useState, useRef } from 'react';
-import { UploadCloud, Link as LinkIcon, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { UploadCloud, Link as LinkIcon, Image as ImageIcon, Loader2, Trash2 } from 'lucide-react';
 import { convertToDirectLink } from '../utils/converter';
-import { supabase } from '@/lib/supabase';
+import { uploadResumable } from '@/lib/tusUpload';
 
 interface ImageUploaderProps {
     label: string;
@@ -29,19 +29,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ label, currentUrl, onUpda
         try {
             setStatus('uploading');
 
-            // Generate Path Unik
-            const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-            const filePath = `uploads/${fileName}`;
-
-            // Upload ke Supabase 'site-assets' bucket (Konsisten dengan Testimoni)
-            const { error: uploadError } = await supabase.storage.from('site-assets').upload(filePath, file);
-
-            if (uploadError) {
-                throw uploadError;
-            }
-
-            const { data: { publicUrl } } = supabase.storage.from('site-assets').getPublicUrl(filePath);
+            // GUNAKAN TUS PROTOCOL (Resumable)
+            const publicUrl = await uploadResumable(file, 'site-assets', 'uploads');
 
             onUpdate(publicUrl);
             setStatus('success');
@@ -86,9 +75,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ label, currentUrl, onUpda
                         </div>
                     )}
                     {currentUrl && (
-                        <div className="mt-3 flex items-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                        <div className="mt-3 flex items-center gap-3 bg-gray-50 p-2 rounded-lg border border-gray-100 group">
                             <img src={currentUrl} className="w-10 h-10 rounded-md object-cover" alt="Preview" />
                             <span className="text-[10px] text-gray-400 truncate flex-1">{currentUrl}</span>
+                            <button
+                                onClick={() => onUpdate('')}
+                                className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-1 rounded transition-all"
+                                title="Hapus Gambar"
+                            >
+                                <Trash2 size={14} />
+                            </button>
                         </div>
                     )}
                 </div>

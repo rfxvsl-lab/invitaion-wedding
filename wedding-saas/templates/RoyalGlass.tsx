@@ -115,7 +115,7 @@ const Leaf = ({ className, style }: any) => (
 /**
  * --- BACKGROUND SYSTEM (PARALLAX & PARTICLES) ---
  */
-const LivingBackground = ({ mousePos }: any) => {
+const LivingBackground = ({ mousePos, customBgUrl }: any) => {
     // Generate random petals for falling animation
     const petals = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
         id: i,
@@ -129,8 +129,8 @@ const LivingBackground = ({ mousePos }: any) => {
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 bg-[#F9F7F2]">
             {/* 1. Base Texture */}
             <div
-                className="absolute inset-0 opacity-50 mix-blend-multiply"
-                style={{ backgroundImage: `url(${ASSETS.texture})` }}
+                className={`absolute inset-0 opacity-50 ${customBgUrl ? 'bg-cover bg-center bg-fixed' : 'mix-blend-multiply'}`}
+                style={{ backgroundImage: `url(${customBgUrl || ASSETS.texture})` }}
             />
 
             {/* 2. Parallax Container */}
@@ -357,7 +357,29 @@ const GalleryPage = ({ invitation }: any) => (
                 </div>
             ))}
         </div>
-    </div>
+
+
+        {/* Video Prewedding */}
+        {
+            invitation.gallery.video_url && (
+                <div className="mt-12 bg-white/30 backdrop-blur-sm p-2 rounded-xl border border-[#B8860B]/20 shadow-xl max-w-4xl mx-auto break-inside-avoid">
+                    <div className="text-center mb-4">
+                        <p className="font-modern text-xs text-[#B8860B] tracking-[0.3em] uppercase mb-1">Our Story in Motion</p>
+                        <h3 className="font-cinzel text-xl text-gray-800">Prewedding Video</h3>
+                    </div>
+                    <div className="aspect-video w-full rounded-lg overflow-hidden bg-black/10">
+                        <iframe
+                            src={`${invitation.gallery.video_url}${invitation.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                            className="w-full h-full"
+                            allowFullScreen
+                            allow="autoplay; encrypted-media"
+                            title="Prewedding Video"
+                        ></iframe>
+                    </div>
+                </div>
+            )
+        }
+    </div >
 );
 
 const GiftPage = ({ invitation }: any) => (
@@ -383,6 +405,24 @@ const GiftPage = ({ invitation }: any) => (
                     </button>
                 </div>
             ))}
+
+            {invitation.gifts.qris_url && (
+                <div className="bg-white/50 border border-[#B8860B]/30 p-8 rounded-xl shadow-sm">
+                    <p className="font-cinzel text-xl text-[#B8860B] mb-4">QRIS Payment</p>
+                    <div className="w-48 h-48 mx-auto bg-white p-2 border border-[#B8860B]/20 mb-6">
+                        <img src={invitation.gifts.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                    </div>
+                    <a
+                        href={invitation.gifts.qris_url}
+                        download="qris.png"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full py-3 bg-[#B8860B] text-white hover:bg-[#8B6E4E] transition-colors font-modern text-xs font-bold uppercase flex items-center justify-center gap-2 rounded"
+                    >
+                        <Gift size={14} /> Download QR Code
+                    </a>
+                </div>
+            )}
         </div>
     </div>
 );
@@ -445,23 +485,12 @@ export default function RoyalGlass({ data, guestName = "Tamu Undangan" }: { data
     if (!invitation) return <div>Loading...</div>;
 
     return (
-        <div
-            className="relative w-full h-screen overflow-hidden text-[#2C2C2C]"
-            style={
-                data.metadata.custom_bg_url
-                    ? { backgroundImage: `url(${data.metadata.custom_bg_url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed' }
-                    : { backgroundColor: '#F9F7F2' }
-            }
-        >
-            {/* Soft overlay for custom background */}
-            {data.metadata.custom_bg_url && (
-                <div className="fixed inset-0 bg-gradient-to-b from-white/80 to-amber-50/75 z-0" />
-            )}
+        <div className="relative w-full h-screen overflow-hidden text-[#2C2C2C] bg-[#F9F7F2]">
             <GlobalStyles />
             <audio ref={audioRef} loop src={invitation.metadata.music_url} />
 
             {/* --- LAYER 0: LIVING BACKGROUND (FULL SCREEN) --- */}
-            <LivingBackground mousePos={mousePos} />
+            <LivingBackground mousePos={mousePos} customBgUrl={invitation.metadata.custom_bg_url} />
 
             {/* --- LAYER 1: ENVELOPE MODAL --- */}
             {stage === 'envelope' && (

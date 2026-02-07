@@ -85,7 +85,10 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData; guestName?: string 
     };
 
     return (
-        <div className="min-h-screen bg-[#FFFAF4] text-[#3E3E3E] font-sans overflow-x-hidden selection:bg-[#D4AF37] selection:text-white relative">
+        <div
+            className="min-h-screen bg-[#FFFAF4] text-[#3E3E3E] font-sans overflow-x-hidden selection:bg-[#D4AF37] selection:text-white relative bg-cover bg-center bg-fixed"
+            style={invitation.metadata.custom_bg_url ? { backgroundImage: `url(${invitation.metadata.custom_bg_url})` } : {}}
+        >
             {/* INJECT FONTS */}
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
@@ -297,6 +300,23 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData; guestName?: string 
                 {invitation.gallery.images && invitation.gallery.images.length > 0 && (
                     <section className="py-20 px-6">
                         <h3 className="font-cinzel text-3xl text-center mb-12">{invitation.texts.gallery_title}</h3>
+
+                        {/* Video Prewedding */}
+                        {invitation.gallery.video_url && (
+                            <div className="mb-16 max-w-5xl mx-auto">
+                                <div className="aspect-video w-full shadow-[0_10px_30px_rgba(0,0,0,0.1)] border-8 border-white">
+                                    <iframe
+                                        src={`${invitation.gallery.video_url}${invitation.gallery.video_url.includes('?') ? '&' : '?'}controls=0&rel=0&modestbranding=1`}
+                                        className="w-full h-full"
+                                        allowFullScreen
+                                        allow="autoplay; encrypted-media"
+                                        title="Prewedding Video"
+                                    ></iframe>
+                                </div>
+                                <p className="text-center font-playfair italic text-[#666] mt-4">"A glimpse of our story"</p>
+                            </div>
+                        )}
+
                         <div className="grid grid-cols-2 gap-4 max-w-6xl mx-auto">
                             {invitation.gallery.images.map((img, idx) => (
                                 <div key={idx} className="relative overflow-hidden aspect-[3/4]">
@@ -332,6 +352,24 @@ const ClassicSerifTemplate: React.FC<{ data: InvitationData; guestName?: string 
                                         </button>
                                     </div>
                                 ))}
+
+                                {invitation.gifts.qris_url && (
+                                    <div className="p-6 border border-[#EAEAEA] rounded bg-[#FFFAF4] text-center">
+                                        <p className="font-lato font-bold uppercase tracking-widest text-[#D4AF37] text-xs mb-4">QRIS / E-WALLET</p>
+                                        <div className="w-48 h-48 mx-auto bg-white p-2 border border-[#EAEAEA] mb-4">
+                                            <img src={invitation.gifts.qris_url} alt="QRIS" className="w-full h-full object-contain" />
+                                        </div>
+                                        <a
+                                            href={invitation.gifts.qris_url}
+                                            download="qris-code.png"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="inline-flex items-center gap-2 text-xs font-bold border border-[#3E3E3E] px-4 py-2 hover:bg-[#3E3E3E] hover:text-white transition-all"
+                                        >
+                                            <ArrowDown size={12} /> Download QRIS
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </section>
