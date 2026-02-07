@@ -891,9 +891,8 @@ export const InstagramStoryTemplate = forwardRef<HTMLDivElement, StoryProps>(({ 
 
                     {/* Content Container - Overlapping the image */}
                     <div className="relative z-10 mt-[1100px] flex flex-col items-center px-16">
-                        {/* Names */}
                         <h1 className="text-8xl mb-6 font-medium" style={{ fontFamily: theme.fontTitle, color: theme.colorPrimary }}>
-                            {data.content.couples.wanita.name.split(' ')[0]} & {data.content.couples.pria.name.split(' ')[0]}
+                            {data.content.couples.wanita?.name?.split(' ')[0] || "Wanita"} & {data.content.couples.pria?.name?.split(' ')[0] || "Pria"}
                         </h1>
 
                         {/* Date */}

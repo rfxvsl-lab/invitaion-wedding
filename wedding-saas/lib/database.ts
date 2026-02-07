@@ -63,9 +63,17 @@ export async function deleteFAQ(id: string): Promise<boolean> {
 
 // ===== ORDERS =====
 export async function createOrder(orderData: CreateOrderInput): Promise<{ success: boolean; orderId?: string; error?: string }> {
+    // Get current user session
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { success: false, error: 'User harus login terlebih dahulu untuk melakukan pembayaran.' };
+    }
+
     const { data, error } = await supabase
         .from('orders')
         .insert([{
+            user_id: user.id, // Include user_id for RLS
             customer_name: orderData.customer_name,
             customer_email: orderData.customer_email,
             customer_phone: orderData.customer_phone,
@@ -73,7 +81,6 @@ export async function createOrder(orderData: CreateOrderInput): Promise<{ succes
             payment_method: orderData.payment_method,
             proof_url: orderData.proof_url,
             slug: orderData.slug,
-            // Store raw details if needed, for now just flattened or standard columns
         }])
         .select('id')
         .single();
@@ -137,100 +144,83 @@ export async function updateOrderStatus(orderId: string, status: 'paid' | 'rejec
 
     // 2. If PAID, process logic
     if (status === 'paid' && order) {
-        // A. Update User Profile (Tier)
-        if (order.user_id) {
-            // Define limits based on tier
-            let maxChanges = 0;
-            let slugSlots = 1;
+        console.log('🔄 Processing paid order:', order.id, 'for user:', order.user_id);
 
-            switch (order.tier_selected) {
-                case 'basic':
-                    maxChanges = 2;
-                    break;
-                case 'premium':
-                    maxChanges = 5;
-                    break;
-                case 'exclusive':
-                    maxChanges = 5;
-                    slugSlots = 3; // 1 + 2
-                    break;
-                default:
-                    // Free or unknown
-                    maxChanges = 0;
-                    slugSlots = 1;
-            }
-
-            await supabase.from('profiles').update({
-                tier: order.tier_selected,
-                max_slug_changes: maxChanges,
-                slug_slots: slugSlots
-            }).eq('id', order.user_id);
+        // A. Validate user_id exists
+        if (!order.user_id) {
+            console.error('❌ CRITICAL: Order', order.id, 'has no user_id! Cannot update tier.');
+            return false;
         }
 
-        // B. Create Invitation Record (if slug exists)
-        if (order.slug) {
-            // Define defaults first
-            const defaultThemes: Record<string, string> = {
-                'free': 'modern-arch',
-                'basic': 'dark-luxury',
-                'premium': 'elegant-vanilla',
-                'exclusive': 'royal-arabian'
-            };
+        // B. Update User Profile (Tier)
+        let maxChanges = 0;
+        let slugSlots = 1;
+        const tier = order.tier_selected;
 
-            // Check if slug taken by another user
-            const { data: existing } = await supabase
-                .from('invitations')
-                .select('id, user_id')
-                .eq('slug', order.slug)
-                .single();
+        switch (tier) {
+            case 'basic':
+                maxChanges = 2;
+                slugSlots = 1;
+                break;
+            case 'premium':
+                maxChanges = 5;
+                slugSlots = 1;
+                break;
+            case 'exclusive':
+                maxChanges = 10; // More flexibility for exclusive
+                slugSlots = 3;
+                break;
+            default:
+                // Free or unknown
+                maxChanges = 0;
+                slugSlots = 1;
+        }
 
-            if (existing && existing.user_id !== order.user_id) {
-                // Conflict: Slug Taken by someone else
-                // We could append a random string or just fail silently/log it
-                // For safety, let's append a random number
-                const newSlug = `${order.slug}-${Math.floor(Math.random() * 1000)}`;
-                // Recursively insert with new slug or just try once
-                await supabase.from('invitations').insert({
-                    slug: newSlug,
-                    user_id: order.user_id,
-                    metadata: {
-                        theme_id: defaultThemes[order.tier_selected] || 'modern-arch',
-                        tier: order.tier_selected,
-                        expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-                    },
-                    content: {
-                        hero: {
-                            title: "The Wedding Of",
-                            nicknames: order.customer_name.split(' ')[0] + " & Partner",
-                        },
-                        couple: {
-                            groom: { name: "Nama Pria", father: "Nama Ayah", mother: "Nama Ibu" },
-                            bride: { name: "Nama Wanita", father: "Nama Ayah", mother: "Nama Ibu" }
-                        }
-                    }
-                });
-            } else {
-                // Safe to Insert or Update (if same user)
-                await supabase.from('invitations').upsert({
-                    slug: order.slug,
-                    user_id: order.user_id,
-                    metadata: {
-                        theme_id: defaultThemes[order.tier_selected] || 'modern-arch',
-                        tier: order.tier_selected,
-                        expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-                    },
-                    content: {
-                        hero: {
-                            title: "The Wedding Of",
-                            nicknames: order.customer_name.split(' ')[0] + " & Partner",
-                        },
-                        couple: {
-                            groom: { name: "Nama Pria", father: "Nama Ayah", mother: "Nama Ibu" },
-                            bride: { name: "Nama Wanita", father: "Nama Ayah", mother: "Nama Ibu" }
-                        }
-                    }
-                }, { onConflict: 'slug' });
+        console.log(`📝 Updating user ${order.user_id} to tier: ${tier} (Slots: ${slugSlots}, Changes: ${maxChanges})`);
+
+        const { error: profileError } = await supabase.from('profiles').update({
+            tier: tier,
+            max_slug_changes: maxChanges,
+            slug_slots: slugSlots,
+            updated_at: new Date().toISOString()
+        }).eq('id', order.user_id);
+
+        if (profileError) {
+            console.error('❌ Failed to update profile tier:', profileError);
+            return false;
+        }
+
+        console.log('✅ Successfully updated user tier to:', tier);
+
+        // C. Update Existing Invitation Metadata (Extend Expiry & Set Tier)
+        // Find invitation by user_id
+        const { data: invitations } = await supabase
+            .from('invitations')
+            .select('id, metadata')
+            .eq('user_id', order.user_id);
+
+        if (invitations && invitations.length > 0) {
+            // Update ALL invitations for this user (or just the primary one? For now update all to match tier)
+            // Or usually user has 1 invitation.
+
+            for (const inv of invitations) {
+                const currentMeta = inv.metadata || {};
+                const newMeta = {
+                    ...currentMeta,
+                    tier: tier,
+                    // Basic/Premium: 1 Year active. Exclusive: Forever? Or longer.
+                    // Let's set 1 year for all paid for now, or per config.
+                    // If Exclusive, maybe set to 5 years.
+                    expires_at: tier === 'exclusive'
+                        ? new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000).toISOString()
+                        : new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+                };
+
+                await supabase.from('invitations').update({
+                    metadata: newMeta
+                }).eq('id', inv.id);
             }
+            console.log(`✅ Updated metadata for ${invitations.length} invitations.`);
         }
     }
 

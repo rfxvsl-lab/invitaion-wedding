@@ -100,7 +100,8 @@ export default function Editor() {
 
             if (existing) {
                 setInvitation(existing);
-                const mergedData = mergeWithDefaults(existing.content, existing.metadata);
+                // Pass existing.slug explicitly to ensure it is picked up
+                const mergedData = mergeWithDefaults(existing.content, existing.metadata, existing.slug);
                 setData(mergedData);
                 setLoading(false);
             } else {
@@ -120,12 +121,13 @@ export default function Editor() {
 
     // Removed createStarterInvitation as per request to avoid random slugs
 
-    const mergeWithDefaults = (content: any, metadata: any): InvitationData => {
+    const mergeWithDefaults = (content: any, metadata: any, rootSlug?: string): InvitationData => {
         // Fallback structure
         return {
             metadata: {
                 theme_id: metadata?.theme_id || 'modern-arch',
-                slug: metadata?.slug || invitation?.slug || '',
+                // Use rootSlug (from DB column) if metadata.slug is missing
+                slug: metadata?.slug || rootSlug || invitation?.slug || '',
                 music_url: metadata?.music_url || '',
                 custom_bg_url: metadata?.custom_bg_url || '',
                 ...metadata
@@ -176,7 +178,10 @@ export default function Editor() {
     };
 
     const saveChanges = async () => {
-        if (!invitation || !data) return;
+        if (!invitation?.id || !data) {
+            console.error("Save failed: Missing invitation ID or data");
+            return;
+        }
 
         // 1. Check for Default Slug
         if (isDefaultSlug(data.metadata.slug)) {
@@ -191,11 +196,8 @@ export default function Editor() {
             if (data.metadata.slug !== invitation.slug) {
                 // Check if user allowed to change
                 if (profileStats?.tier === 'free') {
-                    // Free user cannot change slug (except if it was default, but logic handled in onboarding usually - here we assume strict)
-                    // Actually, if they are free, they should stick with what they have.
-                    // But if they just onboarded, they set it there.
-                    // If they are here, they are trying to change it AGAIN.
-                    // BLOCK IT.
+                    // For legacy/free users, if they change slug, we block it unless checking is skipped (e.g. initial setup)
+                    // But here we enforce strict rules.
                     throw new Error("User Free tidak dapat mengganti link undangan. Upgrade ke Basic/Premium.");
                 }
 
@@ -208,35 +210,47 @@ export default function Editor() {
                 shouldIncrementCount = true;
             }
 
-            // Retry Logic for Supabase Update (Max 3 attempts)
-            const updateWithRetry = async (attempt = 1): Promise<void> => {
-                try {
-                    const { error } = await supabase.from('invitations').update({
-                        content: { ...data.content, engagement: data.engagement },
-                        metadata: data.metadata,
-                        slug: data.metadata.slug
-                    }).eq('id', invitation.id);
+            // Use Native Fetch to bypass Supabase Client AbortController issues
+            const updateWithNativeFetch = async (): Promise<void> => {
+                const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+                const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-                    if (error) throw error;
-                } catch (err: any) {
-                    const isRetryable =
-                        err.message?.includes('AbortError') ||
-                        err.message?.includes('network') ||
-                        err.message?.includes('fetch failed') ||
-                        err.message?.includes('timeout');
+                if (!supabaseUrl || !supabaseKey) {
+                    throw new Error("Missing Supabase config");
+                }
 
-                    if (isRetryable && attempt < 3) {
-                        console.warn(`Save attempt ${attempt} failed (${err.message}). Retrying in ${attempt}s...`);
-                        await new Promise(resolve => setTimeout(resolve, attempt * 1000));
-                        return updateWithRetry(attempt + 1);
+                const payload = {
+                    content: { ...data.content, engagement: data.engagement },
+                    metadata: data.metadata,
+                    slug: data.metadata.slug,
+                    updated_at: new Date().toISOString()
+                };
+
+                const response = await fetch(
+                    `${supabaseUrl}/rest/v1/invitations?id=eq.${invitation.id}`,
+                    {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': supabaseKey,
+                            'Authorization': `Bearer ${supabaseKey}`,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(payload)
                     }
-                    throw err;
+                );
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    // Check for duplicate key error
+                    if (errorText.includes('invitations_slug_key') || errorText.includes('23505')) {
+                        throw { code: '23505', message: 'Slug sudah dipakai' };
+                    }
+                    throw new Error(`Save failed: ${response.status} - ${errorText}`);
                 }
             };
 
-            await updateWithRetry();
-
-
+            await updateWithNativeFetch();
 
             // Increment Count if success
             if (shouldIncrementCount && user) {

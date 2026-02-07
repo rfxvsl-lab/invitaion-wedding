@@ -93,7 +93,6 @@ export default function PaymentPage({ serverConfig }: PaymentPageProps) {
         maleName: '',
         femaleName: '',
         email: '',
-        slug: '',
         whatsapp: ''
     });
     const [paymentMethod, setPaymentMethod] = useState('');
@@ -127,7 +126,7 @@ export default function PaymentPage({ serverConfig }: PaymentPageProps) {
     const handleNext = () => {
         // Validate Step 1
         if (step === 1) {
-            if (!formData.maleName || !formData.femaleName || !formData.email || !formData.slug || !formData.whatsapp) {
+            if (!formData.maleName || !formData.femaleName || !formData.email || !formData.whatsapp) {
                 alert('Mohon lengkapi semua data diri!');
                 return;
             }
@@ -171,8 +170,7 @@ export default function PaymentPage({ serverConfig }: PaymentPageProps) {
                 customer_phone: formData.whatsapp,
                 tier_selected: String(tier || 'premium'),
                 payment_method: paymentMethod,
-                proof_url: uploadResult.url!,
-                slug: formData.slug
+                proof_url: uploadResult.url!
             });
 
             if (!orderResult.success) throw new Error(orderResult.error || 'Gagal membuat order');
@@ -282,24 +280,7 @@ export default function PaymentPage({ serverConfig }: PaymentPageProps) {
                                         </div>
                                     </div>
 
-                                    <div className="mb-6">
-                                        <label className="block text-sm font-bold text-gray-700 mb-2">Link Undangan (Slug)</label>
-                                        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-rose-500 transition-all bg-gray-50">
-                                            <span className="px-4 py-3 text-gray-500 border-r border-gray-300 text-sm md:text-base flex items-center gap-1">
-                                                <LinkIcon size={14} />
-                                                <span className="hidden sm:inline">undangkankita.web.id/</span>
-                                                <span className="sm:hidden">web.id/</span>
-                                            </span>
-                                            <input
-                                                type="text"
-                                                value={formData.slug}
-                                                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                                className="flex-1 px-4 py-3 outline-none bg-white font-bold text-gray-800"
-                                                placeholder="rizky-anisa"
-                                            />
-                                        </div>
-                                        <p className="text-xs text-gray-500 mt-2 ml-1 flex items-center gap-1"><AlertCircle size={12} /> Link ini tidak dapat diubah setelah pembayaran.</p>
-                                    </div>
+
 
                                     <div className="mb-8">
                                         <label className="block text-sm font-bold text-gray-700 mb-2">Nomor WhatsApp</label>
@@ -454,7 +435,9 @@ export default function PaymentPage({ serverConfig }: PaymentPageProps) {
                                 </div>
                                 <h2 className="text-3xl font-bold text-gray-800 mb-4">Pembayaran Berhasil Dijadwalkan!</h2>
                                 <p className="text-gray-600 mb-8 max-w-lg mx-auto">
-                                    Terima kasih! Pesanan Anda sedang diverifikasi oleh admin. Kami juga telah mengirimkan detail pesanan ke email Anda.
+                                    Terima kasih! Pesanan Anda <strong>sedang menunggu verifikasi admin</strong>.
+                                    Kami akan segera memproses pembayaran Anda dan mengirim konfirmasi via email.
+                                    <br /><strong>Tier Anda akan diupdate setelah admin menyetujui pembayaran.</strong>
                                 </p>
 
                                 <div className="bg-gray-50 p-6 rounded-xl max-w-md mx-auto mb-8 border border-gray-200 text-left">
@@ -475,8 +458,21 @@ export default function PaymentPage({ serverConfig }: PaymentPageProps) {
                                     </div>
                                 </div>
 
-                                <Link href="/admin" className="bg-gray-900 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-black transition-all shadow-xl hover:shadow-2xl inline-block">
-                                    Masuk ke Dashboard
+                                {/* Warning Banner */}
+                                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8 max-w-md mx-auto">
+                                    <div className="flex items-center gap-3">
+                                        <AlertCircle className="text-yellow-600 shrink-0" size={20} />
+                                        <div className="text-left">
+                                            <p className="text-sm font-bold text-yellow-800">Status: Menunggu Verifikasi</p>
+                                            <p className="text-xs text-yellow-700 mt-1">
+                                                Tier Anda saat ini masih <strong>FREE</strong>. Setelah admin approve, tier akan otomatis berubah menjadi <strong>{selectedPlan.name}</strong>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <Link href="/dashboard/user" className="bg-gray-900 text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-black transition-all shadow-xl hover:shadow-2xl inline-block">
+                                    Ke Dashboard Saya
                                 </Link>
                             </div>
                         )}

@@ -5,7 +5,8 @@ import { supabase } from '@/lib/supabase';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import Head from 'next/head';
-import { Crown, Clock, Edit2, Play, Plus, Save, User as UserIcon, Calendar } from 'lucide-react';
+import { Crown, Clock, Edit2, Play, Plus, Save, User as UserIcon, Calendar, Link as LinkIcon, CheckCircle, AlertCircle } from 'lucide-react';
+import { useDebounce } from 'use-debounce';
 
 export default function UserDashboard() {
     const { user, profile } = useAuth();
@@ -17,6 +18,65 @@ export default function UserDashboard() {
         full_name: '',
         phone_number: ''
     });
+
+    // Slug Creation State
+    const [newSlug, setNewSlug] = useState('');
+    const [debouncedSlug] = useDebounce(newSlug, 800);
+    const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
+    const [checkingSlug, setCheckingSlug] = useState(false);
+    const [creatingSlug, setCreatingSlug] = useState(false);
+
+    // Check Slug Availability
+    useEffect(() => {
+        const checkSlug = async () => {
+            if (!debouncedSlug || debouncedSlug.length < 3) {
+                setSlugAvailable(null);
+                return;
+            }
+            setCheckingSlug(true);
+            const { data } = await supabase.from('invitations').select('id').eq('slug', debouncedSlug).maybeSingle();
+            setSlugAvailable(!data);
+            setCheckingSlug(false);
+        };
+        checkSlug();
+    }, [debouncedSlug]);
+
+    const handleCreateInvitation = async () => {
+        if (!user || !newSlug || slugAvailable === false) return;
+        setCreatingSlug(true);
+
+        try {
+            // Default content
+            const defaultContent = {
+                hero: { title: "The Wedding Of", nicknames: (profile?.full_name?.split(' ')[0] || "Nama") + " & Pasangan" },
+                couple: {
+                    groom: { name: "Nama Pria", father: "Bapak Pria", mother: "Ibu Pria" },
+                    bride: { name: "Nama Wanita", father: "Bapak Wanita", mother: "Ibu Wanita" }
+                }
+            };
+
+            const { error: invError } = await supabase.from('invitations').insert({
+                user_id: user.id,
+                slug: newSlug,
+                metadata: {
+                    theme_id: 'floral-rustic', // Default Theme
+                    tier: profile?.tier || 'free',
+                    created_at: new Date().toISOString()
+                },
+                content: defaultContent
+            });
+
+            if (invError) throw invError;
+
+            // Success
+            setNewSlug('');
+            fetchInvitations();
+        } catch (error: any) {
+            alert("Gagal membuat undangan: " + error.message);
+        } finally {
+            setCreatingSlug(false);
+        }
+    };
 
     useEffect(() => {
         if (user) {
@@ -233,9 +293,45 @@ export default function UserDashboard() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
-                                <p className="text-gray-500 font-medium">Belum ada undangan.</p>
-                                <button onClick={() => router.push('/editor')} className="mt-4 text-rose-600 font-bold hover:underline">Buat Sekarang</button>
+                            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 animate-fade-up">
+                                <div className="text-center mb-6">
+                                    <div className="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Plus size={32} />
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-gray-900">Buat Undangan Digital</h2>
+                                    <p className="text-gray-500">Mulai buat undangan pernikahan impianmu dengan menentukan link unik.</p>
+                                </div>
+
+                                <div className="max-w-md mx-auto">
+                                    <label className="block text-sm font-bold text-gray-700 mb-2">Link Undangan (Slug)</label>
+                                    <div className={`flex items-center border rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-rose-500 transition-all ${slugAvailable === false ? 'border-red-500 bg-red-50' : 'border-gray-300 bg-gray-50'}`}>
+                                        <span className="px-4 py-3 text-gray-500 border-r border-gray-300 text-sm flex items-center gap-1">
+                                            <LinkIcon size={14} /> web.id/
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className="flex-1 px-4 py-3 outline-none bg-transparent font-bold text-gray-800 lowercase"
+                                            placeholder="romeo-juliet"
+                                            value={newSlug}
+                                            onChange={(e) => setNewSlug(e.target.value.replace(/[^a-z0-9-]/g, ''))}
+                                        />
+                                        <div className="pr-4">
+                                            {checkingSlug && <span className="animate-spin block w-4 h-4 border-2 border-rose-600 border-t-transparent rounded-full"></span>}
+                                            {!checkingSlug && slugAvailable === true && <CheckCircle className="text-green-500" size={20} />}
+                                            {!checkingSlug && slugAvailable === false && <AlertCircle className="text-red-500" size={20} />}
+                                        </div>
+                                    </div>
+                                    {slugAvailable === false && <p className="text-xs text-red-500 mt-1 font-bold">Link sudah dipakai. Coba variasi lain!</p>}
+                                    <p className="text-xs text-gray-500 mt-2 mb-6">Gunakan huruf kecil dan tanda strip (-).</p>
+
+                                    <button
+                                        onClick={handleCreateInvitation}
+                                        disabled={creatingSlug || !newSlug || slugAvailable === false || newSlug.length < 3}
+                                        className="w-full bg-rose-600 text-white font-bold py-3 rounded-xl hover:bg-rose-700 transition shadow-lg shadow-rose-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                    >
+                                        {creatingSlug ? 'Sedang Membuat...' : 'Buat Undangan Sekarang'}
+                                    </button>
+                                </div>
                             </div>
                         )}
                     </div>

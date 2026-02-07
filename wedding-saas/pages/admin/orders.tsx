@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { CheckCircle, XCircle, Eye } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
-import { updateOrderStatus } from '../../lib/database';
 import { Order } from '../../types/database';
 import AdminLayout from '@/components/AdminLayout';
 
@@ -59,14 +58,24 @@ const AdminOrdersPage = () => {
         if (!confirm('Terima pembayaran ini?')) return;
 
         setProcessing(true);
-        const success = await updateOrderStatus(orderId, 'paid');
+        try {
+            const res = await fetch('/api/admin/approve-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId, status: 'paid' }),
+            });
+            const data = await res.json();
 
-        if (success) {
-            alert('Pembayaran diterima! Status diperbarui.');
-            fetchOrders();
-            setSelectedOrder(null);
-        } else {
-            alert('Gagal update status');
+            if (res.ok && data.success) {
+                alert('Pembayaran diterima! Status diperbarui.');
+                fetchOrders();
+                setSelectedOrder(null);
+            } else {
+                alert('Gagal update status: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error accepting order:', error);
+            alert('Terjadi kesalahan saat memproses data.');
         }
         setProcessing(false);
     };
@@ -75,14 +84,24 @@ const AdminOrdersPage = () => {
         if (!confirm('Tolak pembayaran ini?')) return;
 
         setProcessing(true);
-        const success = await updateOrderStatus(orderId, 'rejected');
+        try {
+            const res = await fetch('/api/admin/approve-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId, status: 'rejected' }),
+            });
+            const data = await res.json();
 
-        if (success) {
-            alert('Pembayaran ditolak.');
-            fetchOrders();
-            setSelectedOrder(null);
-        } else {
-            alert('Gagal update status');
+            if (res.ok && data.success) {
+                alert('Pembayaran ditolak.');
+                fetchOrders();
+                setSelectedOrder(null);
+            } else {
+                alert('Gagal update status: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error rejecting order:', error);
+            alert('Terjadi kesalahan saat memproses data.');
         }
         setProcessing(false);
     };

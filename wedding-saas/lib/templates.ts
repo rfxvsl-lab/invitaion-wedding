@@ -18,6 +18,7 @@ const RoyalArabian = dynamic(() => import('@/templates/RoyalArabian'));
 const LuxuryPink = dynamic(() => import('@/templates/LuxuryPink'));
 const SpotiLove = dynamic(() => import('@/templates/SpotiLove'));
 const LuxuryJavanese = dynamic(() => import('@/templates/LuxuryJavanese'));
+const PremiumFloral = dynamic(() => import('@/templates/PremiumFloral'));
 
 export type TemplateTier = 'free' | 'basic' | 'premium' | 'exclusive';
 
@@ -74,5 +75,13 @@ export const TEMPLATES: Template[] = [
         thumbnail_url: '/assets/luxury-javanese/gunungan.png', // Use Gunungan as thumbnail for now
         tier: 'exclusive',
         component: LuxuryJavanese
+    },
+    {
+        id: 'premium-floral',
+        name: 'Premium Floral',
+        thumbnail_url: '/themes/premium-floral/bg-1.png',
+        tier: 'free',
+        component: PremiumFloral
     }
 ];
+

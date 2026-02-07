@@ -53,20 +53,24 @@ export default function Onboarding() {
         if (!user) return;
         const { data } = await supabase.from('profiles').select('full_name, phone_number, contact_email').eq('id', user.id).maybeSingle();
         if (data && data.full_name && data.phone_number) {
-            // Also check if slug exists, if not, stay here (for legacy users)
-            // For now, assume if profile exists, they might need to update/create slug if missing?
-            // Simplified: If profile exists, redirect.
-            router.push('/admin');
+            // Also check if they have an invitation
+            const { data: inv } = await supabase.from('invitations').select('id').eq('user_id', user.id).maybeSingle();
+            if (inv) {
+                router.push('/dashboard/user');
+            }
+            // If profile complete but no invitation, let them stay to create one (input slug)
         }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!user) return;
+
         if (slugAvailable === false) {
             alert('Link undangan sudah dipakai orang lain. Ganti yang lain ya!');
             return;
         }
+
         setSaving(true);
 
         try {
@@ -101,6 +105,7 @@ export default function Onboarding() {
                 metadata: {
                     theme_id: 'floral-rustic', // Default Theme
                     tier: 'free',
+                    slug: formData.slug, // Also store in metadata for editor compatibility
                     created_at: new Date().toISOString()
                 },
                 content: defaultContent
@@ -108,8 +113,8 @@ export default function Onboarding() {
 
             if (invError) throw invError;
 
-            // Redirect ke Home dengan Welcome Flag
-            router.push('/?welcome=true');
+            // Redirect ke Dashboard dengan parameter welcome
+            router.push('/dashboard/user?welcome=true');
         } catch (error: any) {
             // Check if error is duplicate key for slug
             if (error.message?.includes('duplicate key') || error.code === '23505') {

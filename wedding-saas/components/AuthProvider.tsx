@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from 'next/router';
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+    const router = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     const [profile, setProfile] = useState<any | null>(null);
@@ -56,18 +58,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (session?.user) {
                 // Ignore check if already on onboarding page to prevent loop
-                if (window.location.pathname === '/onboarding') return;
+                const currentPath = window.location.pathname;
+                if (currentPath === '/onboarding') return;
 
                 const { data: profileData } = await supabase.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
                 setProfile(profileData);
 
-                // If profile incomplete, Force Redirect ONLY on critical pages
-                // We don't want to block them from viewing their website (/[slug]) or Testimonials
-                const protectedPrefixes = ['/editor', '/dashboard'];
-                const isProtectedPage = protectedPrefixes.some(prefix => window.location.pathname.startsWith(prefix));
+                // ONLY redirect to onboarding from Dashboard entry points
+                // Editor has its own logic. Don't redirect from arbitrary pages.
+                // The root '/' is only checked if exactly '/' (Home page)
+                const exactProtectedPages = ['/', '/dashboard', '/dashboard/user'];
+                const isProtectedPage = exactProtectedPages.includes(currentPath) || currentPath.startsWith('/dashboard/');
+
+                // Exclude /editor from auto-redirect; it has its own fetch logic
+                if (currentPath.startsWith('/editor')) return;
 
                 if (isProtectedPage && (!profileData || !profileData.full_name || !profileData.phone_number)) {
-                    // window.location.href = '/onboarding'; // DISABLED: User requested to stop auto-redirects here
+                    router.push('/onboarding');
                 }
             } else {
                 setProfile(null);
